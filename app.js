@@ -5,7 +5,7 @@
 
 import * as R from './review.js';
 import { renderCapture } from './capture.js';
-import { initAuth, onAuthChange } from './auth-client.js';
+import { initAuth, onAuthChange, currentUser, renderSignInButton, signOut } from './auth-client.js';
 
 const state = {
   items: [],
@@ -49,7 +49,7 @@ async function boot() {
   document.getElementById('foot-meta').textContent =
     `${data.items.length} items · built from the Obsidian vault on ${data.generated}`;
   window.addEventListener('hashchange', route);
-  onAuthChange(() => { if (location.hash.startsWith('#/capture')) renderCapture(view); });
+  onAuthChange(() => route());
   initAuth().catch(() => { /* offline, or Google unreachable: the rest still works */ });
   route();
 }
@@ -57,6 +57,7 @@ async function boot() {
 function route() {
   const hash = location.hash.replace(/^#/, '') || '/review';
   const [, section, ...rest] = hash.split('/');
+  renderAccountBar();
   document.querySelectorAll('.tabs a').forEach((a) => {
     a.removeAttribute('aria-current');
     if (a.dataset.tab === section || (section === 'item' && a.dataset.tab === 'lookup')) {
@@ -64,11 +65,49 @@ function route() {
     }
   });
   window.scrollTo(0, 0);
+
+  // Nothing is usable until you are signed in — including looking words up.
+  if (!currentUser()) return renderSignInGate();
+
   if (section === 'capture') return renderCapture(view);
   if (section === 'lookup') return renderLookup();
   if (section === 'progress') return renderProgress();
   if (section === 'item') return renderItem(decodeURIComponent(rest.join('/')));
   return renderReview();
+}
+
+/** A small account strip in the header, once signed in. */
+function renderAccountBar() {
+  const existing = document.getElementById('account-bar');
+  const user = currentUser();
+  if (!user) { existing?.remove(); return; }
+  if (existing) return;
+
+  const bar = document.createElement('div');
+  bar.id = 'account-bar';
+  bar.className = 'account-bar';
+  bar.innerHTML = `<span class="muted">${esc(user.email)}</span>
+                   <button class="btn secondary small" id="global-signout">Sign out</button>`;
+  document.querySelector('.topbar-inner').appendChild(bar);
+  bar.querySelector('#global-signout').addEventListener('click', () => { signOut(); route(); });
+}
+
+function renderSignInGate() {
+  view.innerHTML = `
+    <div class="card block gate">
+      <h2 class="section" style="margin-bottom:6px">English Review</h2>
+      <p class="lede" style="margin-bottom:26px">
+        Capture what you learn, look it up later, and practise it until you can produce it.
+      </p>
+      <div id="gsi-button" style="display:flex; justify-content:center"></div>
+      <p class="next-hint" style="margin-top:20px">
+        Sign in with Google. Only accounts on the allowlist can get in.
+      </p>
+    </div>`;
+  renderSignInButton(view.querySelector('#gsi-button')).catch((error) => {
+    view.querySelector('#gsi-button').innerHTML =
+      `<span class="muted">${esc(error.message)}</span>`;
+  });
 }
 
 const save = () => R.saveProgress(state.progress);

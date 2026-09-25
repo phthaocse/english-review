@@ -6,6 +6,21 @@ let pass = 0, fail = 0;
 const ok = (n, c, x='') => { if (c) pass++; else { fail++; console.log('  FAIL:', n, x); } };
 const eq = (n,a,b) => ok(n, a===b, `got ${JSON.stringify(a)} want ${JSON.stringify(b)}`);
 
+// Every route is behind sign-in now, so the suite signs in first. The token is
+// deliberately unsigned: the client never verifies it, which is precisely why
+// the Worker does (see auth.test.mjs).
+const b64 = (o) => Buffer.from(JSON.stringify(o)).toString('base64url');
+const fakeToken = `${b64({ alg: 'RS256' })}.${b64({
+  email: 'thaop@ghn.vn', name: 'Thao', exp: Math.floor(Date.now() / 1000) + 7200, sub: '1',
+})}.sig`;
+await B.addInitScript(`
+  sessionStorage.setItem('knowledge/idtoken', ${JSON.stringify(fakeToken)});
+  const real = window.fetch;
+  window.fetch = async (u, i = {}) => String(u).includes('workers.dev')
+    ? new Response(JSON.stringify({ items: [] }), { status: 200, headers: { 'Content-Type': 'application/json' } })
+    : real(u, i);
+`);
+
 await B.goto(`${BASE}/`);
 
 console.log('== every item produces a valid question at every level ==');
@@ -232,7 +247,10 @@ ok('bars render', prog.bars > 3, String(prog.bars));
 ok('export button present', prog.hasExport);
 
 console.log('== console cleanliness ==');
-ok('no uncaught errors', B.consoleErrors.length === 0, B.consoleErrors.slice(0,5).join(' | '));
+// Google's library logs FedCM/One-Tap noise in a headless browser with a
+// stubbed session; only application errors should fail this.
+const appErrors = B.consoleErrors.filter((e) => !/GSI_LOGGER|FedCM/i.test(e));
+ok('no uncaught errors', appErrors.length === 0, appErrors.slice(0, 5).join(' | '));
 
 console.log(`\n${pass} passed, ${fail} failed`);
 B.close();

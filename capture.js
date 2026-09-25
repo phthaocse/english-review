@@ -5,7 +5,7 @@
 // correct it on the review screen, and only what you confirm is saved — which
 // is also what keeps an unverified reading from becoming a finished note.
 
-import { api, ApiError, currentUser, onAuthChange, renderSignInButton, signOut } from './auth-client.js';
+import { api, ApiError, onAuthChange } from './auth-client.js';
 
 const KINDS = [
   ['word', 'Word'], ['phrasal-verb', 'Phrasal verb'], ['idiom', 'Idiom'],
@@ -26,16 +26,8 @@ let recent = [];
 let mode = 'type';
 
 export function renderCapture(view) {
-  const user = currentUser();
-  if (!user) return renderSignedOut(view);
-
   view.innerHTML = `
-    <div class="row" style="margin-bottom:6px">
-      <h2 class="section" style="margin:0">Capture</h2>
-      <span class="spacer"></span>
-      <span class="muted" style="font-size:.85rem">${esc(user.email)}</span>
-      <button class="btn secondary small" id="signout">Sign out</button>
-    </div>
+    <h2 class="section">Capture</h2>
     <p class="lede">Get it down now; tidy it up on the Mac later.</p>
 
     <div class="filters" role="group" aria-label="How to capture">
@@ -47,26 +39,12 @@ export function renderCapture(view) {
     <div id="draft-area"></div>
     <div id="recent-area"></div>`;
 
-  view.querySelector('#signout').addEventListener('click', () => { signOut(); renderCapture(view); });
   view.querySelectorAll('[data-mode]').forEach((b) =>
     b.addEventListener('click', () => { mode = b.dataset.mode; renderCapture(view); }));
 
   (mode === 'type' ? renderTypeForm : renderPhotoForm)(view);
   renderDraft(view);
   loadRecent(view);
-}
-
-function renderSignedOut(view) {
-  view.innerHTML = `
-    <h2 class="section">Capture</h2>
-    <p class="lede">Sign in to add to your knowledge base.</p>
-    <div class="card block" style="text-align:center; padding:40px 22px">
-      <div id="gsi-button" style="display:flex; justify-content:center"></div>
-      <p class="next-hint" style="margin-top:18px">Only accounts on the allowlist can sign in.</p>
-    </div>`;
-  renderSignInButton(view.querySelector('#gsi-button')).catch((e) => {
-    view.querySelector('#gsi-button').innerHTML = `<span class="muted">${esc(e.message)}</span>`;
-  });
 }
 
 // ------------------------------------------------------------------ typing --

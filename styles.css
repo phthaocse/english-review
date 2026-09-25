@@ -300,3 +300,8 @@ select.answer { appearance: none; background-image: none; }
   padding: 4px 9px; border-radius: 8px; font-size: .8rem;
   background: var(--surface); color: var(--text); border: 1px solid var(--border);
 }
+
+/* ---------------------------------------------------------------- account -- */
+.account-bar { display: flex; align-items: center; gap: 9px; font-size: .84rem; flex-basis: 100%; justify-content: flex-end; }
+.gate { text-align: center; padding: 44px 22px; margin-top: 24px; }
+@media (max-width: 560px) { .account-bar { justify-content: flex-start; } }
