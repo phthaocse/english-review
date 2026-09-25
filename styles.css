@@ -269,7 +269,11 @@ mark { background: var(--accent-soft); color: inherit; padding: 0 2px; border-ra
 
 @media (max-width: 560px) {
   .statgrid { grid-template-columns: repeat(2, 1fr); }
-  .wordmark { font-size: .92rem; }
+  /* Too narrow for one row: give the title its own line so the tabs and the
+     theme button share the second one instead of the button wrapping alone. */
+  .wordmark { font-size: .92rem; flex: 1 1 100%; }
+  .tabs { margin-left: 0; }
+  #theme-toggle { margin-left: auto; }
   .tabs a { padding: 6px 10px; font-size: .85rem; }
   .view { padding: 16px 14px 56px; }
   .item-term { font-size: 1.65rem; }
