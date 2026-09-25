@@ -109,9 +109,16 @@ export function levenshtein(a, b) {
   return prev[b.length];
 }
 
-/** Same word, wrong ending — 'accuse' for 'accused', 'go' for 'went'. */
+/**
+ * Same word, wrong ending — 'accuse' for 'accused', 'turn' for 'turned'.
+ *
+ * The trailing -e is dropped after the suffix because English drops it when
+ * inflecting: accuse -> accused leaves 'accus', so the base has to lose its
+ * 'e' too for the two to meet. Irregulars (go/went) are not caught, and fall
+ * through to being marked plain wrong.
+ */
 function sameStem(a, b) {
-  const stem = (w) => w.replace(/(ing|ed|es|s|en)$/, '');
+  const stem = (w) => w.replace(/(ing|ed|es|en|s)$/, '').replace(/e$/, '');
   if (a.length < 4 || b.length < 4) return false;
   return stem(a) === stem(b) && a !== b;
 }

@@ -27,8 +27,13 @@ eq('typo -> Hard', g.rating, Rating.Hard);
 eq('typo verdict', g.verdict, 'typo');
 
 g = grade('accuse', ['accused'], 9000);
-ok('wrong inflection -> not exact', g.verdict !== 'exact', g.verdict);
+eq('wrong inflection -> form, not typo', g.verdict, 'form');
 eq('wrong inflection -> Hard', g.rating, Rating.Hard);
+eq('-e dropped on inflection', grade('use', ['used'], 9000).rating, Rating.Again);  // too short to stem
+eq('longer -e stem matches', grade('argue', ['argued'], 9000).verdict, 'form');
+eq('plural stem matches', grade('base', ['bases'], 9000).verdict, 'form');
+eq('a real typo is still a typo', grade('accusd', ['accused'], 9000).verdict, 'typo');
+eq('irregulars fall through', grade('go', ['went'], 9000).verdict, 'wrong');
 
 g = grade('celebrate', ['accused'], 9000);
 eq('plain wrong -> Again', g.rating, Rating.Again);

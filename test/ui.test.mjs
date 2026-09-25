@@ -76,8 +76,19 @@ const form = await B.evaluate(`
 `);
 eq('it is a gap-fill', form.mode, 'Gap-fill');
 eq('only the inflected form is accepted', form.accepted.length, 1);
-eq('base form is not full credit', form.lemma, 'form');
+// The example is chosen at random and one of them needs "turned out to be",
+// so the lemma may score 'form' or 'wrong'. What must never happen is full
+// credit for the uninflected word.
+ok('base form never gets full credit', form.lemma !== 'exact', form.lemma);
 eq('the sentence form is correct', form.infl, 'exact');
+
+const stem = await B.evaluate(`
+  const R = await import('./review.js');
+  return { one: R.grade('turn out', ['turned out'], 9000).verdict,
+           two: R.grade('accuse', ['accused'], 9000).verdict };
+`);
+eq('same stem, wrong ending is a form error', stem.one, 'form');
+eq('and again on a single word', stem.two, 'form');
 
 console.log('== interactive session ==');
 await B.evaluate(`localStorage.clear(); location.hash='#/review';`);

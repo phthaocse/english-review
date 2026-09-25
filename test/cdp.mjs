@@ -22,24 +22,39 @@ function findChrome() {
 }
 
 const BIN = findChrome();
-const PORT = 9333;
 
 export async function launch() {
+  // Port 0 lets the OS pick a free one, and Chrome writes it to
+  // DevToolsActivePort in the profile. A fixed port would silently attach to a
+  // browser left over from an earlier run and inherit its localStorage, which
+  // makes tests pass or fail depending on what ran before them.
+  const profile = `${os.tmpdir()}/cdp-profile-${process.pid}-${Date.now()}`;
   const proc = spawn(BIN, [
     '--headless', '--disable-gpu', '--no-sandbox', '--no-first-run',
-    `--remote-debugging-port=${PORT}`, `--user-data-dir=${os.tmpdir()}/cdp-profile-${Date.now()}`,
+    '--remote-debugging-port=0', `--user-data-dir=${profile}`,
     'about:blank',
   ], { stdio: 'ignore' });
 
+  const portFile = `${profile}/DevToolsActivePort`;
+  let port = null;
+  for (let i = 0; i < 100 && !port; i++) {
+    await new Promise((r) => setTimeout(r, 100));
+    if (fs.existsSync(portFile)) {
+      const line = fs.readFileSync(portFile, 'utf8').split('\n')[0].trim();
+      if (line) port = Number(line);
+    }
+  }
+  if (!port) { proc.kill(); throw new Error('chrome did not report a debugging port'); }
+
   let target = null;
   for (let i = 0; i < 60 && !target; i++) {
-    await new Promise((r) => setTimeout(r, 200));
+    await new Promise((r) => setTimeout(r, 100));
     try {
-      const list = await fetch(`http://127.0.0.1:${PORT}/json/list`).then((r) => r.json());
+      const list = await fetch(`http://127.0.0.1:${port}/json/list`).then((r) => r.json());
       target = list.find((t) => t.type === 'page');
     } catch { /* not up yet */ }
   }
-  if (!target) { proc.kill(); throw new Error('chrome did not start'); }
+  if (!target) { proc.kill(); throw new Error('chrome did not open a page'); }
 
   const ws = new WebSocket(target.webSocketDebuggerUrl);
   await new Promise((res, rej) => { ws.onopen = res; ws.onerror = rej; });
@@ -97,5 +112,6 @@ export async function launch() {
     (await import('node:fs')).writeFileSync(path, Buffer.from(data, 'base64'));
   }
 
-  return { goto, evaluate, screenshot, consoleErrors, close: () => { ws.close(); proc.kill(); } };
+  return { goto, evaluate, screenshot, consoleErrors,
+           close: () => { ws.close(); proc.kill('SIGKILL'); } };
 }
