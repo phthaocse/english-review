@@ -280,3 +280,23 @@ mark { background: var(--accent-soft); color: inherit; padding: 0 2px; border-ra
   .quiz { padding: 20px 16px; }
   .bar-row { grid-template-columns: 96px 1fr 40px; font-size: .82rem; }
 }
+
+/* -------------------------------------------------------------- capture --- */
+.field { display: block; margin-bottom: 12px; }
+.field > span { display: block; font-size: .82rem; color: var(--muted); margin-bottom: 5px; }
+.field em { font-style: normal; font-size: .78rem; }
+select.answer { appearance: none; background-image: none; }
+
+.drafts { display: flex; flex-direction: column; gap: 12px; }
+.draft {
+  padding: 13px; border: 1px solid var(--border); border-radius: var(--radius);
+  background: var(--surface-2); display: flex; flex-direction: column; gap: 8px;
+}
+.draft.dropped { opacity: .45; }
+.draft .answer { background: var(--surface); }
+.draft-head { display: flex; align-items: center; gap: 9px; }
+.draft-keep { display: flex; align-items: center; gap: 5px; font-size: .8rem; color: var(--muted); cursor: pointer; }
+.draft-kind {
+  padding: 4px 9px; border-radius: 8px; font-size: .8rem;
+  background: var(--surface); color: var(--text); border: 1px solid var(--border);
+}

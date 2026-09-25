@@ -4,6 +4,8 @@
 // _System/Scripts/build_site.py. Scheduling and grading live in review.js.
 
 import * as R from './review.js';
+import { renderCapture } from './capture.js';
+import { initAuth, onAuthChange } from './auth-client.js';
 
 const state = {
   items: [],
@@ -47,6 +49,8 @@ async function boot() {
   document.getElementById('foot-meta').textContent =
     `${data.items.length} items · built from the Obsidian vault on ${data.generated}`;
   window.addEventListener('hashchange', route);
+  onAuthChange(() => { if (location.hash.startsWith('#/capture')) renderCapture(view); });
+  initAuth().catch(() => { /* offline, or Google unreachable: the rest still works */ });
   route();
 }
 
@@ -60,6 +64,7 @@ function route() {
     }
   });
   window.scrollTo(0, 0);
+  if (section === 'capture') return renderCapture(view);
   if (section === 'lookup') return renderLookup();
   if (section === 'progress') return renderProgress();
   if (section === 'item') return renderItem(decodeURIComponent(rest.join('/')));

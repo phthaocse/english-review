@@ -59,6 +59,50 @@ Punctuation drills are marked strictly, because in a comma-splice card the
 punctuation *is* the answer. Every wrong verdict offers a one-click override for
 when the marking is unfair.
 
+## Capture (new)
+
+The problem this solves: knowledge fragments in the gap between meeting a word
+and being at the Mac. **Capture** lets you record it from any device — type it,
+or photograph a notebook page and have it read — so the notebook and the
+by-hand re-typing go away.
+
+```
+any device ── site (GitHub Pages)
+   │  type a word, or photograph a page
+   │      └─► Worker ─► Gemini (key lives here) ─► draft
+   │             └─► REVIEW SCREEN — you correct it
+   │                    └─► D1 (canonical SQLite)
+   └─ look up / practise
+
+Mac, later
+   └─ enrich: Oxford lookup via english-vocab → IPA, CEFR, collocations
+   └─ export: D1 → Obsidian .md → Anki CSV → .docx
+```
+
+**Nothing is stored without your confirmation.** The photo path returns a
+*draft*; the review screen shows each reading with a confidence flag, you edit
+or untick, and only what you keep is saved. Items stay `status = 'captured'`
+until the Mac has verified them against Oxford — which is why the prompt
+explicitly refuses to invent pronunciation or CEFR level.
+
+SQLite is the source of truth and every destination is an exporter, so moving
+off Obsidian later costs one plugin rather than a migration.
+
+### Access and secrets
+
+Sign-in is Google, restricted to an allowlist held in the database, so adding or
+revoking someone never needs a deploy. The Worker verifies each ID token's
+signature, issuer, audience, expiry and `email_verified` before touching
+anything — identity comes only from the verified token, never from a field the
+browser sends.
+
+The Gemini key is a Worker secret. It is never in the repo, never in `config.js`
+and never sent to the browser; the client calls the Worker, and the Worker calls
+Google. The endpoint is itself behind the allowlist and capped at 50 image reads
+per person per day, so a stolen session cannot drain the quota.
+
+Setup is in [docs/SETUP.md](docs/SETUP.md).
+
 ## Repo layout
 
 ```
@@ -68,7 +112,17 @@ review.js         scheduling, grading, session queue
 styles.css        light and dark themes
 data/vocab.json   generated from the vault — do not hand-edit
 vendor/           ts-fsrs, MIT, unmodified
-test/             engine + headless-browser suites (test/run.sh)
+test/             all suites (test/run.sh)
+config.js         public config: OAuth client ID, Worker URL
+auth-client.js    Google sign-in, token renewal, authenticated fetch
+capture.js        capture form, photo upload, review screen
+worker/
+  schema.sql      the canonical store
+  src/auth.js     ID token verification + allowlist
+  src/gemini.js   image → draft, key never leaves here
+  src/db.js       queries
+  src/index.js    routes
+docs/SETUP.md     one-time setup
 ```
 
 ## Tests

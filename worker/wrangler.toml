@@ -1,0 +1,19 @@
+# No secrets in this file. GEMINI_API_KEY is set with:
+#   wrangler secret put GEMINI_API_KEY
+# and is not readable afterwards, from the CLI or the dashboard.
+
+name = "knowledge-api"
+main = "src/index.js"
+compatibility_date = "2026-09-01"
+
+[vars]
+# The OAuth client ID is public by design — it identifies the app, it does not
+# authorise anything. The allowlist and the token signature do that.
+GOOGLE_CLIENT_ID = "REPLACE_ME.apps.googleusercontent.com"
+ALLOWED_ORIGINS  = "https://phthaocse.github.io,http://localhost:8731"
+GEMINI_MODEL     = "gemini-3.8-flash"
+
+[[d1_databases]]
+binding       = "DB"
+database_name = "knowledge"
+database_id   = "REPLACE_ME"

@@ -89,6 +89,11 @@ export async function launch() {
     }
   });
 
+  /** Run a script in every page before its own scripts execute. */
+  async function addInitScript(source) {
+    await send('Page.addScriptToEvaluateOnNewDocument', { source });
+  }
+
   async function goto(url) {
     await send('Page.navigate', { url });
     await new Promise((r) => setTimeout(r, 1500));
@@ -112,6 +117,6 @@ export async function launch() {
     (await import('node:fs')).writeFileSync(path, Buffer.from(data, 'base64'));
   }
 
-  return { goto, evaluate, screenshot, consoleErrors,
+  return { goto, evaluate, screenshot, addInitScript, consoleErrors,
            close: () => { ws.close(); proc.kill('SIGKILL'); } };
 }
