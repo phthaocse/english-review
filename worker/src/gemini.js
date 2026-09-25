@@ -9,7 +9,14 @@
 // with an `x-goog-api-key` header and a {model, input, response_format} body.
 
 const ENDPOINT = 'https://generativelanguage.googleapis.com/v1beta/interactions';
-const DEFAULT_MODEL = 'gemini-3.8-flash';
+
+// Tried in order. One model is not enough on the free tier: gemini-3.8-flash
+// allows 20 requests a day and returns 503 under load, which looked like a
+// broken feature rather than a busy one. 3.7 and 3.5 read the same handwriting
+// and carry their own quotas, so a bad day for one is not a bad day for you.
+const MODEL_CHAIN = ['gemini-3.7-flash', 'gemini-3.5-flash', 'gemini-3.8-flash'];
+const OVERLOADED = 503;
+const RATE_LIMITED = 429;
 
 // Inline image data caps the whole request at 20 MB; stay well under it, and
 // the client downscales before uploading anyway.
@@ -76,20 +83,17 @@ export class GeminiError extends Error {
  *
  * @param {{base64: string, mimeType: string}} image
  */
-export async function draftFromImage(image, env, { fetchImpl = fetch } = {}) {
-  if (!env.GEMINI_API_KEY) throw new GeminiError('image reading is not configured', 503);
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
+/** One attempt at one model. Returns the parsed draft, or the status to act on. */
+async function askModel(model, image, env, fetchImpl) {
   const body = {
-    model: env.GEMINI_MODEL || DEFAULT_MODEL,
+    model,
     input: [
       { type: 'text', text: PROMPT },
       { type: 'image', data: image.base64, mime_type: image.mimeType },
     ],
-    response_format: {
-      type: 'text',
-      mime_type: 'application/json',
-      schema: RESPONSE_SCHEMA,
-    },
+    response_format: { type: 'text', mime_type: 'application/json', schema: RESPONSE_SCHEMA },
   };
 
   let res;
@@ -100,20 +104,56 @@ export async function draftFromImage(image, env, { fetchImpl = fetch } = {}) {
       body: JSON.stringify(body),
     });
   } catch {
-    throw new GeminiError('could not reach the image service', 502);
+    return { status: 0 };   // network failure; treat like an overload and move on
   }
 
   if (!res.ok) {
-    // Upstream errors can echo the request back. Log a bare status and tell the
-    // client nothing that could carry the key.
-    console.error('gemini request failed', res.status);
-    throw new GeminiError(res.status === 429
-      ? 'the image service is rate limiting; try again shortly'
-      : 'the image service rejected the request', res.status === 429 ? 429 : 502);
+    // Upstream errors quote the request back, key included, so only the status
+    // is logged and nothing from the body reaches the client.
+    console.error('gemini request failed', model, res.status);
+    return { status: res.status };
+  }
+  return { status: 200, payload: await res.json() };
+}
+
+/**
+ * Turn a photo into draft items, trying each model in turn.
+ *
+ * An overloaded model is retried once; an exhausted one is abandoned
+ * immediately, because its quota resets tomorrow, not in a second.
+ */
+export async function draftFromImage(image, env, { fetchImpl = fetch, pause = sleep } = {}) {
+  if (!env.GEMINI_API_KEY) throw new GeminiError('image reading is not configured', 503);
+
+  const chain = env.GEMINI_MODEL
+    ? [env.GEMINI_MODEL, ...MODEL_CHAIN.filter((m) => m !== env.GEMINI_MODEL)]
+    : MODEL_CHAIN;
+
+  let everyModelRateLimited = true;
+
+  for (const model of chain) {
+    for (let attempt = 0; attempt < 2; attempt++) {
+      const { status, payload } = await askModel(model, image, env, fetchImpl);
+
+      if (status === 200) return { items: parseItems(payload), model };
+
+      if (status === RATE_LIMITED) break;          // out of quota today; next model
+      everyModelRateLimited = false;
+      if (status === OVERLOADED || status === 0) {
+        if (attempt === 0) { await pause(700); continue; }
+        break;                                      // still busy; next model
+      }
+      throw new GeminiError('the image service could not read that photo', 502);
+    }
   }
 
-  const payload = await res.json();
-  return { items: parseItems(payload) };
+  throw new GeminiError(
+    everyModelRateLimited
+      ? "today's free quota for reading photos is used up - it resets tomorrow, "
+        + 'or you can type the word in instead'
+      : 'the image service is busy right now - try again in a moment',
+    RATE_LIMITED,
+  );
 }
 
 /**

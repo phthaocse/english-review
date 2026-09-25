@@ -15,7 +15,8 @@ preview_urls = false
 # authorise anything. The allowlist and the token signature do that.
 GOOGLE_CLIENT_ID = "148321977918-2bmnoeuvcq5nf404o37f2ja38qtg3nl3.apps.googleusercontent.com"
 ALLOWED_ORIGINS  = "https://phthaocse.github.io,http://localhost:8731"
-GEMINI_MODEL     = "gemini-3.8-flash"
+# Leave unset to use the built-in chain (3.7 -> 3.5 -> 3.8).
+# GEMINI_MODEL   = "gemini-3.7-flash"
 
 [[d1_databases]]
 binding       = "DB"

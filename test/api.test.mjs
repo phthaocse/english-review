@@ -150,22 +150,54 @@ console.log('== vision: the key never leaves the Worker ==');
   eq('vision stores nothing by itself', list.body.items.length, 0);
 }
 
+console.log('== busy and exhausted models are worked around ==');
+{
+  const env = makeEnv();
+  const ok = () => ({ ok: true, json: async () => ({
+    steps: [{ type: 'model_output', content: [{ type: 'text', text:
+      '{"items":[{"term":"go off","kind":"phrasal-verb","confidence":"high"}]}' }] }] }) });
+
+  // First model overloaded twice, second answers.
+  let seen = [];
+  geminiHandler = async (_h, init) => {
+    const model = JSON.parse(init.body).model;
+    seen.push(model);
+    return model === 'gemini-3.7-flash' ? { ok: false, status: 503, json: async () => ({}) } : ok();
+  };
+  let r = await call(env, 'POST', '/api/vision', { body: { image: 'AAAA' } });
+  eq('falls through to a working model', r.status, 200);
+  eq('  and returns the draft', r.body.items[0].term, 'go off');
+  eq('  after retrying the busy one once', seen.filter((m) => m === 'gemini-3.7-flash').length, 2);
+  ok('  then moving on', seen.includes('gemini-3.5-flash'), seen.join(','));
+
+  // A transient overload that clears on the retry.
+  seen = []; let calls = 0;
+  geminiHandler = async () => (++calls === 1 ? { ok: false, status: 503, json: async () => ({}) } : ok());
+  r = await call(env, 'POST', '/api/vision', { body: { image: 'AAAA' } });
+  eq('a single retry rescues a busy model', r.status, 200);
+
+  // Every model out of quota: say so plainly, and do not retry a quota error.
+  let attempts = 0;
+  geminiHandler = async () => { attempts++; return { ok: false, status: 429, json: async () => ({}) }; };
+  r = await call(env, 'POST', '/api/vision', { body: { image: 'AAAA' } });
+  eq('all exhausted → 429', r.status, 429);
+  ok('  explains the quota resets', /quota|resets tomorrow/i.test(r.body.error), r.body.error);
+  ok('  suggests typing instead', /type the word/i.test(r.body.error), r.body.error);
+  eq('  tries each model once, no retries on quota', attempts, 3);
+}
+
 console.log('== vision failures stay quiet about internals ==');
 {
   const env = makeEnv();
   geminiHandler = async () => ({ ok: false, status: 400, json: async () => ({
     error: { message: 'API key not valid: test-key-do-not-log' } }) });
   const r = await call(env, 'POST', '/api/vision', { body: { image: 'AAAA' } });
-  eq('upstream failure → 502', r.status, 502);
+  eq('a genuine error is not retried around → 502', r.status, 502);
   ok('upstream message is not forwarded', !JSON.stringify(r.body).includes('test-key-do-not-log'), JSON.stringify(r.body));
-
-  geminiHandler = async () => ({ ok: false, status: 429, json: async () => ({}) });
-  const r2 = await call(env, 'POST', '/api/vision', { body: { image: 'AAAA' } });
-  eq('upstream 429 is passed through as 429', r2.status, 429);
 
   geminiHandler = async () => { throw new Error('network down'); };
   const r3 = await call(env, 'POST', '/api/vision', { body: { image: 'AAAA' } });
-  eq('network failure → 502', r3.status, 502);
+  eq('network failure exhausts the chain → 429', r3.status, 429);
 
   geminiHandler = async () => ({ ok: true, json: async () => ({
     steps: [{ type: 'model_output', content: [{ type: 'text', text: 'not json at all' }] }] }) });
