@@ -15,6 +15,7 @@ let token = null;
 let claims = null;
 let listeners = [];
 let gsiReady = null;
+let initialised = null;
 
 const notify = () => listeners.forEach((fn) => fn(currentUser()));
 export const onAuthChange = (fn) => { listeners.push(fn); fn(currentUser()); };
@@ -59,7 +60,18 @@ function loadGsi() {
   return gsiReady;
 }
 
+/**
+ * Load Google's script and configure it. Idempotent, and returns the same
+ * promise to every caller, so nothing can use the library before
+ * `initialize()` has run.
+ */
 export async function initAuth() {
+  if (initialised) return initialised;
+  initialised = bootstrapAuth();
+  return initialised;
+}
+
+async function bootstrapAuth() {
   // A token kept for this tab only: sessionStorage clears when the tab closes,
   // and it is never written to localStorage where it would outlive the visit.
   try {
@@ -81,7 +93,10 @@ export async function initAuth() {
 }
 
 export async function renderSignInButton(element) {
-  await loadGsi();
+  // Waiting only for the script to load is not enough: renderButton before
+  // initialize() fails with "Missing required parameter: client_id", and which
+  // one wins is a race decided by network timing.
+  await initAuth();
   window.google.accounts.id.renderButton(element, {
     theme: 'outline', size: 'large', text: 'signin_with', shape: 'pill', width: 260,
   });
