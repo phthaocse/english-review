@@ -1,5 +1,5 @@
 {
- "generated": "2026-09-25 15:11",
+ "generated": "2026-09-25 15:21",
  "items": [
   {
    "id": "I'm not following",
@@ -29,6 +29,8 @@
    "meaning": "a softer way of saying \"I don't understand\"",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "Sorry, **I'm not following** — could you go back a step?",
@@ -68,6 +70,8 @@
    "meaning": "as stated by a source",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "**According to** the logs, the retry never fired.",
@@ -116,6 +120,8 @@
    "meaning": "to say that somebody has done something wrong or is guilty of something",
    "register": "neutral",
    "pattern": "accuse sb OF sth / OF doing sth  (not: for)",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "He **accused** the frontier labs of being disingenuous about the risks.",
@@ -161,6 +167,8 @@
    "meaning": "enough in quantity, or good enough in quality, for a particular purpose",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "They'll need an **adequate** supply of hot water.",
@@ -209,6 +217,8 @@
    "meaning": "the total; everything added together",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "Per-query cost fell, but **aggregate** spend went up.",
@@ -254,6 +264,8 @@
    "meaning": "(of laws) preventing companies from controlling prices unfairly",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "He called for regulation of the labs for **antitrust** reasons.",
@@ -301,6 +313,8 @@
    "meaning": "the end of the world",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "Half of the AI discourse is about an **apocalypse** that never arrives.",
@@ -340,6 +354,8 @@
    "meaning": "disaster-like; used loosely for anything extreme",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "The post took an **apocalyptic** tone about job losses.",
@@ -388,6 +404,8 @@
    "meaning": "a decision about the fundamental structure of a system, expensive to reverse later",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "Choosing event sourcing was an **architectural decision**, not an implementation detail.",
@@ -436,6 +454,8 @@
    "meaning": "this is my understanding, and I may be wrong",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "**As I understand it**, the consumer retries three times before dropping.",
@@ -473,6 +493,8 @@
    "meaning": "the preposition frame for *ask*",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "I'll **ask** Minh **about** the index.",
@@ -524,6 +546,8 @@
    "meaning": "past the point where logic applies",
    "register": "neutral",
    "pattern": "beyond reason  (no article)",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "The thread went **beyond reason** about twenty replies ago.",
@@ -564,6 +588,8 @@
    "meaning": "(computing) how much of a system is affected when one part fails",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "We wanted to reduce the **blast radius** of any single region outage.",
@@ -612,6 +638,8 @@
    "meaning": "hard but easily broken",
    "register": "neutral",
    "pattern": "",
+   "image": "brittle.svg",
+   "imageAlt": "A rigid rod snapping sharply under downward pressure",
    "examples": [
     {
      "md": "The coordination process proved increasingly **brittle** and inefficient.",
@@ -661,6 +689,8 @@
    "meaning": "(computing) containing many errors; (Oxford) a small light vehicle",
    "register": "informal",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "One team rolled back to a previously **buggy** client, causing the outage.",
@@ -709,6 +739,8 @@
    "meaning": "to expand something into a fuller, more complete version",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "They scaled while simultaneously **building out** a mature platform.",
@@ -757,6 +789,8 @@
    "meaning": "to give up an advantage or a position to a rival",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "A slowdown would **cede ground** to China in the AI race.",
@@ -804,6 +838,8 @@
    "meaning": "the sound of a lot of people expressing approval or disapproval at the same time",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "The proposal was met with **a chorus of** complaints.",
@@ -851,6 +887,8 @@
    "meaning": "adjectives that naturally go with *front-runner*",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "They're **the clear front-runner** for the contract.",
@@ -896,6 +934,8 @@
    "meaning": "to find or meet by chance",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "I **came across** this pattern while reading the consumer code.",
@@ -945,6 +985,8 @@
    "meaning": "a serious competitor",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "Three **contenders** are left in the tender.",
@@ -992,6 +1034,8 @@
    "meaning": "nouns that naturally follow *counterculture*",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "He became **a counterculture figure** almost by accident.",
@@ -1041,6 +1085,8 @@
    "meaning": "a culture that opposes the mainstream",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "Open source began as a **counterculture** and became the default.",
@@ -1081,6 +1127,8 @@
    "meaning": "true, but it feels wrong at first",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "The result is **counterintuitive**: adding a cache made the endpoint slower.",
@@ -1128,6 +1176,8 @@
    "meaning": "achieving the opposite of what you wanted",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "Adding more reviewers was **counterproductive** — the MR sat for a week.",
@@ -1177,6 +1227,8 @@
    "meaning": "three senses — see below",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "They fended off storage and compute capacity **crunches**.",
@@ -1263,6 +1315,8 @@
    "meaning": "an unknown who does surprisingly well",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "That start-up is **the dark horse** of the whole sector.",
@@ -1302,6 +1356,8 @@
    "meaning": "in a way that shows skill; with quick, skilful movements",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "Habitat had to **deftly** operate at massive scale.",
@@ -1351,6 +1407,8 @@
    "meaning": "to make something worse in quality; to treat somebody without respect",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "Latency **degraded** steadily as the pool concentrated traffic on one pod.",
@@ -1437,6 +1495,8 @@
    "meaning": "two words in one spelling — see below",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "That was a **deliberate** choice, not an accident.",
@@ -1523,6 +1583,8 @@
    "meaning": "not sincere, especially when you pretend to know less about something than you really do",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "He called the AI leaders **disingenuous** for demanding rules they want to escape.",
@@ -1572,6 +1634,8 @@
    "meaning": "rigidly following doctrine, regardless of the facts",
    "register": "formal",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "The review was **doctrinaire** — every comment cited the style guide, none the bug.",
@@ -1613,6 +1677,8 @@
    "meaning": "someone who believes the future will be catastrophic",
    "register": "informal",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "Don't let the leather jacket fool you — Huang isn't a **doomer**.",
@@ -1662,6 +1728,8 @@
    "meaning": "the end of the world; (informal) a very long time",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "Warnings about a **doomsday** scenario are not grounded in science.",
@@ -1710,6 +1778,8 @@
    "meaning": "to repeat an idea or opinion because you agree with it",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "This is a view **echoed** by many others.",
@@ -1759,6 +1829,8 @@
    "meaning": "output per unit of input",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "Jevons' paradox says a gain in **efficiency** can raise total demand.",
@@ -1808,6 +1880,8 @@
    "meaning": "how strongly demand responds to a change in price",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "Jevons' paradox only bites when demand has high **elasticity**.",
@@ -1856,6 +1930,8 @@
    "meaning": "to become recognised as something over time",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "He **emerged as** a key figure in the campaign.",
@@ -1905,6 +1981,8 @@
    "meaning": "to make sure that people obey a particular law or rule",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "This is where we centrally **enforce** access control policies.",
@@ -1953,6 +2031,8 @@
    "meaning": "a mysterious person",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "He's something of an **enigma** — nobody knows what he actually works on.",
@@ -1991,6 +2071,8 @@
    "meaning": "a matching word or thing",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "What's the English **equivalent** of *giáo điều*?",
@@ -2036,6 +2118,8 @@
    "meaning": "a historical period",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "We're in the early **era** of AI tooling.",
@@ -2084,6 +2168,8 @@
    "meaning": "someone extreme about a cause",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "He's a **fanatic** about test coverage.",
@@ -2131,6 +2217,8 @@
    "meaning": "an action or piece of work that needs skill, strength or courage",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "Building infrastructure at this scale is no easy **feat**.",
@@ -2178,6 +2266,8 @@
    "meaning": "to defend yourself against something attacking you; to hold off difficult questions or problems",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "They **fended off** capacity crunches to buy time for foundational investments.",
@@ -2226,6 +2316,8 @@
    "meaning": "a first-order concern is the most important one; a second-order concern is a knock-on effect",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "Data loss is **a first-order concern**; the log format is **second-order**.",
@@ -2274,6 +2366,8 @@
    "meaning": "to release something for other use",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "Dropping the index **freed up** 40 GB.",
@@ -2323,6 +2417,8 @@
    "meaning": "a rise from expected loser to leader",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "It's been quite a story — **from underdog to front-runner** in eighteen months.",
@@ -2365,6 +2461,8 @@
    "meaning": "the one currently leading",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "They're the clear **front-runner** for the contract.",
@@ -2413,6 +2511,8 @@
    "meaning": "the limit of what is known in a subject; also a border between countries",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "to push back the **frontiers** of science",
@@ -2460,6 +2560,8 @@
    "meaning": "three senses — see below",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "The building of the new bridge will **go ahead** as planned.",
@@ -2546,6 +2648,8 @@
    "meaning": "to drift off topic",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "Sorry, I **went off on a tangent** — back to the migration.",
@@ -2586,6 +2690,8 @@
    "meaning": "to lose control of your life",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "The project **went off the rails** after the third re-scope.",
@@ -2628,6 +2734,8 @@
    "meaning": "six distinct senses — see below",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "He **went off** to take a break.",
@@ -2750,6 +2858,8 @@
    "meaning": "to resign formally",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "She **handed in her notice** on Monday.",
@@ -2798,6 +2908,8 @@
    "meaning": "a small, imprecise number of things — roughly a few",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "Only **a handful of** server connections were affected.",
@@ -2845,6 +2957,8 @@
    "meaning": "to make it difficult for somebody to do something or for something to happen",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "a political situation that **hinders** economic growth",
@@ -2890,6 +3004,8 @@
    "meaning": "the people side of an organisation; the HR department",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "**Human resources** handles the contract, not the team lead.",
@@ -2930,6 +3046,8 @@
    "meaning": "someone who says one thing and does another",
    "register": "insult",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "Calling someone a **hypocrite** in a review will end the conversation.",
@@ -2970,6 +3088,8 @@
    "meaning": "driven by doctrine rather than evidence",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "The objection was **ideological**, not technical.",
@@ -3009,6 +3129,8 @@
    "meaning": "in fact, the opposite is true",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "It didn't help. **If anything**, it made the latency worse.",
@@ -3056,6 +3178,8 @@
    "meaning": "when everything is added together",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "Each call is cheap, but **in aggregate** it's our biggest line item.",
@@ -3095,6 +3219,8 @@
    "meaning": "ranked from most to least important",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "Here are the blockers, **in order of priority**.",
@@ -3134,6 +3260,8 @@
    "meaning": "a sudden attack on a place by foreign forces; an unwanted appearance of something in an area",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "We viewed this as a strategic **incursion** of technical debt.",
@@ -3181,6 +3309,8 @@
    "meaning": "not possible to do or achieve",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "Backward-compatible protocol changes had become **infeasible**.",
@@ -3228,6 +3358,8 @@
    "meaning": "action taken to improve or help a situation",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "calls for government **intervention** to save the steel industry",
@@ -3277,6 +3409,8 @@
    "meaning": "it is logical; it follows naturally",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "**It stands to reason** that cheaper inference means more calls.",
@@ -3317,6 +3451,8 @@
    "meaning": "to jump ahead of a competitor",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "The new release **leapfrogged** everything on the market.",
@@ -3365,6 +3501,8 @@
    "meaning": "keeping something in memory over a long period",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "Spacing your reviews is what drives **long-term retention**.",
@@ -3414,6 +3552,8 @@
    "meaning": "a madman",
    "register": "insult",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "Calling them **lunatics** ends the discussion rather than winning it.",
@@ -3455,6 +3595,8 @@
    "meaning": "the dominant, conventional culture",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "The tool went **mainstream** after the 2.0 release.",
@@ -3503,6 +3645,8 @@
    "meaning": "to make something stay in memory",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "Writing your own example sentences is what **makes it stick**.",
@@ -3551,6 +3695,8 @@
    "meaning": "a very large size of operation",
    "register": "neutral",
    "pattern": "ON a massive scale (everyday) / AT massive scale (engineering)",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "Habitat had to operate at **massive scale**.",
@@ -3599,6 +3745,8 @@
    "meaning": "essential for an organization to function successfully",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "Habitat had to become reliable enough for **mission-critical** product traffic.",
@@ -3648,6 +3796,8 @@
    "meaning": "to leave a job (vague and polite)",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "Minh has **moved on** — today is his last day.",
@@ -3696,6 +3846,8 @@
    "meaning": "(computing) one system instance serving many separate customers with their data kept isolated",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "We'll write about how we made **multi-tenancy** reliable at scale.",
@@ -3744,6 +3896,8 @@
    "meaning": "extremely large in number",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "The products could harm people in **myriad** forms.",
@@ -3793,6 +3947,8 @@
    "meaning": "to make something necessary",
    "register": "neutral",
    "pattern": "necessitate sth / doing sth  (never: to do)",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "Changes to the client library **necessitated** complex coordination across dozens of services.",
@@ -3842,6 +3998,8 @@
    "meaning": "the one most expected to win",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "They're **the odds-on favourite** to win the tender.",
@@ -3881,6 +4039,8 @@
    "meaning": "a factor of ten",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "That's **an order of magnitude** slower than the old query.",
@@ -3929,6 +4089,8 @@
    "meaning": "two opposite senses — see below",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "The missing index was an **oversight**, not a decision.",
@@ -4003,6 +4165,8 @@
    "meaning": "a self-contradictory thing that turns out to be true; or a person of odd contradictions",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "Jevons' paradox: making a resource cheaper to use can increase total consumption.",
@@ -4048,6 +4212,8 @@
    "meaning": "contradictory and yet true",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "It seems **paradoxical**, but the faster the model runs, the more compute we end up buying.",
@@ -4088,6 +4254,8 @@
    "meaning": "to route traffic to a specific target and hold it there instead of letting it move",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "The load balancer **was pinning more traffic** to the healthy region.",
@@ -4136,6 +4304,8 @@
    "meaning": "very simple or belonging to an early stage of development; (computing) a basic building block",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "A centralized service gives us a single chokepoint for the strongest security **primitives**.",
@@ -4183,6 +4353,8 @@
    "meaning": "important or well known",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "He played a **prominent** part in the campaign.",
@@ -4230,6 +4402,8 @@
    "meaning": "each point of a fork; each separate part of an attack or an argument",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "One of those **prongs** was a call for antitrust regulation.",
@@ -4278,6 +4452,8 @@
    "meaning": "to set something up so that it is ready and working",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "We'll hold the rollout until monitoring is **put in place**.",
@@ -4323,6 +4499,8 @@
    "meaning": "to look for or discover a meaning in something that is not openly stated",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "**Reading between the lines**, I think Clare needs money.",
@@ -4371,6 +4549,8 @@
    "meaning": "the capacity for logic",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "The argument is beyond **reason** at this point.",
@@ -4421,6 +4601,8 @@
    "meaning": "a bouncing back; the portion of an efficiency saving that gets eaten back by extra use",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "The **rebound** effect cancelled most of the saving.",
@@ -4468,6 +4650,8 @@
    "meaning": "to repeat something you have already said, especially to emphasize it",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "Let me **reiterate** the one constraint that matters.",
@@ -4516,6 +4700,8 @@
    "meaning": "three senses — see below",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "They're asking to be **relieved of** the laws we do have.",
@@ -4603,6 +4789,8 @@
    "meaning": "feeling happy because something unpleasant has stopped or has not happened",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "I'm just **relieved** that nobody was hurt.",
@@ -4648,6 +4836,8 @@
    "meaning": "to need",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "This endpoint **requires** an auth token.",
@@ -4697,6 +4887,8 @@
    "meaning": "to quit a job formally",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "She **resigned** last Friday.",
@@ -4745,6 +4937,8 @@
    "meaning": "to keep or hold on to",
    "register": "formal",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "The cache **retains** the last four URLs.",
@@ -4793,6 +4987,8 @@
    "meaning": "to support the weaker side",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "British audiences almost always **root for the underdog**.",
@@ -4833,6 +5029,8 @@
    "meaning": "to support; to cheer for",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "I'm **rooting for** them to land the contract.",
@@ -4881,6 +5079,8 @@
    "meaning": "performance getting worse in a self-reinforcing loop that cannot be stopped from inside",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "Retries on a slow endpoint caused **runaway degradation** — each retry added load that made it slower.",
@@ -4928,6 +5128,8 @@
    "meaning": "the strip an aircraft takes off from; (business) how long your money lasts before it runs out",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "The plane taxied along the **runway**.",
@@ -4977,6 +5179,8 @@
    "meaning": "something designed to protect people from harm, risk or danger",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "Stronger legal **safeguards** are needed to protect the consumer.",
@@ -5025,6 +5229,8 @@
    "meaning": "to say exactly that, without necessarily using those words",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "He **said as much** in the standup — the release is slipping.",
@@ -5072,6 +5278,8 @@
    "meaning": "(computing) sending a copy of real traffic to a new system to compare its results without using them",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "We wanted to introduce some **shadowing** to ensure the sharding logic would be correct.",
@@ -5120,6 +5328,8 @@
    "meaning": "to spread someone else's message so that more people see it",
    "register": "informal",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "The essay was **signal-boosted** by Altman and Musk.",
@@ -5165,6 +5375,8 @@
    "meaning": "to use time on something",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "I **spent** two days **on** that bug.",
@@ -5215,6 +5427,8 @@
    "meaning": "to extract every last bit of value or performance from something you already have",
    "register": "informal",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "They worked at the lowest level to **squeeze as much juice out of** their existing stack as possible.",
@@ -5263,6 +5477,8 @@
    "meaning": "so great, shocking or surprising that it is difficult to believe",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "We scaled to support **staggering** user growth.",
@@ -5312,6 +5528,8 @@
    "meaning": "processing that has stopped making progress without having failed",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "We found **stalled processing** on three partitions — the consumer was alive but not advancing.",
@@ -5362,6 +5580,8 @@
    "meaning": "to leave a senior position",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "She **stepped down** as CTO in May.",
@@ -5409,6 +5629,8 @@
    "meaning": "to leave work briefly",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "I'm going to **step out** for ten minutes.",
@@ -5456,6 +5678,8 @@
    "meaning": "to limit yourself to something",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "Let's **stick to** the agenda.",
@@ -5503,6 +5727,8 @@
    "meaning": "two senses — see below",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "They hope the new rules will not **stifle** creativity.",
@@ -5576,6 +5802,8 @@
    "meaning": "to have your resources used so heavily that there is nothing left spare",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "The pandemic has **stretched** healthcare resources **to the limit**.",
@@ -5625,6 +5853,8 @@
    "meaning": "a smaller culture inside a bigger one",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "Every engineering team develops its own **subculture**.",
@@ -5666,6 +5896,8 @@
    "meaning": "large in amount, value or importance",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "Python added **substantial** CPU and memory scaling costs.",
@@ -5713,6 +5945,8 @@
    "meaning": "very likely to be influenced, harmed or affected by something",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "The process was **susceptible** to operational failures.",
@@ -5758,6 +5992,8 @@
    "meaning": "the fixed comparison frame for sameness",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "It returns **the same** shape **as** the v1 endpoint.",
@@ -5807,6 +6043,8 @@
    "meaning": "having three separate parts or lines of attack",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "Amodei proposed a **three-pronged** plan.",
@@ -5855,6 +6093,8 @@
    "meaning": "to stop caring about how dangerous something might be; to start taking risks",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "Python lets us move quickly, but we couldn't **throw caution to the wind** and accept worse latencies.",
@@ -5900,6 +6140,8 @@
    "meaning": "the written phonetic form of a word",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "The **transcription** /ˈzelət/ shows the surprising vowel.",
@@ -5939,6 +6181,8 @@
    "meaning": "to be revealed, in the end",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "It **turned out** that the bug was in the retry logic.",
@@ -5995,6 +6239,8 @@
    "meaning": "(of a reason) kept hidden and not admitted",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "They must be doing it for **ulterior** reasons.",
@@ -6042,6 +6288,8 @@
    "meaning": "nouns that naturally follow *underdog*",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "It's a classic **underdog story**.",
@@ -6092,6 +6340,8 @@
    "meaning": "the one expected to lose",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "We went into the pitch as the **underdog**.",
@@ -6140,6 +6390,8 @@
    "meaning": "demand that exists but is not currently being served",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "Jevons' paradox needs a pool of **unmet demand** to draw on.",
@@ -6180,6 +6432,8 @@
    "meaning": "that has never happened, been done or been known before",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "We had to scale at an **unprecedented** rate.",
@@ -6229,6 +6483,8 @@
    "meaning": "an arrangement to risk money on the result of an event; a bet",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "We made a calculated **wager** that our coding models would simplify the path.",
@@ -6276,6 +6532,8 @@
    "meaning": "explain it to me step by step",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "Can you **walk me through** the retry logic?",
@@ -6324,6 +6582,8 @@
    "meaning": "a person full of contradictions",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "He's **a walking paradox** — a privacy advocate who logs everything.",
@@ -6365,6 +6625,8 @@
    "meaning": "to know something thoroughly from having read, seen or experienced it",
    "register": "formal",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "Anyone on the on-call rota should be **well acquainted with** the runbook.",
@@ -6412,6 +6674,8 @@
    "meaning": "what I actually wanted",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "That's not quite **what I was after** — I meant the p99, not the average.",
@@ -6451,6 +6715,8 @@
    "meaning": "with no problems at all",
    "register": "neutral",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "The deploy went **without a hitch**.",
@@ -6501,6 +6767,8 @@
    "meaning": "an uncompromising fanatic",
    "register": "formal",
    "pattern": "",
+   "image": "",
+   "imageAlt": "",
    "examples": [
     {
      "md": "The debate is dominated by **zealots** on both sides.",

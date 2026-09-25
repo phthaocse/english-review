@@ -118,12 +118,19 @@ console.log('== vision: the key never leaves the Worker ==');
 {
   const env = makeEnv();
   let sentHeaders = null, sentBody = null;
+  // The real Interactions response: a 'thought' step, then 'model_output'.
   geminiHandler = async (_href, init) => {
     sentHeaders = init.headers; sentBody = JSON.parse(init.body);
-    return { ok: true, json: async () => ({ output_text: JSON.stringify({ items: [
-      { term: 'go off', kind: 'phrasal-verb', meaning: 'to explode', vi: null,
-        example: 'The alarm **went off**.', confidence: 'high' },
-    ] }) }) };
+    return { ok: true, json: async () => ({
+      id: 'v1_abc', status: 'completed', object: 'interaction', model: 'gemini-3.8-flash',
+      steps: [
+        { type: 'thought', signature: 'xxx' },
+        { type: 'model_output', content: [{ type: 'text', text: JSON.stringify({ items: [
+            { term: 'go off', kind: 'phrasal-verb', meaning: 'to explode', vi: null,
+              example: 'The alarm **went off**.', confidence: 'high' },
+        ] }) }] },
+      ],
+    }) };
   };
 
   const r = await call(env, 'POST', '/api/vision', { body: { image: 'AAAA', mimeType: 'image/png' } });
@@ -160,7 +167,8 @@ console.log('== vision failures stay quiet about internals ==');
   const r3 = await call(env, 'POST', '/api/vision', { body: { image: 'AAAA' } });
   eq('network failure → 502', r3.status, 502);
 
-  geminiHandler = async () => ({ ok: true, json: async () => ({ output_text: 'not json at all' }) });
+  geminiHandler = async () => ({ ok: true, json: async () => ({
+    steps: [{ type: 'model_output', content: [{ type: 'text', text: 'not json at all' }] }] }) });
   const r4 = await call(env, 'POST', '/api/vision', { body: { image: 'AAAA' } });
   eq('unparseable model output → 502', r4.status, 502);
 }
@@ -168,7 +176,8 @@ console.log('== vision failures stay quiet about internals ==');
 console.log('== vision input limits ==');
 {
   const env = makeEnv();
-  geminiHandler = async () => ({ ok: true, json: async () => ({ output_text: '{"items":[]}' }) });
+  geminiHandler = async () => ({ ok: true, json: async () => ({
+    steps: [{ type: 'model_output', content: [{ type: 'text', text: '{"items":[]}' }] }] }) });
   let r = await call(env, 'POST', '/api/vision', { body: {} });
   eq('missing image → 400', r.status, 400);
   r = await call(env, 'POST', '/api/vision', { body: { image: 'A'.repeat(7 * 1024 * 1024) } });
@@ -180,7 +189,8 @@ console.log('== vision input limits ==');
 console.log('== daily quota bounds a stolen token ==');
 {
   const env = makeEnv();
-  geminiHandler = async () => ({ ok: true, json: async () => ({ output_text: '{"items":[]}' }) });
+  geminiHandler = async () => ({ ok: true, json: async () => ({
+    steps: [{ type: 'model_output', content: [{ type: 'text', text: '{"items":[]}' }] }] }) });
   let last;
   for (let i = 0; i < 52; i++) last = await call(env, 'POST', '/api/vision', { body: { image: 'AAAA' } });
   eq('blocked once over the daily limit', last.status, 429);
@@ -190,20 +200,27 @@ console.log('== daily quota bounds a stolen token ==');
 
 console.log('== parseItems tolerates model sloppiness ==');
 {
-  const items = parseItems({ output_text: JSON.stringify({ items: [
+  const steps = (text) => ({ steps: [{ type: 'thought' }, { type: 'model_output', content: [{ type: 'text', text }] }] });
+  const items = parseItems(steps(JSON.stringify({ items: [
     { term: '  spaced  ', kind: 'word', confidence: 'high' },
     { term: 'x', kind: 'not-a-kind', confidence: 'wat' },
     { term: '', kind: 'word' },
     { notterm: 1 },
     null,
-  ] }) });
+  ] })));
   eq('drops entries without a term', items.length, 2);
   eq('trims the term', items[0].term, 'spaced');
   eq('falls back to word for an unknown kind', items[1].kind, 'word');
   eq('falls back to low confidence', items[1].confidence, 'low');
 
-  eq('reads the candidates shape too',
-    parseItems({ candidates: [{ content: { parts: [{ text: '{"items":[{"term":"a","kind":"word","confidence":"high"}]}' }] } }] })[0].term, 'a');
+  eq('reads the real steps shape',
+    parseItems(steps('{"items":[{"term":"a","kind":"word","confidence":"high"}]}'))[0].term, 'a');
+  eq('still reads the older candidates shape',
+    parseItems({ candidates: [{ content: { parts: [{ text: '{"items":[{"term":"b","kind":"word","confidence":"high"}]}' }] } }] })[0].term, 'b');
+  eq('ignores thought steps', parseItems({ steps: [
+    { type: 'thought', content: [{ type: 'text', text: '{"items":[{"term":"WRONG","kind":"word","confidence":"high"}]}' }] },
+    { type: 'model_output', content: [{ type: 'text', text: '{"items":[{"term":"right","kind":"word","confidence":"high"}]}' }] },
+  ] })[0].term, 'right');
 
   let threw = null;
   try { parseItems({ nothing: true }); } catch (e) { threw = e; }

@@ -267,18 +267,87 @@ mark { background: var(--accent-soft); color: inherit; padding: 0 2px; border-ra
 .weak-row { display: flex; align-items: center; gap: 10px; padding: 9px 13px; background: var(--surface-2); border-radius: 9px; text-decoration: none; color: inherit; }
 .weak-row:hover { background: var(--accent-soft); }
 
-@media (max-width: 560px) {
-  .statgrid { grid-template-columns: repeat(2, 1fr); }
-  /* Too narrow for one row: give the title its own line so the tabs and the
-     theme button share the second one instead of the button wrapping alone. */
-  .wordmark { font-size: .92rem; flex: 1 1 100%; }
-  .tabs { margin-left: 0; }
-  #theme-toggle { margin-left: auto; }
-  .tabs a { padding: 6px 10px; font-size: .85rem; }
-  .view { padding: 16px 14px 56px; }
-  .item-term { font-size: 1.65rem; }
-  .quiz { padding: 20px 16px; }
-  .bar-row { grid-template-columns: 96px 1fr 40px; font-size: .82rem; }
+/* =========================================================== mobile ======
+   This is mostly used on a phone, so the phone layout is the real one: the
+   header collapses to one row and navigation moves to the bottom, within thumb
+   reach, the way a native app puts it. The header previously took three rows —
+   title, tabs, account — before any content appeared. */
+@media (max-width: 700px) {
+  /* backdrop-filter makes an element a containing block for its fixed-position
+     descendants, which would anchor the tab bar to the header instead of the
+     viewport. The header is small enough not to need the blur. */
+  .topbar { backdrop-filter: none; background: var(--bg); }
+  .topbar-inner { flex-wrap: nowrap; gap: 8px; padding: 8px 14px; align-items: center; }
+
+  /* "Englis…" helps nobody. The mark alone identifies the app, and the tab bar
+     says which screen you are on. */
+  .wordmark { font-size: 0; flex: 0 0 auto; }
+  .wordmark span { font-size: 1.25rem; }
+
+  #theme-toggle { margin-left: auto; order: 2; }
+  /* Signing out is the rarest action here, so it stops shouting. */
+  .account-bar { flex-basis: auto; margin-left: 6px; order: 3; gap: 6px; }
+  .account-bar .btn { padding: 7px 11px; font-size: .78rem; font-weight: 500; }
+  /* The address stays in the DOM; on a phone the screen is worth more than the
+     reminder, so it lives on the Progress tab instead. */
+  .account-bar > span.muted { display: none; }
+
+  .tabs {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 30;
+    margin: 0; gap: 2px; justify-content: space-around;
+    background: color-mix(in srgb, var(--bg) 94%, transparent);
+    backdrop-filter: saturate(1.6) blur(12px);
+    border-top: 1px solid var(--border);
+    padding: 6px 8px calc(6px + env(safe-area-inset-bottom, 0px));
+  }
+  .tabs a { flex: 1 1 0; text-align: center; padding: 13px 4px; border-radius: 10px;
+            font-size: .78rem; font-weight: 600; letter-spacing: -.01em; }
+
+  /* Clear the fixed bar so the last card is never trapped beneath it. */
+  .view { padding: 14px 14px 104px; }
+  .foot { padding: 0 14px calc(96px + env(safe-area-inset-bottom, 0px)); }
+  body.signed-out .tabs { display: none; }
+  body.signed-out .view { padding-bottom: 40px; }
+  body.signed-out h2.section { display: block; }
+
+  /* Searching is the commonest thing done here, so the box stays put. */
+  .searchwrap { position: sticky; top: 52px; z-index: 10;
+                margin: 0 -14px 12px; padding: 0 14px 10px;
+                background: linear-gradient(var(--bg) 78%, transparent); }
+
+  /* The tab bar already names the screen, so the page heading repeats it.
+     Removing it puts the first result a screenful higher. */
+  h2.section { display: none; }
+  .view > .lede:first-child, h2.section + .lede { margin-top: 0; }
+  .lede { margin-bottom: 12px; }
+
+  .statgrid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .item-term { font-size: 1.6rem; }
+  .item-head { padding: 18px 16px 15px; }
+  .block { padding: 15px 16px; margin-bottom: 11px; }
+  .quiz { padding: 18px 15px; }
+  .bar-row { grid-template-columns: 92px 1fr 38px; font-size: .82rem; }
+  .prompt { font-size: 1.12rem; }
+  .prompt-serif { font-size: 1.5rem; }
+  .lede { margin-bottom: 16px; font-size: .94rem; }
+  h2.section { font-size: 1.22rem; }
+
+  /* Thumbs, not cursors: nothing tappable much below 44px. */
+  .btn { padding: 13px 18px; }
+  .btn.small { padding: 10px 14px; }
+  .chip { padding: 9px 13px; font-size: .82rem; }
+  .option { padding: 15px; }
+  .result { padding: 14px 15px; }
+  .icon-btn { width: 36px; height: 36px; }
+  /* 16px is the threshold below which iOS zooms the page on focus. */
+  .answer, .search { padding: 14px 15px; font-size: 16px; }
+
+  /* The term and its IPA stop competing for one line. */
+  .result-top { gap: 6px; }
+  .result-ipa { flex-basis: 100%; order: 3; }
+  /* Supporting the definition, not competing with it — capped so the word,
+     meaning and pattern still share the first screen. */
+  .item-image { max-width: 100%; max-height: 190px; object-fit: contain; }
 }
 
 /* -------------------------------------------------------------- capture --- */
@@ -304,7 +373,6 @@ select.answer { appearance: none; background-image: none; }
 /* ---------------------------------------------------------------- account -- */
 .account-bar { display: flex; align-items: center; gap: 9px; font-size: .84rem; flex-basis: 100%; justify-content: flex-end; }
 .gate { text-align: center; padding: 44px 22px; margin-top: 24px; }
-@media (max-width: 560px) { .account-bar { justify-content: flex-start; } }
 
 /* --------------------------------------------------------- signed-out ---- */
 /* The sign-in screen is one box: no nav to tease at, no build footer. */
@@ -334,3 +402,16 @@ body.signed-out .view { padding-top: 12vh; max-width: 460px; }
   font-size: .7rem; text-transform: uppercase; letter-spacing: .07em; color: var(--accent);
 }
 .result-pattern { font-family: var(--mono); font-size: .8rem; color: var(--accent); margin-top: 3px; }
+
+/* ------------------------------------------------------------- pictures -- */
+/* A picture carries a concrete meaning faster than a definition does, so it
+   sits above the pattern and below the gloss — read after the words, not
+   instead of them. */
+.item-image {
+  display: block; width: 100%; max-width: 340px; margin: 16px 0 0;
+  border-radius: 10px; border: 1px solid var(--border); background: var(--surface-2);
+}
+.verdict-image {
+  display: block; width: 100%; max-width: 200px; margin-top: 10px;
+  border-radius: 8px; border: 1px solid var(--border);
+}

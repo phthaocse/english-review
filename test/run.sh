@@ -18,3 +18,4 @@ sleep 1
 echo "── site ──";    BASE="http://localhost:$PORT" node test/ui.test.mjs
 echo "── capture ──"; BASE="http://localhost:$PORT" node test/capture.test.mjs
 echo "── sign-in gate ──"; BASE="http://localhost:$PORT" node test/gate.test.mjs
+echo "── mobile layout ──"; BASE="http://localhost:$PORT" node test/mobile.test.mjs

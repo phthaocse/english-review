@@ -110,13 +110,24 @@ export async function launch() {
     return r.result.value;
   }
 
-  async function screenshot(path, width = 900, height = 1100) {
-    await send('Emulation.setDeviceMetricsOverride', {
-      width, height, deviceScaleFactor: 2, mobile: false });
-    const { data } = await send('Page.captureScreenshot', { format: 'png', captureBeyondViewport: true });
+  /**
+   * `fullPage` captures beyond the viewport, which on a long list produces a
+   * 45,000px image nobody can read. Default to what a phone actually shows.
+   */
+  /** Resize the viewport and give the page a moment to reflow against it. */
+  async function setViewport(width, height, { mobile = false, deviceScaleFactor = 2 } = {}) {
+    await send('Emulation.setDeviceMetricsOverride', { width, height, deviceScaleFactor, mobile });
+    // Setting metrics does not synchronously relayout; capturing immediately
+    // photographs the previous layout at the new size.
+    await new Promise((r) => setTimeout(r, 350));
+  }
+
+  async function screenshot(path, width = 900, height = 1100, { fullPage = false, mobile = false } = {}) {
+    await setViewport(width, height, { mobile });
+    const { data } = await send('Page.captureScreenshot', { format: 'png', captureBeyondViewport: fullPage });
     (await import('node:fs')).writeFileSync(path, Buffer.from(data, 'base64'));
   }
 
-  return { goto, evaluate, screenshot, addInitScript, consoleErrors,
+  return { goto, evaluate, screenshot, setViewport, addInitScript, consoleErrors,
            close: () => { ws.close(); proc.kill('SIGKILL'); } };
 }

@@ -116,11 +116,28 @@ export async function draftFromImage(image, env, { fetchImpl = fetch } = {}) {
   return { items: parseItems(payload) };
 }
 
-/** Pull the model's JSON out of whichever field carries it, and sanity-check it. */
-export function parseItems(payload) {
-  const text = payload?.output_text
+/**
+ * Pull the model's text out of the response.
+ *
+ * The Interactions API answers with a `steps` array: reasoning arrives as
+ * `type: 'thought'` steps and the answer as the `model_output` one, so the
+ * text has to be picked out rather than read off the top level. The older
+ * shapes are kept as fallbacks.
+ */
+export function modelText(payload) {
+  const steps = Array.isArray(payload?.steps) ? payload.steps : [];
+  const output = [...steps].reverse().find((s) => s?.type === 'model_output');
+  const fromStep = output?.content?.find((c) => typeof c?.text === 'string')?.text;
+
+  return fromStep
+    ?? payload?.output_text
     ?? payload?.output?.[0]?.content?.[0]?.text
     ?? payload?.candidates?.[0]?.content?.parts?.[0]?.text;
+}
+
+/** Pull the model's JSON out of the response, and sanity-check it. */
+export function parseItems(payload) {
+  const text = modelText(payload);
 
   if (typeof text !== 'string') throw new GeminiError('unexpected response from the image service');
 

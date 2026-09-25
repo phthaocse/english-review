@@ -474,6 +474,8 @@ function answer(rating, verdict, given) {
       <div class="verdict-body">
         ${showSolution ? `<div class="solution">${esc(q.solution)}</div>` : ''}
         ${q.after ? `<div class="muted" style="margin-top:6px">${q.after}</div>` : ''}
+        ${item.image ? `<img class="verdict-image" src="assets/words/${encodeURIComponent(item.image)}"
+               alt="${esc(item.imageAlt || item.term)}" loading="lazy">` : ''}
         ${showSolution && item.meaning ? `<div class="muted" style="margin-top:6px">${esc(item.meaning)}</div>` : ''}
       </div>
       <div class="next-hint">${note} ${nextAt ? `Back ${formatDue(nextAt)}.` : ''}</div>
@@ -648,6 +650,8 @@ function renderItem(id) {
       ${item.meaning ? `<p class="item-meaning">${esc(item.meaning)}</p>` : ''}
       ${item.ruleHtml && !item.meaning ? `<div class="item-meaning">${item.ruleHtml}</div>` : ''}
       ${item.vi ? `<p class="item-vi">${esc(item.vi)}</p>` : ''}
+      ${item.image ? `<img class="item-image" src="assets/words/${encodeURIComponent(item.image)}"
+             alt="${esc(item.imageAlt || item.meaning || item.term)}" loading="lazy">` : ''}
       ${item.pattern ? `<p class="item-pattern"><span>pattern</span> ${esc(item.pattern)}</p>` : ''}
       <div class="item-meta">
         <span class="pill accent">${TYPE_LABEL[item.type] || item.type}</span>
@@ -741,7 +745,7 @@ function renderProgress() {
 
   view.innerHTML = `
     <h2 class="section">Progress</h2>
-    <p class="lede">Stored in this browser only — export it if you want it on another device.</p>
+    <p class="lede">Signed in as ${esc(currentUser()?.email || '')}. Progress is stored on this device — export it to move it.</p>
 
     <div class="statgrid">
       <div class="card stat"><b>${studied.length}</b><span>started</span></div>

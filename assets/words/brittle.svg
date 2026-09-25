@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="A rigid rod snapping sharply under downward pressure">
+  <rect width="320" height="240" fill="#eef0f5"/>
+
+  <!-- the load pressing down -->
+  <g stroke="#7b8399" stroke-width="7" stroke-linecap="round" fill="none">
+    <path d="M160 28 V78"/>
+    <path d="M144 62 L160 80 L176 62"/>
+  </g>
+
+  <!-- supports -->
+  <rect x="34" y="150" width="34" height="46" rx="5" fill="#9aa2b4"/>
+  <rect x="252" y="150" width="34" height="46" rx="5" fill="#9aa2b4"/>
+
+  <!-- the rod, snapped clean: two pieces tilting away from a jagged break -->
+  <g fill="#4f46e5">
+    <path d="M44 138 L150 138 L158 150 L146 152 L44 152 Z"/>
+    <path d="M276 138 L170 138 L162 150 L174 152 L276 152 Z"/>
+  </g>
+
+  <!-- fracture shards -->
+  <g fill="#c0392f">
+    <path d="M150 138 L158 150 L152 133 Z"/>
+    <path d="M170 138 L162 150 L168 133 Z"/>
+  </g>
+
+  <!-- the snap, drawn as radiating cracks -->
+  <g stroke="#c0392f" stroke-width="3" stroke-linecap="round" fill="none" opacity=".85">
+    <path d="M160 126 L154 110"/>
+    <path d="M160 126 L166 108"/>
+    <path d="M160 164 L152 180"/>
+    <path d="M160 164 L170 178"/>
+  </g>
+</svg>
