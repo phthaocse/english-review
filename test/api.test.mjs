@@ -73,6 +73,7 @@ console.log('== capture ==');
   const env = makeEnv();
   let r = await call(env, 'POST', '/api/items', { body: {
     term: 'brittle', kind: 'word', meaning: 'hard but easily broken', vi: 'giòn, dễ vỡ',
+    pattern: 'spend + on / + -ing (not for)',
     examples: ['The service was **brittle** under load.'], tags: ['theme/engineering'], source: 'typed',
   }});
   eq('created → 201', r.status, 201);
@@ -80,6 +81,7 @@ console.log('== capture ==');
   eq('status defaults to captured', r.body.item.status, 'captured');
   eq('example stored with its bold target', r.body.item.examples[0], 'The service was **brittle** under load.');
   eq('tag stored', r.body.item.tags[0], 'theme/engineering');
+  eq('pattern stored', r.body.item.pattern, 'spend + on / + -ing (not for)');
   ok('attributed to the signed-in user', r.body.item.captured_by === 1, JSON.stringify(r.body.item.captured_by));
 
   r = await call(env, 'POST', '/api/items', { body: { term: 'brittle', kind: 'word' } });

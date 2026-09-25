@@ -57,6 +57,7 @@ async function boot() {
 function route() {
   const hash = location.hash.replace(/^#/, '') || '/review';
   const [, section, ...rest] = hash.split('/');
+  document.body.classList.toggle('signed-out', !currentUser());
   renderAccountBar();
   document.querySelectorAll('.tabs a').forEach((a) => {
     a.removeAttribute('aria-current');
@@ -76,6 +77,28 @@ function route() {
   return renderReview();
 }
 
+// Oxford resolves a direct entry for single words and phrasal verbs, but 404s
+// for idioms and collocations, so those go to its search page instead.
+const OXFORD = 'https://www.oxfordlearnersdictionaries.com';
+const CAMBRIDGE = 'https://dictionary.cambridge.org';
+const DIRECT_LOOKUP_KINDS = ['word', 'phrasal-verb'];
+
+function dictionaryLinks(item) {
+  const term = item.term.trim();
+  const slug = term.toLowerCase().replace(/[^a-z0-9\s-]/g, '').trim().replace(/\s+/g, '-');
+  const oxford = DIRECT_LOOKUP_KINDS.includes(item.type) && slug
+    ? `${OXFORD}/definition/english/${encodeURIComponent(slug)}`
+    : `${OXFORD}/search/english/?q=${encodeURIComponent(term)}`;
+  const cambridge = `${CAMBRIDGE}/search/english/direct/?q=${encodeURIComponent(term)}`;
+  return `
+    <a class="dict" href="${oxford}" target="_blank" rel="noopener noreferrer"
+       title="Look up &quot;${esc(term)}&quot; in the Oxford Learner's Dictionary">
+      <span aria-hidden="true">\u{1F4D6}</span> Oxford</a>
+    <a class="dict" href="${cambridge}" target="_blank" rel="noopener noreferrer"
+       title="Look up &quot;${esc(term)}&quot; in the Cambridge Dictionary">
+      <span aria-hidden="true">\u{1F4D5}</span> Cambridge</a>`;
+}
+
 /** A small account strip in the header, once signed in. */
 function renderAccountBar() {
   const existing = document.getElementById('account-bar');
@@ -93,6 +116,7 @@ function renderAccountBar() {
 }
 
 function renderSignInGate() {
+  document.body.classList.add('signed-out');
   view.innerHTML = `
     <div class="card block gate">
       <h2 class="section" style="margin-bottom:6px">English Review</h2>
@@ -597,6 +621,7 @@ function resultRow(item, q) {
         <span class="pill">${TYPE_LABEL[item.type] || item.type}</span>
       </div>
       <div class="result-gloss">${highlight(gloss, q)}</div>
+      ${item.pattern ? `<div class="result-pattern">${esc(item.pattern)}</div>` : ''}
       ${item.vi ? `<div class="result-vi">${highlight(item.vi, q)}</div>` : ''}
     </a>`;
 }
@@ -623,6 +648,7 @@ function renderItem(id) {
       ${item.meaning ? `<p class="item-meaning">${esc(item.meaning)}</p>` : ''}
       ${item.ruleHtml && !item.meaning ? `<div class="item-meaning">${item.ruleHtml}</div>` : ''}
       ${item.vi ? `<p class="item-vi">${esc(item.vi)}</p>` : ''}
+      ${item.pattern ? `<p class="item-pattern"><span>pattern</span> ${esc(item.pattern)}</p>` : ''}
       <div class="item-meta">
         <span class="pill accent">${TYPE_LABEL[item.type] || item.type}</span>
         ${item.cefr ? `<span class="pill">${esc(item.cefr.toUpperCase())}</span>` : ''}
@@ -632,6 +658,7 @@ function renderItem(id) {
         ${item.frequency ? `<span class="pill warn">${esc(item.frequency)}</span>` : ''}
         ${item.added ? `<span class="pill">added ${esc(item.added)}</span>` : ''}
       </div>
+      <div class="dict-row">${dictionaryLinks(item)}</div>
     </div>
 
     ${senses.length ? `

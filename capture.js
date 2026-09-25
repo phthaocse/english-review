@@ -63,6 +63,9 @@ function renderTypeForm(view) {
         <input class="answer" name="meaning" autocomplete="off" placeholder="hard but easily broken"></label>
       <label class="field"><span>Vietnamese <em class="muted">optional</em></span>
         <input class="answer" name="vi" autocomplete="off" placeholder="giòn, dễ vỡ"></label>
+      <label class="field"><span>Pattern <em class="muted">the preposition or structure it takes</em></span>
+        <input class="answer" name="pattern" autocomplete="off"
+               placeholder="spend + on / + -ing (not for)"></label>
       <label class="field"><span>Example <em class="muted">wrap the target in **asterisks**</em></span>
         <input class="answer" name="example" autocomplete="off"
                placeholder="The service was **brittle** under load."></label>
@@ -85,7 +88,7 @@ function renderTypeForm(view) {
     try {
       await api('/api/items', { method: 'POST', body: {
         term: data.term, kind: data.kind, meaning: data.meaning, vi: data.vi,
-        source: 'typed', source_note: data.source_note,
+        pattern: data.pattern, source: 'typed', source_note: data.source_note,
         examples: data.example ? [data.example] : [],
       }});
       form.reset();
@@ -189,6 +192,7 @@ function renderDraft(view) {
             <input class="answer" data-field="term" data-i="${i}" value="${esc(item.term)}" placeholder="term">
             <input class="answer" data-field="meaning" data-i="${i}" value="${esc(item.meaning || '')}" placeholder="meaning (optional)">
             <input class="answer" data-field="vi" data-i="${i}" value="${esc(item.vi || '')}" placeholder="Vietnamese (optional)">
+            <input class="answer" data-field="pattern" data-i="${i}" value="${esc(item.pattern || '')}" placeholder="pattern, e.g. spend + on / + -ing (optional)">
             <input class="answer" data-field="example" data-i="${i}" value="${esc(item.example || '')}" placeholder="example (optional)">
           </div>`).join('')}
       </div>
@@ -224,7 +228,7 @@ async function saveDraft(view) {
     try {
       await api('/api/items', { method: 'POST', body: {
         term: item.term, kind: item.kind, meaning: item.meaning, vi: item.vi,
-        source: 'photo', source_note: item.source_note,
+        pattern: item.pattern, source: 'photo', source_note: item.source_note,
         examples: item.example ? [item.example] : [],
       }});
       saved += 1;

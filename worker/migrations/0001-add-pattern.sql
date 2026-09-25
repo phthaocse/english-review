@@ -1,0 +1,11 @@
+-- Adds item.pattern to a database created before the column existed.
+--
+-- Run it as a command, not with --file: `wrangler d1 execute --file` goes
+-- through D1's import API, which an OAuth login (wrangler login) cannot reach
+-- and which fails with "Authentication error [code: 10000]".
+--
+--   wrangler d1 execute knowledge --remote --command "ALTER TABLE item ADD COLUMN pattern TEXT"
+--
+-- SQLite has no ADD COLUMN IF NOT EXISTS, so re-running errors harmlessly with
+-- "duplicate column name".
+ALTER TABLE item ADD COLUMN pattern TEXT;

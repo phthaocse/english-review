@@ -169,13 +169,16 @@ ok('vision call alone posted no items',
    true /* verified above: after the vision call, saved posts only happened on click */);
 
 console.log('== signing out ==');
+// Sign-out moved into the header bar, which every screen now shows.
 s = await B.evaluate(`
-  document.querySelector('#signout').click();
-  await new Promise(r => setTimeout(r, 300));
-  return { lede: document.querySelector('.lede')?.textContent,
+  document.querySelector('#global-signout').click();
+  await new Promise(r => setTimeout(r, 400));
+  return { gate: !!document.querySelector('.gate'),
+           chromeHidden: document.body.classList.contains('signed-out'),
            stored: sessionStorage.getItem('knowledge/idtoken') };
 `);
-ok('returns to the sign-in screen', /Sign in/.test(s.lede || ''), s.lede);
+ok('returns to the sign-in gate', s.gate);
+ok('nav and footer hidden on the gate', s.chromeHidden);
 eq('token discarded', s.stored, null);
 
 const appErrors = B.consoleErrors.filter((e) => !/GSI_LOGGER|FedCM|client ID/.test(e));

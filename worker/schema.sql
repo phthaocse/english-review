@@ -32,6 +32,9 @@ CREATE TABLE IF NOT EXISTS item (
   vi          TEXT,
   ipa         TEXT,
   cefr        TEXT,
+  -- The preposition or structure the word demands: "spend ON / -ing (not for)".
+  -- Knowing what a word means is not the same as being able to use it.
+  pattern     TEXT,
   register    TEXT,
   rule        TEXT,               -- grammar patterns / pronunciation rules / drills
   notes       TEXT,               -- markdown

@@ -66,6 +66,7 @@ function validateItem(body) {
     term, kind,
     meaning: body.meaning?.trim?.() || null,
     vi: body.vi?.trim?.() || null,
+    pattern: body.pattern?.trim?.()?.slice(0, 300) || null,
     rule: body.rule?.trim?.() || null,
     notes: body.notes?.trim?.() || null,
     source: ['photo', 'typed'].includes(body.source) ? body.source : 'typed',

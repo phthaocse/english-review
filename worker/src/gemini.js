@@ -31,13 +31,15 @@ Extract every English word or phrase the writer was learning. For each one give:
 - vi: the Vietnamese gloss ONLY if it is written in the photo; otherwise null
 - example: an example sentence ONLY if one appears in the photo; otherwise null.
   Wrap the target word in **double asterisks**.
+- pattern: the grammatical pattern the word takes, ONLY if the notes show one —
+  e.g. "spend + on / + -ing (not for)", "accuse sb of sth". Otherwise null.
 - source_note: any context the writer recorded about where they met it
 - confidence: high, medium or low — how sure you are you read the handwriting correctly
 
 Rules:
 - Transcribe, do not invent. If the handwriting is unclear, use low confidence
   and put your best reading in term.
-- Never invent a Vietnamese gloss or an example that is not in the photo.
+- Never invent a Vietnamese gloss, an example, or a pattern that is not in the photo.
 - Do not supply pronunciation or CEFR level; those are verified elsewhere.
 - Return an empty list if the image contains no English study notes.`;
 
@@ -54,6 +56,7 @@ const RESPONSE_SCHEMA = {
           meaning: { type: 'string', nullable: true },
           vi: { type: 'string', nullable: true },
           example: { type: 'string', nullable: true },
+          pattern: { type: 'string', nullable: true },
           source_note: { type: 'string', nullable: true },
           confidence: { type: 'string', enum: ['high', 'medium', 'low'] },
         },
@@ -137,6 +140,7 @@ export function parseItems(payload) {
       meaning: i.meaning?.trim() || null,
       vi: i.vi?.trim() || null,
       example: i.example?.trim() || null,
+      pattern: i.pattern?.trim() || null,
       source_note: i.source_note?.trim() || null,
       confidence: ['high', 'medium', 'low'].includes(i.confidence) ? i.confidence : 'low',
     }));
