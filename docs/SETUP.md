@@ -59,8 +59,23 @@ wrangler d1 execute knowledge --remote \
 
 ## 3. The Gemini key
 
+Never paste a key into a chat, and never pass one as a command argument —
+arguments are visible in `history` and in `ps` while the command runs. Type it
+once at a hidden prompt instead:
+
 ```bash
-wrangler secret put GEMINI_API_KEY      # paste the key when prompted
+./save-secret.sh GEMINI_API_KEY
+```
+
+That writes `~/.config/knowledge/secrets.env`, mode 600 in a mode 700
+directory, the same shape as the keys you already keep under
+`~/.config/ghn-mcp/`. `setup.sh` uploads it with `wrangler secret bulk`, which
+reads the file directly.
+
+To do it by hand:
+
+```bash
+wrangler secret bulk ~/.config/knowledge/secrets.env
 ```
 
 It is encrypted and **cannot be read back** — not from the CLI, not from the

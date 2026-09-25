@@ -12,9 +12,19 @@
 set -euo pipefail
 
 REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SECRETS_DIR="${KNOWLEDGE_SECRETS:-$HOME/.config/knowledge}"
+SECRETS_FILE="$SECRETS_DIR/secrets.env"
 TOML="$REPO/worker/wrangler.toml"
 CONFIG="$REPO/config.js"
 DB_NAME="knowledge"
+
+# Read a value from the private secrets file without ever echoing it.
+from_secrets() {
+  [ -f "$SECRETS_FILE" ] || return 1
+  local line
+  line=$(grep -m1 "^$1=" "$SECRETS_FILE" 2>/dev/null) || return 1
+  printf '%s' "${line#*=}"
+}
 
 bold()  { printf '\033[1m%s\033[0m\n' "$1"; }
 step()  { printf '\n\033[1m==> %s\033[0m\n' "$1"; }
@@ -106,7 +116,11 @@ else
   echo "        https://phthaocse.github.io"
   echo "        http://localhost:8731"
   echo
-  read -r -p "    Paste the client ID: " CLIENT_ID
+  if CLIENT_ID=$(from_secrets GOOGLE_CLIENT_ID) && [ -n "$CLIENT_ID" ]; then
+    echo "    Using GOOGLE_CLIENT_ID from $SECRETS_FILE"
+  else
+    read -r -p "    Paste the client ID: " CLIENT_ID
+  fi
   [ -n "$CLIENT_ID" ] || fail "the client ID is required"
   case "$CLIENT_ID" in
     *.apps.googleusercontent.com) ;;
@@ -121,11 +135,20 @@ fi
 step "Gemini key"
 if wrangler secret list --name knowledge-api 2>/dev/null | grep -q GEMINI_API_KEY; then
   echo "    Already set (its value cannot be read back, by design)."
+elif [ -f "$SECRETS_FILE" ] && grep -q '^GEMINI_API_KEY=' "$SECRETS_FILE"; then
+  echo "    Uploading from $SECRETS_FILE …"
+  # `secret bulk` takes a KEY=VALUE file, so the key is never an argument and
+  # never reaches the shell history or a process listing.
+  ( cd "$REPO/worker" && wrangler secret bulk "$SECRETS_FILE" >/dev/null )
+  echo "    Uploaded. Cloudflare stores it encrypted; it cannot be read back."
 else
-  warn "Not set yet. The prompt hides what you type, and the key is never"
-  warn "written to this repo or your shell history."
+  warn "No key found in $SECRETS_FILE."
   echo
-  ( cd "$REPO/worker" && wrangler secret put GEMINI_API_KEY )
+  bold "    Save it first, then re-run ./setup.sh:"
+  echo "        ./save-secret.sh GEMINI_API_KEY"
+  echo
+  echo "    (Hidden prompt, written to a mode-600 file. Never paste a key into a chat.)"
+  exit 1
 fi
 
 # ----------------------------------------------------------------- deploy --
