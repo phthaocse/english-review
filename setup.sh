@@ -153,7 +153,24 @@ fi
 
 # ----------------------------------------------------------------- deploy --
 step "Deploying the Worker"
-DEPLOY_OUT=$(cd "$REPO/worker" && wrangler deploy 2>&1)
+# Capture the output so the URL can be read back, but show it on failure:
+# swallowing it under `set -e` leaves the script dying with nothing on screen.
+if ! DEPLOY_OUT=$(cd "$REPO/worker" && wrangler deploy 2>&1); then
+  echo "$DEPLOY_OUT" | tail -20 | sed 's/^/    /'
+  echo
+  if echo "$DEPLOY_OUT" | grep -q "workers.dev subdomain"; then
+    bold "    This account has no workers.dev subdomain yet. Register it once:"
+    echo "      1. cd $REPO/worker && wrangler deploy"
+    echo "      2. answer 'y' to 'register a workers.dev subdomain now?' and pick a name"
+    echo "      3. cd $REPO && ./setup.sh"
+    echo
+    echo "    (Run it directly rather than through this script: the prompt needs a"
+    echo "     terminal, and this script captures the output so it can read the URL.)"
+  else
+    warn "Deploy failed - the error is above."
+  fi
+  exit 1
+fi
 echo "$DEPLOY_OUT" | grep -E "Uploaded|Deployed|workers\.dev" | sed 's/^/    /' || true
 
 WORKER_URL=$(echo "$DEPLOY_OUT" | grep -oE 'https://[a-z0-9.-]+\.workers\.dev' | head -1)
