@@ -3,5 +3,5 @@
 // anything, and the Gemini key lives only in the Worker.
 export const CONFIG = {
   googleClientId: '148321977918-2bmnoeuvcq5nf404o37f2ja38qtg3nl3.apps.googleusercontent.com',
-  apiBase: 'https://knowledge-api.REPLACE_ME.workers.dev',
+  apiBase: 'https://knowledge-api.thaophan.workers.dev',
 };

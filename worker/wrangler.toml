@@ -6,6 +6,10 @@ name = "knowledge-api"
 main = "src/index.js"
 compatibility_date = "2026-09-01"
 
+# Every past version would otherwise get its own public URL. This Worker
+# holds an API key, so it gets one address, not one per deployment.
+preview_urls = false
+
 [vars]
 # The OAuth client ID is public by design — it identifies the app, it does not
 # authorise anything. The allowlist and the token signature do that.
