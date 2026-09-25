@@ -68,7 +68,41 @@ review.js         scheduling, grading, session queue
 styles.css        light and dark themes
 data/vocab.json   generated from the vault — do not hand-edit
 vendor/           ts-fsrs, MIT, unmodified
-.github/          Pages deployment
+test/             engine + headless-browser suites (test/run.sh)
+```
+
+## Tests
+
+```bash
+./test/run.sh
+```
+
+The engine suite covers grading and scheduling. The UI suite drives a real
+headless Chrome over the DevTools protocol: it generates a question for every
+item at every rung and checks none is malformed or leaks its own answer. To run
+it against the deployed site instead of a local server:
+
+```bash
+BASE=https://phthaocse.github.io/english-review node test/ui.test.mjs
+```
+
+## Deployment
+
+Pages builds straight from the `main` branch, so every push republishes the
+site. There is nothing to compile — the data file is generated on the Mac,
+because the vault lives on an external drive that CI cannot reach.
+
+`.github/deploy.yml.disabled` is a GitHub Actions workflow that does the same
+thing and additionally refuses to publish a `vocab.json` with no items in it.
+Pushing a workflow file needs a token with the `workflow` scope, which the
+GitHub CLI login does not have by default. To switch to it:
+
+```bash
+gh auth refresh -s workflow
+mkdir -p .github/workflows
+git mv .github/deploy.yml.disabled .github/workflows/deploy.yml
+git commit -m "Deploy via GitHub Actions" && git push
+gh api -X PUT repos/phthaocse/english-review/pages -f build_type=workflow
 ```
 
 ## Updating it
@@ -80,9 +114,9 @@ cd "/Volumes/Thao-Media/Obsidian Vault/English/_System/Scripts"
 ./publish_site.sh
 ```
 
-That regenerates `data/vocab.json`, commits it and pushes. GitHub Actions
-publishes the site about a minute later. `--dry-run` shows what would change
-without committing.
+That regenerates `data/vocab.json`, commits it and pushes. GitHub rebuilds the
+site about a minute later. `--dry-run` shows what would change without
+committing.
 
 To rebuild the data without publishing:
 

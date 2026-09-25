@@ -10,7 +10,7 @@ await B.goto(`${BASE}/`);
 
 console.log('== every item produces a valid question at every level ==');
 const sweep = await B.evaluate(`
-  const m = await import('/app.js');
+  const m = await import('./app.js');
   const bad = [];
   let count = 0;
   for (const item of m.state.items) {
@@ -42,7 +42,7 @@ ok('no malformed questions', sweep.bad.length === 0, '\n   - ' + sweep.bad.slice
 
 console.log('== gap-fill never shows the answer in the prompt ==');
 const leak = await B.evaluate(`
-  const m = await import('/app.js');
+  const m = await import('./app.js');
   const leaks = [];
   for (const item of m.state.items.filter(i=>i.kind==='vocab')) {
     m.state.progress.cards[item.id] = { level:1, seen:0, correct:0, streak:0, lapses:0,
@@ -63,8 +63,8 @@ ok('no answer leak in gap-fill prompts', leak.length === 0, '\n   - ' + leak.sli
 
 console.log('== gap-fill demands the inflected form ==');
 const form = await B.evaluate(`
-  const m = await import('/app.js');
-  const R = await import('/review.js');
+  const m = await import('./app.js');
+  const R = await import('./review.js');
   m.state.progress.cards['turn out'] = { level:1, seen:2, correct:2, streak:0, lapses:0,
     card:{ due:new Date().toISOString(), stability:3, difficulty:5, elapsed_days:1,
            scheduled_days:1, learning_steps:0, reps:2, lapses:0, state:2 } };
@@ -100,7 +100,7 @@ ok('an input method is present', step.kind !== 'none', step.kind);
 
 // Answer question 1 correctly by reading the accepted answer out of the engine.
 const right = await B.evaluate(`
-  const m = await import('/app.js');
+  const m = await import('./app.js');
   const q = m.state.session.current;
   if (q.kind === 'choice') {
     const i = q.options.indexOf(q.correct);
@@ -123,7 +123,7 @@ ok('a review was recorded', (right.stored.history||[]).length === 1);
 
 // Question 2 deliberately wrong.
 const wrong = await B.evaluate(`
-  const m = await import('/app.js');
+  const m = await import('./app.js');
   document.querySelector('#next').click();
   await new Promise(r=>setTimeout(r,120));
   const q = m.state.session.current;
@@ -145,7 +145,7 @@ ok('override offered after a miss', wrong.override);
 
 // Run the rest of the session to the summary.
 const summary = await B.evaluate(`
-  const m = await import('/app.js');
+  const m = await import('./app.js');
   for (let i=0;i<20;i++) {
     const next = document.querySelector('#next');
     if (next) { next.click(); await new Promise(r=>setTimeout(r,60)); }
