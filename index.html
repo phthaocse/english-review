@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>English Review</title>
+<meta name="description" content="Look up and practise the English vocabulary recorded in my Obsidian vault.">
+<meta name="theme-color" content="#1b1d24">
+<link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <h1 class="wordmark"><span aria-hidden="true">✳</span> English Review</h1>
+    <nav class="tabs" aria-label="Sections">
+      <a href="#/review" data-tab="review">Practise</a>
+      <a href="#/lookup" data-tab="lookup">Look up</a>
+      <a href="#/progress" data-tab="progress">Progress</a>
+    </nav>
+    <button id="theme-toggle" class="icon-btn" type="button" aria-label="Switch colour theme">◐</button>
+  </div>
+</header>
+
+<main id="main" tabindex="-1">
+  <div id="view" class="view"></div>
+</main>
+
+<footer class="foot">
+  <span id="foot-meta"></span>
+</footer>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>
