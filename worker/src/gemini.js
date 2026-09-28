@@ -112,10 +112,32 @@ async function askModel(model, image, env, fetchImpl) {
     return { status: 0, ms: Date.now() - started };   // timed out or unreachable
   }
 
-  // Upstream errors quote the request back, key included, so only the status
-  // ever leaves this function.
-  if (!res.ok) return { status: res.status, ms: Date.now() - started };
+  if (!res.ok) return { status: res.status, ms: Date.now() - started, detail: await reason(res, env) };
   return { status: 200, ms: Date.now() - started, payload: await res.json() };
+}
+
+/**
+ * The upstream complaint in a few words, for the log. Upstream errors can quote
+ * the request back, so the key and any image data are taken out first.
+ */
+async function reason(res, env) {
+  let body;
+  try {
+    body = await res.text();
+  } catch {
+    return null;
+  }
+  let message = body;
+  try {
+    // Some errors arrive wrapped in an array, some bare.
+    const parsed = JSON.parse(body);
+    const failure = (Array.isArray(parsed) ? parsed[0] : parsed)?.error;
+    message = failure?.message || failure?.status || body;
+  } catch { /* not JSON; the raw text is still a clue */ }
+
+  let clean = String(message);
+  if (env.GEMINI_API_KEY) clean = clean.split(env.GEMINI_API_KEY).join('<key>');
+  return clean.replace(/[A-Za-z0-9+/]{40,}={0,2}/g, '<data>').replace(/\s+/g, ' ').trim().slice(0, 160);
 }
 
 /**
@@ -139,8 +161,8 @@ export async function draftFromImage(image, env, { fetchImpl = fetch } = {}) {
 
   for (const model of chain) {
     if (Date.now() - startedAt > CHAIN_DEADLINE_MS) break;
-    const { status, ms, payload } = await askModel(model, image, env, fetchImpl);
-    attempts.push({ model, status, ms });
+    const { status, ms, detail, payload } = await askModel(model, image, env, fetchImpl);
+    attempts.push({ model, status, ms, ...(detail ? { detail } : {}) });
     if (status === 200) return { items: parseItems(payload), model, attempts };
     if (status === RATE_LIMITED) exhausted += 1;
     else if (!isTransient(status)) refused = status;

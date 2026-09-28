@@ -253,10 +253,20 @@ console.log('== every read leaves something to look up afterwards ==');
 console.log('== vision failures stay quiet about internals ==');
 {
   const env = makeEnv();
-  geminiHandler = async () => ({ ok: false, status: 400, json: async () => ({
-    error: { message: 'API key not valid: test-key-do-not-log' } }) });
+  // Google wraps this one in an array; the reason has to survive that.
+  geminiHandler = async () => ({ ok: false, status: 400,
+    text: async () => JSON.stringify([{ error: { code: 400, status: 'INVALID_ARGUMENT',
+      message: 'API key not valid: test-key-do-not-log' } }]) });
   const r = await call(env, 'POST', '/api/vision', { body: { image: 'AAAA' } });
   eq('a refused request → 502', r.status, 502);
+
+  // The reason goes in the log, where it is useful - with the key taken out.
+  const logged = (await call(env, 'GET', '/api/logs')).body.logs[0];
+  ok('  the upstream reason is logged', /API key not valid/.test(logged.attempts[0].detail || ''),
+     JSON.stringify(logged.attempts[0]));
+  ok('  with the key redacted', logged.attempts[0].detail.includes('<key>')
+     && !JSON.stringify(logged).includes('test-key-do-not-log'), JSON.stringify(logged.attempts[0]));
+
   ok('  the status is quoted so it can be reported', /\(400\)/.test(r.body.error), r.body.error);
   ok('upstream message is not forwarded', !JSON.stringify(r.body).includes('test-key-do-not-log'), JSON.stringify(r.body));
 

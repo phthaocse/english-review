@@ -172,7 +172,10 @@ for (const row of (await fetch(`http://localhost:${API_PORT}/api/logs`, {
 }).then((r) => r.json())).logs) {
   console.log(`  #${row.id} ${row.ok ? 'ok ' : 'FAIL'} ${(row.duration_ms / 1000).toFixed(1)}s`
     + ` ${row.image_kb}KB ${row.ok ? `${row.model} · ${row.items} items` : row.error}`);
-  for (const a of row.attempts) console.log(`      ${a.model} ${a.status || 'timeout'} ${(a.ms / 1000).toFixed(1)}s`);
+  for (const a of row.attempts) {
+    console.log(`      ${a.model} ${a.status || 'timeout'} ${(a.ms / 1000).toFixed(1)}s`
+      + (a.detail ? `  ${a.detail}` : ''));
+  }
 }
 
 // Folded-away detail is exactly what a debugging screenshot needs to show.
