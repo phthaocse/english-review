@@ -491,3 +491,10 @@ body.signed-out .view { padding-top: 12vh; max-width: 460px; }
   .flash-term { font-size: 1.5rem; }
   .deck-nav .btn { flex: 1; min-width: 0; }
 }
+
+/* How far through the whole vault this skim has got. */
+.deck-bar {
+  display: inline-block; width: 90px; height: 4px; margin-left: 10px;
+  vertical-align: middle; background: var(--border); border-radius: 2px; overflow: hidden;
+}
+.deck-bar i { display: block; height: 100%; background: var(--accent); }

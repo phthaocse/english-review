@@ -122,10 +122,92 @@ s = await B.evaluate(`
 eq('choosing pronunciation shows a pronunciation card', s.type, 'pronunciation-rule');
 ok('and the deck restarts', /^1 of/.test(s.count || ''), s.count);
 
+console.log('== the deck is the whole group, not a sample ==');
+s = await B.evaluate(`
+  const m = await import('./app.js');
+  localStorage.removeItem('english-review/deck');
+  m.state.deck = null; m.state.filter = 'all';
+  location.hash = '#/cards'; window.dispatchEvent(new HashChangeEvent('hashchange'));
+  await new Promise(r => setTimeout(r, 200));
+  return { total: m.state.items.length, deck: m.state.deck.ids.length,
+           unique: new Set(m.state.deck.ids).size,
+           count: document.querySelector('.deck-count')?.textContent.replace(/\\s+/g, ' ').trim(),
+           bar: !!document.querySelector('.deck-bar i') };
+`);
+eq('every item is in the deck', s.deck, s.total);
+eq('  each one once', s.unique, s.total);
+ok('  and the count says so', s.count.startsWith(`1 of ${s.total}`), s.count);
+ok('  with a bar showing how far through you are', s.bar);
+
+console.log('== it remembers where you stopped ==');
+s = await B.evaluate(`
+  const m = await import('./app.js');
+  for (let i = 0; i < 3; i++) {
+    document.querySelector('#flashcard').click();   // show
+    await new Promise(r => setTimeout(r, 60));
+    document.querySelector('#deck-next').click();   // move on
+    await new Promise(r => setTimeout(r, 60));
+  }
+  const term = document.querySelector('.flash-term').textContent;
+  const stored = JSON.parse(localStorage.getItem('english-review/deck'));
+
+  // Leave the section and come back, as if it were tomorrow morning.
+  m.state.deck = null;
+  location.hash = '#/lookup'; window.dispatchEvent(new HashChangeEvent('hashchange'));
+  await new Promise(r => setTimeout(r, 150));
+  location.hash = '#/cards'; window.dispatchEvent(new HashChangeEvent('hashchange'));
+  await new Promise(r => setTimeout(r, 200));
+  return { savedIndex: stored.all.index, term,
+           resumedTerm: document.querySelector('.flash-term').textContent,
+           count: document.querySelector('.deck-count').textContent.trim().split(' ')[0],
+           faceDown: !document.querySelector('.flash-back') };
+`);
+eq('the place is written down', s.savedIndex, 3);
+eq('  and picked up on return', s.resumedTerm, s.term);
+eq('  at the same number', s.count, '4');
+ok('  face down, ready to be recalled', s.faceDown);
+
+console.log('== each group keeps its own place ==');
+s = await B.evaluate(`
+  const m = await import('./app.js');
+  document.querySelector('[data-scope=pron]').click();
+  await new Promise(r => setTimeout(r, 150));
+  document.querySelector('#flashcard').click();
+  await new Promise(r => setTimeout(r, 60));
+  document.querySelector('#deck-next').click();
+  await new Promise(r => setTimeout(r, 120));
+  const pronAt = m.state.deck.index;
+  document.querySelector('[data-scope=all]').click();
+  await new Promise(r => setTimeout(r, 150));
+  const allAt = m.state.deck.index;
+  const stored = JSON.parse(localStorage.getItem('english-review/deck'));
+  return { pronAt, allAt, groups: Object.keys(stored).sort() };
+`);
+eq('pronunciation kept its own position', s.pronAt, 1);
+eq('and everything kept the earlier one', s.allAt, 3);
+ok('both are stored side by side', s.groups.includes('all') && s.groups.includes('pron'), s.groups.join(','));
+
+console.log('== a deck built before new words still works ==');
+s = await B.evaluate(`
+  const m = await import('./app.js');
+  const ids = m.state.items.map(i => i.id);
+  // Yesterday's deck: missing the two newest words, and parked on one of them.
+  localStorage.setItem('english-review/deck', JSON.stringify({
+    all: { ids: ids.slice(0, -2), index: 5 } }));
+  const parked = ids[5];
+  m.state.deck = null; m.state.filter = 'all';
+  location.hash = '#/cards'; window.dispatchEvent(new HashChangeEvent('hashchange'));
+  await new Promise(r => setTimeout(r, 200));
+  return { size: m.state.deck.ids.length, total: ids.length,
+           onParked: document.querySelector('.flash-term').textContent === m.state.byId.get(parked).term };
+`);
+eq('the deck is rebuilt to include them', s.size, s.total);
+ok('  without losing the card you were on', s.onParked);
+
 console.log('== the end of the deck offers the real thing ==');
 s = await B.evaluate(`
   const m = await import('./app.js');
-  m.state.deck = { ...m.state.deck, index: 99 };
+  m.state.deck = { ...m.state.deck, index: m.state.deck.ids.length };   // past the last card
   location.hash = '#/cards';
   window.dispatchEvent(new HashChangeEvent('hashchange'));
   await new Promise(r => setTimeout(r, 200));

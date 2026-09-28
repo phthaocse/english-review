@@ -722,35 +722,80 @@ function renderItem(id) {
 // recognising a word you are shown is not evidence you can produce it, which
 // is what Practise is for. This is for keeping things warm.
 
-const DECK_SIZE = 20;
+const DECK_KEY = 'english-review/deck';
 
-function newDeck() {
+function cardPool() {
   const scope = SCOPES[state.filter] || SCOPES.all;
-  const pool = scope.types ? state.items.filter((i) => scope.types.includes(i.type)) : state.items;
-  // Least-recently-seen first, so a daily skim rotates instead of repeating.
+  return scope.types ? state.items.filter((i) => scope.types.includes(i.type)) : state.items;
+}
+
+/** Every item in the group, least-seen first so a daily skim rotates. */
+function newDeck(startAt = null) {
   const seen = (item) => state.progress.cards[item.id]?.seen ?? 0;
-  const ordered = shuffle(pool).sort((a, b) => seen(a) - seen(b));
-  return { cards: ordered.slice(0, DECK_SIZE), index: 0, shown: false };
+  const ids = shuffle(cardPool()).sort((a, b) => seen(a) - seen(b)).map((i) => i.id);
+  const resumed = startAt ? ids.indexOf(startAt) : -1;
+  return { scope: state.filter, ids, index: resumed < 0 ? 0 : resumed, shown: false };
+}
+
+/**
+ * The deck outlives the visit: 156 cards is weeks of morning skims, so where
+ * you got to is worth more than the shuffle that produced the order.
+ */
+const readDecks = () => {
+  try {
+    return JSON.parse(localStorage.getItem(DECK_KEY) || '{}');
+  } catch {
+    return {};
+  }
+};
+
+function loadDeck() {
+  const saved = readDecks()[state.filter];
+  if (!saved?.ids?.length) return null;
+
+  // A rebuilt vault means new ids; keep the place if that card survived.
+  const pool = new Set(cardPool().map((i) => i.id));
+  if (saved.ids.length !== pool.size || saved.ids.some((id) => !pool.has(id))) {
+    return newDeck(saved.ids[saved.index]);
+  }
+  return { ...saved, scope: state.filter, shown: false };
+}
+
+function saveDeck(deck) {
+  try {
+    const decks = readDecks();
+    decks[deck.scope] = { ids: deck.ids, index: deck.index };
+    localStorage.setItem(DECK_KEY, JSON.stringify(decks));
+  } catch { /* private window: the deck still works for this visit */ }
+}
+
+function setDeck(deck) {
+  state.deck = deck;
+  saveDeck(deck);
+  renderCards();
 }
 
 function renderCards() {
   if (!state.deck || state.deck.scope !== state.filter) {
-    state.deck = { ...newDeck(), scope: state.filter };
+    state.deck = loadDeck() || newDeck();
   }
   const deck = state.deck;
 
-  if (!deck.cards.length) {
+  if (!deck.ids.length) {
     view.innerHTML = `${cardsHeader()}<p class="empty">Nothing in this group yet.</p>`;
     wireCardScopes();
     return;
   }
-  if (deck.index >= deck.cards.length) return renderDeckEnd();
+  if (deck.index >= deck.ids.length) return renderDeckEnd();
 
-  const item = deck.cards[deck.index];
+  const item = state.byId.get(deck.ids[deck.index]);
+  if (!item) return setDeck({ ...deck, index: deck.index + 1 });
 
   view.innerHTML = `
     ${cardsHeader()}
-    <p class="deck-count">${deck.index + 1} of ${deck.cards.length}</p>
+    <p class="deck-count">${deck.index + 1} of ${deck.ids.length}
+      <span class="deck-bar"><i style="width:${((deck.index + 1) / deck.ids.length) * 100}%"></i></span>
+    </p>
 
     <div class="flashcard ${deck.shown ? 'is-open' : ''}" id="flashcard"
          role="button" tabindex="0" aria-expanded="${deck.shown}">
@@ -771,15 +816,9 @@ function renderCards() {
 
   wireCardScopes();
   const flip = () => { state.deck.shown = true; renderCards(); };
-  const next = () => {
-    if (!deck.shown) return flip();
-    state.deck = { ...deck, index: deck.index + 1, shown: false };
-    renderCards();
-  };
+  const next = () => (deck.shown ? setDeck({ ...deck, index: deck.index + 1, shown: false }) : flip());
   const back = () => {
-    if (deck.index === 0) return;
-    state.deck = { ...deck, index: deck.index - 1, shown: false };
-    renderCards();
+    if (deck.index > 0) setDeck({ ...deck, index: deck.index - 1, shown: false });
   };
 
   const card = view.querySelector('#flashcard');
@@ -817,7 +856,8 @@ function cardBack(item) {
 function cardsHeader() {
   return `
     <h2 class="section">Cards</h2>
-    <p class="lede">A quick flip through what you have learnt. Nothing here is graded.</p>
+    <p class="lede">Every word and phrase you have recorded, one at a time. It keeps your place,
+    so a minute a day gets through the lot. Nothing here is graded.</p>
     <div class="filters" role="group" aria-label="What to flip through">
       ${Object.entries(SCOPES).map(([key, cfg]) => `
         <button class="chip" data-scope="${key}" aria-pressed="${state.filter === key}">${cfg.label}</button>`).join('')}
@@ -828,7 +868,7 @@ function wireCardScopes() {
   view.querySelectorAll('[data-scope]').forEach((b) =>
     b.addEventListener('click', () => {
       state.filter = b.dataset.scope;
-      state.deck = null;
+      state.deck = null;      // each group keeps its own place, picked up on return
       renderCards();
     }));
 }
@@ -837,19 +877,16 @@ function renderDeckEnd() {
   view.innerHTML = `
     ${cardsHeader()}
     <div class="card block">
-      <h3>That is the twenty</h3>
+      <h3>That is all ${state.deck.ids.length}</h3>
       <p class="muted" style="margin-top:0">Seeing a word is not the same as being able to use it.
       When you want to know which ones you actually have, Practise asks you to type them.</p>
       <div class="row">
-        <button class="btn" id="deck-again">Another ${DECK_SIZE}</button>
+        <button class="btn" id="deck-again">Shuffle and start again</button>
         <a class="btn secondary" href="#/review">Practise instead</a>
       </div>
     </div>`;
   wireCardScopes();
-  view.querySelector('#deck-again').addEventListener('click', () => {
-    state.deck = { ...newDeck(), scope: state.filter };
-    renderCards();
-  });
+  view.querySelector('#deck-again').addEventListener('click', () => setDeck(newDeck()));
 }
 
 // ---------------------------------------------------------- progress view --
