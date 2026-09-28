@@ -1,5 +1,6 @@
 import worker from '../worker/src/index.js';
-import { parseItems, GeminiError } from '../worker/src/gemini.js';
+import { parseItems, GeminiError, readPhoto } from '../worker/src/gemini.js';
+import { viaRegion, REGIONS } from '../worker/src/region.js';
 import { makeSigner, claimsFor } from './jwt.mjs';
 import { makeD1, addUser } from './d1.mjs';
 
@@ -14,12 +15,13 @@ const signer = await makeSigner();
 // The Worker calls the real Google JWKS URL; point fetch at our test keys.
 const realFetch = globalThis.fetch;
 let geminiHandler = async () => { throw new Error('gemini not stubbed'); };
-globalThis.fetch = async (url, init) => {
+const patchedFetch = async (url, init) => {
   const href = String(url);
   if (href.includes('googleapis.com/oauth2')) return signer.jwksFetch()();
   if (href.includes('generativelanguage')) return geminiHandler(href, init);
   return realFetch(url, init);
 };
+globalThis.fetch = patchedFetch;
 
 function makeEnv(seed = (db) => addUser(db, 'thaop@ghn.vn', { role: 'owner' })) {
   const DB = makeD1();
@@ -278,6 +280,64 @@ console.log('== vision failures stay quiet about internals ==');
     steps: [{ type: 'model_output', content: [{ type: 'text', text: 'not json at all' }] }] }) });
   const r4 = await call(env, 'POST', '/api/vision', { body: { image: 'AAAA' } });
   eq('unparseable model output → 502', r4.status, 502);
+}
+
+console.log('== the call to Google leaves from a region Google serves ==');
+{
+  const env = { GEMINI_API_KEY: 'test-key-do-not-log' };
+  const blocked = (region) => ({ ok: false, status: 400, text: async () => JSON.stringify({
+    error: { code: 400, status: 'FAILED_PRECONDITION',
+             message: `This API is not available in your current location (${region}).` } }) });
+  const answer = () => ({ ok: true, json: async () => ({
+    steps: [{ type: 'model_output', content: [{ type: 'text', text:
+      '{"items":[{"term":"go off","kind":"phrasal-verb","confidence":"high"}]}' }] }] }) });
+
+  // Every model refuses the first region for the same reason: try the next one.
+  const asked = [];
+  let draft = await readPhoto({ base64: 'AAAA', mimeType: 'image/jpeg' }, env, {
+    regions: ['first', 'second'],
+    relay: (_e, region) => async () => { asked.push(region); return region === 'first' ? blocked(region) : answer(); },
+  });
+  eq('a blocked region is abandoned for the next', draft.items[0].term, 'go off');
+  eq('  after trying every model there', asked.filter((r) => r === 'first').length, 3);
+  eq('  and the log says which region answered', draft.attempts.at(-1).region, 'second');
+
+  // A refusal that is NOT about location stays a refusal - no second region.
+  asked.length = 0;
+  const refuses = { ok: false, status: 400, text: async () => JSON.stringify(
+    { error: { message: 'Invalid value at input[1].data' } }) };
+  let failed = null;
+  await readPhoto({ base64: 'AAAA' }, env, {
+    regions: ['first', 'second'],
+    relay: (_e, region) => async () => { asked.push(region); return refuses; },
+  }).catch((e) => { failed = e; });
+  ok('an ordinary refusal is reported, not retried elsewhere', failed instanceof GeminiError);
+  eq('  and no other region is tried', asked.filter((r) => r === 'second').length, 0);
+
+  // The relay itself: the body is passed through, the target named in a header.
+  let sent = null;
+  const fakeEnv = { REGION: {
+    idFromName: (name) => ({ name }),
+    get: (id, options) => ({ fetch: async (_url, init) => { sent = { id, options, init }; return answer(); } }),
+  } };
+  await viaRegion(fakeEnv, 'apac-se')('https://generativelanguage.googleapis.com/v1beta/interactions',
+                                      { method: 'POST', headers: { 'x-goog-api-key': 'k' }, body: '{"model":"m"}' });
+  eq('the object is pinned to the region', sent.options.locationHint, 'apac-se');
+  eq('  and named after it, so the pin sticks', sent.id.name, 'apac-se');
+  eq('  the real destination rides in a header', sent.init.headers['x-target'],
+     'https://generativelanguage.googleapis.com/v1beta/interactions');
+  eq('  the key still goes to Google', sent.init.headers['x-goog-api-key'], 'k');
+  eq('  and the photo is not copied into an envelope', sent.init.body, '{"model":"m"}');
+
+  // Without the binding - a local run, or a stripped deployment - call directly.
+  let direct = false;
+  const plain = viaRegion({}, 'apac-se');
+  globalThis.fetch = async () => { direct = true; return answer(); };
+  await plain('https://example.test', { method: 'POST' });
+  ok('no binding means a direct call, not a crash', direct);
+  globalThis.fetch = patchedFetch;
+
+  ok('the regions tried are ones Google serves', REGIONS.length >= 2, REGIONS.join(','));
 }
 
 console.log('== vision input limits ==');

@@ -5,7 +5,7 @@
 // itself stays public — it is only a shell until someone signs in.
 
 import { authenticate, AuthError } from './auth.js';
-import { draftFromImage, GeminiError, MAX_IMAGE_BYTES, KINDS } from './gemini.js';
+import { readPhoto, GeminiError, MAX_IMAGE_BYTES, KINDS } from './gemini.js';
 import { createItem, findItemByTerm, getItem, listItems, countItems, consumeQuota,
          logVision, listVisionLogs } from './db.js';
 
@@ -140,7 +140,7 @@ const ROUTES = {
     // Both paths record a row and hand its id back, so "it failed" always has
     // something to look up afterwards.
     try {
-      const draft = await draftFromImage({ base64, mimeType }, env);
+      const draft = await readPhoto({ base64, mimeType }, env);
       const trace = await recordVision(env, user, {
         ok: true, durationMs: Date.now() - startedAt, imageKb,
         model: draft.model, items: draft.items.length, attempts: draft.attempts });
@@ -180,3 +180,6 @@ export default {
     }
   },
 };
+
+// The relay that keeps the call to Google inside a country Google serves.
+export { RegionalFetcher } from './region.js';

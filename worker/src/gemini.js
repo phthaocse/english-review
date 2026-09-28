@@ -8,6 +8,8 @@
 // (https://ai.google.dev/gemini-api/docs/quickstart): POST /v1beta/interactions
 // with an `x-goog-api-key` header and a {model, input, response_format} body.
 
+import { REGIONS, viaRegion } from './region.js';
+
 const ENDPOINT = 'https://generativelanguage.googleapis.com/v1beta/interactions';
 
 // Ordered by what answered fastest and most accurately on a handwritten page;
@@ -140,11 +142,35 @@ async function reason(res, env) {
   return clean.replace(/[A-Za-z0-9+/]{40,}={0,2}/g, '<data>').replace(/\s+/g, ' ').trim().slice(0, 160);
 }
 
+/** Google's refusal when the request comes from a country it does not serve. */
+const blockedByLocation = (attempts) => attempts.length > 0
+  && attempts.every((a) => a.status === 400 && /current location/i.test(a.detail || ''));
+
+/**
+ * Turn a photo into draft items, from a region Google serves.
+ *
+ * The relay's region is fixed when it is first created, so a bad one would be
+ * permanent: if every model says the location is wrong, the next region gets
+ * the same photo rather than the reader getting a dead end.
+ */
+export async function readPhoto(image, env, { regions = REGIONS, relay = viaRegion } = {}) {
+  let last;
+  for (const region of regions) {
+    try {
+      return await draftFromImage(image, env, { fetchImpl: relay(env, region), region });
+    } catch (error) {
+      last = error;
+      if (!blockedByLocation(error.attempts || [])) throw error;
+    }
+  }
+  throw last;
+}
+
 /**
  * Turn a photo into draft items, asking each model in turn until one answers.
  * The chain is the retry: a busy model is rarely free a second later.
  */
-export async function draftFromImage(image, env, { fetchImpl = fetch } = {}) {
+export async function draftFromImage(image, env, { fetchImpl = fetch, region = null } = {}) {
   if (!env.GEMINI_API_KEY) throw new GeminiError('image reading is not configured', 503);
 
   const chain = env.GEMINI_MODEL
@@ -162,7 +188,7 @@ export async function draftFromImage(image, env, { fetchImpl = fetch } = {}) {
   for (const model of chain) {
     if (Date.now() - startedAt > CHAIN_DEADLINE_MS) break;
     const { status, ms, detail, payload } = await askModel(model, image, env, fetchImpl);
-    attempts.push({ model, status, ms, ...(detail ? { detail } : {}) });
+    attempts.push({ model, status, ms, ...(region ? { region } : {}), ...(detail ? { detail } : {}) });
     if (status === 200) return { items: parseItems(payload), model, attempts };
     if (status === RATE_LIMITED) exhausted += 1;
     else if (!isTransient(status)) refused = status;
