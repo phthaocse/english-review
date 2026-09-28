@@ -13,6 +13,7 @@ const state = {
   progress: R.loadProgress(),
   generated: '',
   session: null,
+  deck: null,
   query: '',
   filter: 'all',
 };
@@ -71,6 +72,7 @@ function route() {
   if (!currentUser()) return renderSignInGate();
 
   if (section === 'capture') return renderCapture(view);
+  if (section === 'cards') return renderCards();
   if (section === 'lookup') return renderLookup();
   if (section === 'progress') return renderProgress();
   if (section === 'item') return renderItem(decodeURIComponent(rest.join('/')));
@@ -711,6 +713,142 @@ function renderItem(id) {
 
   view.querySelectorAll('a.xref').forEach((a) => {
     a.setAttribute('href', `#/item/${encodeURIComponent(a.dataset.term)}`);
+  });
+}
+
+// ------------------------------------------------------------- card view --
+// A flip-through for the minute before a meeting: the term alone, then
+// everything about it. Nothing here is graded and nothing is scheduled —
+// recognising a word you are shown is not evidence you can produce it, which
+// is what Practise is for. This is for keeping things warm.
+
+const DECK_SIZE = 20;
+
+function newDeck() {
+  const scope = SCOPES[state.filter] || SCOPES.all;
+  const pool = scope.types ? state.items.filter((i) => scope.types.includes(i.type)) : state.items;
+  // Least-recently-seen first, so a daily skim rotates instead of repeating.
+  const seen = (item) => state.progress.cards[item.id]?.seen ?? 0;
+  const ordered = shuffle(pool).sort((a, b) => seen(a) - seen(b));
+  return { cards: ordered.slice(0, DECK_SIZE), index: 0, shown: false };
+}
+
+function renderCards() {
+  if (!state.deck || state.deck.scope !== state.filter) {
+    state.deck = { ...newDeck(), scope: state.filter };
+  }
+  const deck = state.deck;
+
+  if (!deck.cards.length) {
+    view.innerHTML = `${cardsHeader()}<p class="empty">Nothing in this group yet.</p>`;
+    wireCardScopes();
+    return;
+  }
+  if (deck.index >= deck.cards.length) return renderDeckEnd();
+
+  const item = deck.cards[deck.index];
+
+  view.innerHTML = `
+    ${cardsHeader()}
+    <p class="deck-count">${deck.index + 1} of ${deck.cards.length}</p>
+
+    <div class="flashcard ${deck.shown ? 'is-open' : ''}" id="flashcard"
+         role="button" tabindex="0" aria-expanded="${deck.shown}">
+      <div class="flash-front">
+        <p class="flash-term">${esc(item.term)}</p>
+        <p class="flash-kind">${TYPE_LABEL[item.type] || item.type}${
+          item.cefr ? ` · ${esc(item.cefr.toUpperCase())}` : ''}</p>
+      </div>
+      ${deck.shown ? `<div class="flash-back">${cardBack(item)}</div>`
+                   : '<p class="flash-hint">Tap to show the meaning</p>'}
+    </div>
+
+    <div class="row deck-nav">
+      <button class="btn secondary" id="deck-prev" ${deck.index === 0 ? 'disabled' : ''}>← Back</button>
+      <button class="btn" id="deck-next">${deck.shown ? 'Next →' : 'Show'}</button>
+      <a class="chiplink" href="#/item/${encodeURIComponent(item.id)}">Open the note</a>
+    </div>`;
+
+  wireCardScopes();
+  const flip = () => { state.deck.shown = true; renderCards(); };
+  const next = () => {
+    if (!deck.shown) return flip();
+    state.deck = { ...deck, index: deck.index + 1, shown: false };
+    renderCards();
+  };
+  const back = () => {
+    if (deck.index === 0) return;
+    state.deck = { ...deck, index: deck.index - 1, shown: false };
+    renderCards();
+  };
+
+  const card = view.querySelector('#flashcard');
+  card.addEventListener('click', () => (deck.shown ? next() : flip()));
+  view.querySelector('#deck-next').addEventListener('click', (e) => { e.stopPropagation(); next(); });
+  view.querySelector('#deck-prev').addEventListener('click', (e) => { e.stopPropagation(); back(); });
+  card.focus();
+
+  view.onkeydown = null;
+  document.onkeydown = (e) => {
+    if (!location.hash.startsWith('#/cards')) { document.onkeydown = null; return; }
+    if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); deck.shown ? next() : flip(); }
+    if (e.key === 'ArrowRight') next();
+    if (e.key === 'ArrowLeft') back();
+  };
+}
+
+/** Everything worth a five-second glance, in the order you want to read it. */
+function cardBack(item) {
+  const examples = (item.examples || []).filter((e) => e.html).slice(0, 2);
+  return `
+    ${item.meaning ? `<p class="flash-meaning">${esc(item.meaning)}</p>` : ''}
+    ${item.ruleHtml && !item.meaning ? `<div class="flash-meaning">${item.ruleHtml}</div>` : ''}
+    ${item.vi ? `<p class="flash-vi">${esc(item.vi)}</p>` : ''}
+    ${item.pattern ? `<p class="item-pattern"><span>pattern</span> ${esc(item.pattern)}</p>` : ''}
+    ${item.image ? `<img class="flash-image" src="assets/words/${encodeURIComponent(item.image)}"
+           alt="${esc(item.imageAlt || item.meaning || item.term)}" loading="lazy">` : ''}
+    ${examples.length ? `<ul class="flash-examples">${examples.map(
+      (e) => `<li>${e.html.replace(/^<p>|<\/p>$/g, '')}</li>`).join('')}</ul>` : ''}
+    ${(item.wrongHtml || []).length ? `
+      <p class="wrongline">${item.wrongHtml[0].replace(/^<p>|<\/p>$/g, '')}</p>
+      <p class="rightline">${(item.correctHtml || [''])[0].replace(/^<p>|<\/p>$/g, '')}</p>` : ''}`;
+}
+
+function cardsHeader() {
+  return `
+    <h2 class="section">Cards</h2>
+    <p class="lede">A quick flip through what you have learnt. Nothing here is graded.</p>
+    <div class="filters" role="group" aria-label="What to flip through">
+      ${Object.entries(SCOPES).map(([key, cfg]) => `
+        <button class="chip" data-scope="${key}" aria-pressed="${state.filter === key}">${cfg.label}</button>`).join('')}
+    </div>`;
+}
+
+function wireCardScopes() {
+  view.querySelectorAll('[data-scope]').forEach((b) =>
+    b.addEventListener('click', () => {
+      state.filter = b.dataset.scope;
+      state.deck = null;
+      renderCards();
+    }));
+}
+
+function renderDeckEnd() {
+  view.innerHTML = `
+    ${cardsHeader()}
+    <div class="card block">
+      <h3>That is the twenty</h3>
+      <p class="muted" style="margin-top:0">Seeing a word is not the same as being able to use it.
+      When you want to know which ones you actually have, Practise asks you to type them.</p>
+      <div class="row">
+        <button class="btn" id="deck-again">Another ${DECK_SIZE}</button>
+        <a class="btn secondary" href="#/review">Practise instead</a>
+      </div>
+    </div>`;
+  wireCardScopes();
+  view.querySelector('#deck-again').addEventListener('click', () => {
+    state.deck = { ...newDeck(), scope: state.filter };
+    renderCards();
   });
 }
 

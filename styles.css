@@ -447,3 +447,47 @@ body.signed-out .view { padding-top: 12vh; max-width: 460px; }
 .log td:last-child { white-space: normal; }
 .log tr.bad td { color: var(--bad); }
 .log tr.log-detail td { padding-bottom: 9px; font-size: .74rem; word-break: break-word; }
+
+/* ---------------------------------------------------------------- cards -- */
+/* A flip-through, not a test: the term fills the card so it is readable at
+   arm's length, and everything else waits behind one tap. */
+.deck-count {
+  margin: 16px 0 8px; font-size: .82rem; color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.flashcard {
+  display: flex; flex-direction: column; justify-content: center;
+  min-height: 210px; padding: 28px 22px; cursor: pointer;
+  background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
+  text-align: center; transition: border-color .15s ease;
+}
+.flashcard:hover, .flashcard:focus-visible { border-color: var(--accent); outline: none; }
+.flashcard.is-open { text-align: left; cursor: pointer; }
+.flashcard.is-open .flash-front { text-align: center; }
+
+.flash-term { margin: 0; font-size: 1.7rem; font-weight: 600; line-height: 1.25; }
+.flash-kind {
+  margin: 8px 0 0; font-size: .72rem; letter-spacing: .07em;
+  text-transform: uppercase; color: var(--muted);
+}
+.flash-hint { margin: 18px 0 0; font-size: .84rem; color: var(--muted); }
+
+.flash-back { margin-top: 20px; padding-top: 18px; border-top: 1px solid var(--border); }
+.flash-meaning { margin: 0; font-size: 1.05rem; }
+.flash-vi { margin: 8px 0 0; color: var(--accent); }
+.flash-image {
+  display: block; width: 100%; max-width: 300px; margin: 14px auto 0;
+  border-radius: 10px; border: 1px solid var(--border);
+}
+.flash-examples { margin: 14px 0 0; padding-left: 20px; }
+.flash-examples li { margin-bottom: 6px; }
+
+.deck-nav { margin-top: 16px; }
+.deck-nav .btn { min-width: 108px; }
+
+@media (max-width: 700px) {
+  .flashcard { min-height: 180px; padding: 24px 18px; }
+  .flash-term { font-size: 1.5rem; }
+  .deck-nav .btn { flex: 1; min-width: 0; }
+}
