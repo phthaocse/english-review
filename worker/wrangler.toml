@@ -6,22 +6,23 @@ name = "knowledge-api"
 main = "src/index.js"
 compatibility_date = "2026-09-01"
 
-# Keeps console output in the Cloudflare dashboard for 3 days. Without it a
-# failure is only visible to whoever happens to be running `wrangler tail`.
-[observability]
-enabled = true
-
 # Every past version would otherwise get its own public URL. This Worker
 # holds an API key, so it gets one address, not one per deployment.
 preview_urls = false
+
+# Keeps console output in the Cloudflare dashboard for 3 days. Without it a
+# failure is only visible to whoever happens to be running `wrangler tail`.
+# Table headers swallow every key below them, so this one stays last.
+[observability]
+enabled = true
 
 [vars]
 # The OAuth client ID is public by design — it identifies the app, it does not
 # authorise anything. The allowlist and the token signature do that.
 GOOGLE_CLIENT_ID = "148321977918-2bmnoeuvcq5nf404o37f2ja38qtg3nl3.apps.googleusercontent.com"
 ALLOWED_ORIGINS  = "https://phthaocse.github.io,http://localhost:8731"
-# Leave unset to use the built-in chain (3.7 -> 3.5 -> 3.8).
-# GEMINI_MODEL   = "gemini-3.7-flash"
+# Leave unset to use the built-in chain (3.5 -> 3.7 -> 3.8).
+# GEMINI_MODEL   = "gemini-3.5-flash"
 
 [[d1_databases]]
 binding       = "DB"
