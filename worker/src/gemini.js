@@ -10,13 +10,19 @@
 
 const ENDPOINT = 'https://generativelanguage.googleapis.com/v1beta/interactions';
 
-// Tried in order. One model is not enough on the free tier: gemini-3.8-flash
-// allows 20 requests a day and returns 503 under load, which looked like a
-// broken feature rather than a busy one. 3.7 and 3.5 read the same handwriting
-// and carry their own quotas, so a bad day for one is not a bad day for you.
-const MODEL_CHAIN = ['gemini-3.7-flash', 'gemini-3.5-flash', 'gemini-3.8-flash'];
-const OVERLOADED = 503;
+// Ordered by what answered fastest and most accurately on a handwritten page;
+// each carries its own free-tier quota, so a bad day for one is survivable.
+const MODEL_CHAIN = ['gemini-3.5-flash', 'gemini-3.7-flash', 'gemini-3.8-flash'];
 const RATE_LIMITED = 429;
+
+// The free tier is slow when busy - an 8-token text prompt took 17s the day
+// this was written - so waiting beats failing, but not for ever.
+const ATTEMPT_TIMEOUT_MS = 90_000;
+const CHAIN_DEADLINE_MS = 150_000;
+
+// 500 and up is the service having a bad moment rather than a verdict on the
+// photo, so the next model gets a turn. 0 is our own timeout or network.
+const isTransient = (status) => status === 0 || status >= 500;
 
 // Inline image data caps the whole request at 20 MB; stay well under it, and
 // the client downscales before uploading anyway.
@@ -44,6 +50,10 @@ Extract every English word or phrase the writer was learning. For each one give:
 - confidence: high, medium or low — how sure you are you read the handwriting correctly
 
 Rules:
+- Cover the WHOLE page. Every numbered or bulleted entry becomes one item, in
+  the order they are written. Do not stop after the first few.
+- Each field holds the final value only — never your reasoning, alternatives,
+  restatements or commentary. Work it out before you answer, not in the field.
 - Transcribe, do not invent. If the handwriting is unclear, use low confidence
   and put your best reading in term.
 - Never invent a Vietnamese gloss, an example, or a pattern that is not in the photo.
@@ -78,13 +88,6 @@ export class GeminiError extends Error {
   constructor(message, status = 502) { super(message); this.status = status; }
 }
 
-/**
- * Turn a photo into draft items. Never throws the API key into a message.
- *
- * @param {{base64: string, mimeType: string}} image
- */
-const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
 /** One attempt at one model. Returns the parsed draft, or the status to act on. */
 async function askModel(model, image, env, fetchImpl) {
   const body = {
@@ -96,64 +99,61 @@ async function askModel(model, image, env, fetchImpl) {
     response_format: { type: 'text', mime_type: 'application/json', schema: RESPONSE_SCHEMA },
   };
 
+  const started = Date.now();
   let res;
   try {
     res = await fetchImpl(ENDPOINT, {
       method: 'POST',
       headers: { 'x-goog-api-key': env.GEMINI_API_KEY, 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
+      signal: AbortSignal.timeout(ATTEMPT_TIMEOUT_MS),
     });
   } catch {
-    return { status: 0 };   // network failure; treat like an overload and move on
+    return { status: 0, ms: Date.now() - started };   // timed out or unreachable
   }
 
-  if (!res.ok) {
-    // Upstream errors quote the request back, key included, so only the status
-    // is logged and nothing from the body reaches the client.
-    console.error('gemini request failed', model, res.status);
-    return { status: res.status };
-  }
-  return { status: 200, payload: await res.json() };
+  // Upstream errors quote the request back, key included, so only the status
+  // ever leaves this function.
+  if (!res.ok) return { status: res.status, ms: Date.now() - started };
+  return { status: 200, ms: Date.now() - started, payload: await res.json() };
 }
 
 /**
- * Turn a photo into draft items, trying each model in turn.
- *
- * An overloaded model is retried once; an exhausted one is abandoned
- * immediately, because its quota resets tomorrow, not in a second.
+ * Turn a photo into draft items, asking each model in turn until one answers.
+ * The chain is the retry: a busy model is rarely free a second later.
  */
-export async function draftFromImage(image, env, { fetchImpl = fetch, pause = sleep } = {}) {
+export async function draftFromImage(image, env, { fetchImpl = fetch } = {}) {
   if (!env.GEMINI_API_KEY) throw new GeminiError('image reading is not configured', 503);
 
   const chain = env.GEMINI_MODEL
     ? [env.GEMINI_MODEL, ...MODEL_CHAIN.filter((m) => m !== env.GEMINI_MODEL)]
     : MODEL_CHAIN;
 
-  let everyModelRateLimited = true;
+  let refused = 0;      // a 4xx: the service looked at the request and said no
+  let exhausted = 0;    // models with nothing left in today's free quota
+  const startedAt = Date.now();
+  const attempts = [];  // what every model said, for the log and the UI
+
+  // Attached to the error so the caller can record why this failed.
+  const give = (message, status) => Object.assign(new GeminiError(message, status), { attempts });
 
   for (const model of chain) {
-    for (let attempt = 0; attempt < 2; attempt++) {
-      const { status, payload } = await askModel(model, image, env, fetchImpl);
-
-      if (status === 200) return { items: parseItems(payload), model };
-
-      if (status === RATE_LIMITED) break;          // out of quota today; next model
-      everyModelRateLimited = false;
-      if (status === OVERLOADED || status === 0) {
-        if (attempt === 0) { await pause(700); continue; }
-        break;                                      // still busy; next model
-      }
-      throw new GeminiError('the image service could not read that photo', 502);
-    }
+    if (Date.now() - startedAt > CHAIN_DEADLINE_MS) break;
+    const { status, ms, payload } = await askModel(model, image, env, fetchImpl);
+    attempts.push({ model, status, ms });
+    if (status === 200) return { items: parseItems(payload), model, attempts };
+    if (status === RATE_LIMITED) exhausted += 1;
+    else if (!isTransient(status)) refused = status;
   }
 
-  throw new GeminiError(
-    everyModelRateLimited
-      ? "today's free quota for reading photos is used up - it resets tomorrow, "
-        + 'or you can type the word in instead'
-      : 'the image service is busy right now - try again in a moment',
-    RATE_LIMITED,
-  );
+  // The status is in the message on purpose: it is the one fact that tells a
+  // refusal apart from an outage when this is reported second-hand.
+  if (refused) throw give(`the image service could not read that photo (${refused})`, 502);
+  if (exhausted === chain.length) {
+    throw give("today's free quota for reading photos is used up - it resets "
+      + 'tomorrow, or you can type the word in instead', RATE_LIMITED);
+  }
+  throw give('the image service is busy right now - try again in a moment', 503);
 }
 
 /**
@@ -175,6 +175,14 @@ export function modelText(payload) {
     ?? payload?.candidates?.[0]?.content?.parts?.[0]?.text;
 }
 
+// A model under a JSON schema sometimes deliberates inside a string field, so
+// keep the first line and cap the length; the review screen fixes the rest.
+function field(text, max) {
+  if (typeof text !== 'string') return null;
+  const line = text.split('\n')[0].trim();
+  return line ? line.slice(0, max) : null;
+}
+
 /** Pull the model's JSON out of the response, and sanity-check it. */
 export function parseItems(payload) {
   const text = modelText(payload);
@@ -192,13 +200,13 @@ export function parseItems(payload) {
   return items
     .filter((i) => i && typeof i.term === 'string' && i.term.trim())
     .map((i) => ({
-      term: i.term.trim(),
+      term: field(i.term, 200),
       kind: KINDS.includes(i.kind) ? i.kind : 'word',
-      meaning: i.meaning?.trim() || null,
-      vi: i.vi?.trim() || null,
-      example: i.example?.trim() || null,
-      pattern: i.pattern?.trim() || null,
-      source_note: i.source_note?.trim() || null,
+      meaning: field(i.meaning, 200),
+      vi: field(i.vi, 120),
+      example: field(i.example, 500),
+      pattern: field(i.pattern, 200),
+      source_note: field(i.source_note, 200),
       confidence: ['high', 'medium', 'low'].includes(i.confidence) ? i.confidence : 'low',
     }));
 }

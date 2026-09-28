@@ -6,6 +6,11 @@ name = "knowledge-api"
 main = "src/index.js"
 compatibility_date = "2026-09-01"
 
+# Keeps console output in the Cloudflare dashboard for 3 days. Without it a
+# failure is only visible to whoever happens to be running `wrangler tail`.
+[observability]
+enabled = true
+
 # Every past version would otherwise get its own public URL. This Worker
 # holds an API key, so it gets one address, not one per deployment.
 preview_urls = false

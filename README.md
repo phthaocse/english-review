@@ -140,6 +140,36 @@ it against the deployed site instead of a local server:
 BASE=https://phthaocse.github.io/english-review node test/ui.test.mjs
 ```
 
+### When the photo path itself is in question
+
+`run.sh` stubs Gemini, so it proves the plumbing but never the model. One more
+test goes all the way out:
+
+```bash
+node test/live.mjs                         # read the fixture page
+node test/live.mjs ~/Desktop/notes.jpg     # read a photo of your own
+GEMINI_API_KEY=nonsense node test/live.mjs # see the failure screen, no quota spent
+```
+
+A real browser drives the real front-end, which calls the real Worker code,
+which calls Gemini with the real key. Only Google's signing keys and D1 are
+stood in for. It prints what each model answered, the drafts that reached the
+screen and the log rows, and leaves a screenshot behind. It is kept out of
+`run.sh` because it spends daily free-tier quota.
+
+## When a photo fails
+
+Every read writes a row saying which models were asked, what each answered and
+how long it took — visible three ways:
+
+- **Recent reads** on the Capture screen, with a button that copies the lot.
+- `GET /api/logs?limit=20` for the signed-in person.
+- The Cloudflare dashboard, where the Worker's JSON log lines are kept 3 days.
+
+Failures on screen quote their row (`log #41`), so a report can be traced to
+the exact attempt. Writing the row is wrapped in a `try` — a broken log must
+never turn a working read into a failure.
+
 ## Deployment
 
 Pages builds straight from the `main` branch, so every push republishes the

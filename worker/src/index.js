@@ -6,9 +6,24 @@
 
 import { authenticate, AuthError } from './auth.js';
 import { draftFromImage, GeminiError, MAX_IMAGE_BYTES, KINDS } from './gemini.js';
-import { createItem, findItemByTerm, getItem, listItems, countItems, consumeQuota } from './db.js';
+import { createItem, findItemByTerm, getItem, listItems, countItems, consumeQuota,
+         logVision, listVisionLogs } from './db.js';
 
 const VISION_CALLS_PER_DAY = 50;
+
+/**
+ * Record a read, and never let recording it be the thing that fails.
+ * A missing table or a full database must not turn a working read into an error.
+ */
+async function recordVision(env, user, entry) {
+  console[entry.ok ? 'log' : 'error'](JSON.stringify({ event: 'vision', user: user.email, ...entry }));
+  try {
+    return await logVision(env.DB, user.id, entry);
+  } catch (error) {
+    console.error('could not write vision_log', error?.message);
+    return null;
+  }
+}
 
 function cors(env, request) {
   const allowed = (env.ALLOWED_ORIGINS || '').split(',').map((s) => s.trim()).filter(Boolean);
@@ -119,8 +134,30 @@ const ROUTES = {
     const mimeType = ['image/jpeg', 'image/png', 'image/webp', 'image/heic', 'image/heif']
       .includes(body.mimeType) ? body.mimeType : 'image/jpeg';
 
-    const draft = await draftFromImage({ base64, mimeType }, env);
-    return json({ ...draft, quota: { remaining: quota.remaining } }, 200);
+    const imageKb = Math.round(base64.length * 0.75 / 1024);
+    const startedAt = Date.now();
+
+    // Both paths record a row and hand its id back, so "it failed" always has
+    // something to look up afterwards.
+    try {
+      const draft = await draftFromImage({ base64, mimeType }, env);
+      const trace = await recordVision(env, user, {
+        ok: true, durationMs: Date.now() - startedAt, imageKb,
+        model: draft.model, items: draft.items.length, attempts: draft.attempts });
+      return json({ items: draft.items, model: draft.model, trace,
+                    quota: { remaining: quota.remaining } }, 200);
+    } catch (error) {
+      if (!(error instanceof GeminiError)) throw error;
+      const trace = await recordVision(env, user, {
+        ok: false, durationMs: Date.now() - startedAt, imageKb,
+        attempts: error.attempts || [], error: error.message });
+      return json({ error: error.message, trace }, error.status);
+    }
+  },
+
+  'GET /api/logs': async (request, env, user) => {
+    const limit = new URL(request.url).searchParams.get('limit');
+    return json({ logs: await listVisionLogs(env.DB, user.id, limit) }, 200);
   },
 };
 

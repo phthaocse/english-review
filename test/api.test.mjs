@@ -43,7 +43,8 @@ async function call(env, method, path, { body, email = 'thaop@ghn.vn', token, or
 console.log('== every route requires a valid identity ==');
 {
   const env = makeEnv();
-  for (const [method, path] of [['GET','/api/me'], ['GET','/api/items'], ['POST','/api/items'], ['POST','/api/vision']]) {
+  for (const [method, path] of [['GET','/api/me'], ['GET','/api/items'], ['POST','/api/items'],
+                                ['POST','/api/vision'], ['GET','/api/logs']]) {
     const r = await call(env, method, path, { token: null, body: {} });
     eq(`${method} ${path} without a token → 401`, r.status, 401);
   }
@@ -157,24 +158,30 @@ console.log('== busy and exhausted models are worked around ==');
     steps: [{ type: 'model_output', content: [{ type: 'text', text:
       '{"items":[{"term":"go off","kind":"phrasal-verb","confidence":"high"}]}' }] }] }) });
 
-  // First model overloaded twice, second answers.
+  // The model the chain reaches for first is overloaded; the next one answers.
   let seen = [];
   geminiHandler = async (_h, init) => {
     const model = JSON.parse(init.body).model;
     seen.push(model);
-    return model === 'gemini-3.7-flash' ? { ok: false, status: 503, json: async () => ({}) } : ok();
+    return model === 'gemini-3.5-flash' ? { ok: false, status: 503, json: async () => ({}) } : ok();
   };
   let r = await call(env, 'POST', '/api/vision', { body: { image: 'AAAA' } });
   eq('falls through to a working model', r.status, 200);
   eq('  and returns the draft', r.body.items[0].term, 'go off');
-  eq('  after retrying the busy one once', seen.filter((m) => m === 'gemini-3.7-flash').length, 2);
-  ok('  then moving on', seen.includes('gemini-3.5-flash'), seen.join(','));
+  eq('  asking the busy one only once', seen.filter((m) => m === 'gemini-3.5-flash').length, 1);
+  eq('  and stopping at the first answer', seen.length, 2);
 
-  // A transient overload that clears on the retry.
-  seen = []; let calls = 0;
-  geminiHandler = async () => (++calls === 1 ? { ok: false, status: 503, json: async () => ({}) } : ok());
-  r = await call(env, 'POST', '/api/vision', { body: { image: 'AAAA' } });
-  eq('a single retry rescues a busy model', r.status, 200);
+  // 500 and 504 are the service having a bad moment, not a verdict on the photo.
+  for (const status of [500, 502, 504]) {
+    seen = [];
+    geminiHandler = async (_h, init) => {
+      const model = JSON.parse(init.body).model;
+      seen.push(model);
+      return model === 'gemini-3.5-flash' ? { ok: false, status, json: async () => ({}) } : ok();
+    };
+    r = await call(env, 'POST', '/api/vision', { body: { image: 'AAAA' } });
+    eq(`upstream ${status} falls through rather than failing`, r.status, 200);
+  }
 
   // Every model out of quota: say so plainly, and do not retry a quota error.
   let attempts = 0;
@@ -183,7 +190,64 @@ console.log('== busy and exhausted models are worked around ==');
   eq('all exhausted → 429', r.status, 429);
   ok('  explains the quota resets', /quota|resets tomorrow/i.test(r.body.error), r.body.error);
   ok('  suggests typing instead', /type the word/i.test(r.body.error), r.body.error);
-  eq('  tries each model once, no retries on quota', attempts, 3);
+  eq('  tries each model once', attempts, 3);
+
+  // Busy is not the same as spent, and the message has to say which.
+  geminiHandler = async () => ({ ok: false, status: 503, json: async () => ({}) });
+  r = await call(env, 'POST', '/api/vision', { body: { image: 'AAAA' } });
+  eq('every model busy → 503', r.status, 503);
+  ok('  says busy, not out of quota', /busy/i.test(r.body.error) && !/quota/i.test(r.body.error),
+     r.body.error);
+}
+
+console.log('== every read leaves something to look up afterwards ==');
+{
+  const env = makeEnv();
+  const answer = () => ({ ok: true, json: async () => ({
+    steps: [{ type: 'model_output', content: [{ type: 'text', text:
+      '{"items":[{"term":"go off","kind":"phrasal-verb","confidence":"high"}]}' }] }] }) });
+
+  // One model busy, the next answers: the log has to show both.
+  geminiHandler = async (_h, init) =>
+    (JSON.parse(init.body).model === 'gemini-3.5-flash'
+      ? { ok: false, status: 503, json: async () => ({}) } : answer());
+  let r = await call(env, 'POST', '/api/vision', { body: { image: 'AAAA' } });
+  eq('a read that worked', r.status, 200);
+  ok('  answers with its log id', Number.isInteger(r.body.trace), JSON.stringify(r.body.trace));
+
+  geminiHandler = async () => ({ ok: false, status: 429, json: async () => ({}) });
+  const bad = await call(env, 'POST', '/api/vision', { body: { image: 'AAAA' } });
+  eq('a read that failed', bad.status, 429);
+  ok('  answers with its log id too', Number.isInteger(bad.body.trace));
+
+  const logs = await call(env, 'GET', '/api/logs');
+  eq('both reads are listed', logs.body.logs.length, 2);
+  eq('  newest first', logs.body.logs[0].id, bad.body.trace);
+  eq('  the failure is marked as one', logs.body.logs[0].ok, false);
+  ok('  and says why', /quota/i.test(logs.body.logs[0].error), logs.body.logs[0].error);
+  eq('  with every model it asked', logs.body.logs[0].attempts.length, 3);
+  eq('  and what each one said', logs.body.logs[0].attempts[0].status, 429);
+  eq('the success records the model that answered', logs.body.logs[1].model, 'gemini-3.7-flash');
+  eq('  and how many items it read', logs.body.logs[1].items, 1);
+  eq('  and the busy one before it', logs.body.logs[1].attempts[0].status, 503);
+  ok('  and the size of the photo', logs.body.logs[1].image_kb >= 0);
+
+  // Someone else's reads are none of your business.
+  addUser(env.DB, 'other@example.com');
+  const theirs = await call(env, 'GET', '/api/logs', { email: 'other@example.com' });
+  eq('logs are per person', theirs.body.logs.length, 0);
+
+  const capped = await call(env, 'GET', '/api/logs?limit=1');
+  eq('limit respected', capped.body.logs.length, 1);
+
+  // Logging is there to explain failures, not to cause them.
+  const noTable = makeEnv();
+  noTable.DB._raw.exec('DROP TABLE vision_log');
+  geminiHandler = answer;
+  const survived = await call(noTable, 'POST', '/api/vision', { body: { image: 'AAAA' } });
+  eq('a read still works when the log cannot be written', survived.status, 200);
+  eq('  the draft is unaffected', survived.body.items[0].term, 'go off');
+  eq('  and it says there is no trace to look up', survived.body.trace, null);
 }
 
 console.log('== vision failures stay quiet about internals ==');
@@ -192,12 +256,13 @@ console.log('== vision failures stay quiet about internals ==');
   geminiHandler = async () => ({ ok: false, status: 400, json: async () => ({
     error: { message: 'API key not valid: test-key-do-not-log' } }) });
   const r = await call(env, 'POST', '/api/vision', { body: { image: 'AAAA' } });
-  eq('a genuine error is not retried around → 502', r.status, 502);
+  eq('a refused request → 502', r.status, 502);
+  ok('  the status is quoted so it can be reported', /\(400\)/.test(r.body.error), r.body.error);
   ok('upstream message is not forwarded', !JSON.stringify(r.body).includes('test-key-do-not-log'), JSON.stringify(r.body));
 
   geminiHandler = async () => { throw new Error('network down'); };
   const r3 = await call(env, 'POST', '/api/vision', { body: { image: 'AAAA' } });
-  eq('network failure exhausts the chain → 429', r3.status, 429);
+  eq('network failure exhausts the chain → 503', r3.status, 503);
 
   geminiHandler = async () => ({ ok: true, json: async () => ({
     steps: [{ type: 'model_output', content: [{ type: 'text', text: 'not json at all' }] }] }) });
@@ -244,6 +309,16 @@ console.log('== parseItems tolerates model sloppiness ==');
   eq('trims the term', items[0].term, 'spaced');
   eq('falls back to word for an unknown kind', items[1].kind, 'word');
   eq('falls back to low confidence', items[1].confidence, 'low');
+
+  // Seen from gemini-3.5-flash at thinking_level "low": the model works out its
+  // answer inside the field instead of in a thought step.
+  const leaked = parseItems(steps(JSON.stringify({ items: [{
+    term: 'brittle', kind: 'word', confidence: 'high',
+    vi: 'giòn, dễ vỡ\nLet\'s write: {\n  "term": "brittle",\n  "vi": "giòn, dễ vỡ"\n}',
+    meaning: 'x'.repeat(400),
+  }] })));
+  eq('keeps the answer, drops the thinking after it', leaked[0].vi, 'giòn, dễ vỡ');
+  eq('caps a runaway field', leaked[0].meaning.length, 200);
 
   eq('reads the real steps shape',
     parseItems(steps('{"items":[{"term":"a","kind":"word","confidence":"high"}]}'))[0].term, 'a');

@@ -90,3 +90,29 @@ export async function consumeQuota(db, userId, kind, limit, today = new Date().t
   const used = row?.count ?? 0;
   return { allowed: used <= limit, used, limit, remaining: Math.max(0, limit - used) };
 }
+
+/** Record one photo read - the whole point is that a failure leaves a trace. */
+export async function logVision(db, userId, entry) {
+  const row = await db.prepare(`
+    INSERT INTO vision_log (user_id, at, ok, duration_ms, image_kb, model, items, attempts, error)
+    VALUES (?, datetime('now'), ?, ?, ?, ?, ?, ?, ?)
+    RETURNING id
+  `).bind(
+    userId, entry.ok ? 1 : 0, entry.durationMs ?? 0, entry.imageKb ?? null,
+    entry.model ?? null, entry.items ?? null,
+    JSON.stringify(entry.attempts ?? []), entry.error ?? null,
+  ).first();
+  return row?.id ?? null;
+}
+
+export async function listVisionLogs(db, userId, limit = 20) {
+  const { results } = await db.prepare(
+    'SELECT * FROM vision_log WHERE user_id = ? ORDER BY id DESC LIMIT ?',
+  ).bind(userId, Math.min(Number(limit) || 20, 100)).all();
+
+  return (results || []).map((row) => ({
+    ...row,
+    ok: !!row.ok,
+    attempts: JSON.parse(row.attempts || '[]'),
+  }));
+}

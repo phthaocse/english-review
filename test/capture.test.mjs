@@ -38,8 +38,12 @@ await B.addInitScript(`
       window.__recent = [{ id: 1, term: body.term, kind: body.kind, meaning: body.meaning }, ...(window.__recent || [])];
       return reply({ item: { id: 1, ...body } }, 201);
     }
+    if (href.includes('/api/logs')) return reply({ logs: window.__logs || [] });
     if (href.includes('/api/vision')) {
-      return reply({ quota: { remaining: 49 }, items: window.__draftReply || [] });
+      if (window.__visionFail) {
+        return reply({ error: window.__visionFail, trace: 77 }, window.__visionStatus || 503);
+      }
+      return reply({ quota: { remaining: 49 }, items: window.__draftReply || [], trace: 12 });
     }
     return reply({ error: 'unexpected' }, 404);
   };
@@ -117,13 +121,19 @@ s = await B.evaluate(`
   await new Promise(r => setTimeout(r, 900));
   const call = window.__calls.filter(c => c.href.includes('/api/vision')).pop();
   const sent = atob(call.body.image);
+  const shot = new Image();
+  shot.src = 'data:image/jpeg;base64,' + call.body.image;
+  await shot.decode();
   return { sentBytes: sent.length, mime: call.body.mimeType,
+           sentEdge: Math.max(shot.naturalWidth, shot.naturalHeight),
            drafts: document.querySelectorAll('.draft').length,
            status: document.querySelector('#photo-status')?.textContent,
            hasPreview: !!document.querySelector('#preview img') };
 `);
 ok('image uploaded', s.sentBytes > 0);
 ok('downscaled well under the cap', s.sentBytes < 4 * 1024 * 1024, `${s.sentBytes} bytes`);
+// Detail is what the model reads handwriting with, so the resize keeps it.
+eq('keeps the page at full size when it is within the cap', s.sentEdge, 2400);
 eq('re-encoded as jpeg', s.mime, 'image/jpeg');
 ok('shows the photo back', s.hasPreview);
 eq('review screen lists both drafts', s.drafts, 2);
@@ -167,6 +177,103 @@ eq('review screen cleared after saving', s.remaining, 0);
 console.log('== nothing is stored without confirmation ==');
 ok('vision call alone posted no items',
    true /* verified above: after the vision call, saved posts only happened on click */);
+
+console.log('== a failed read explains itself and can be retried ==');
+// Feeding a photo is three lines of canvas; the tests below reuse it.
+const feedPhoto = `
+  const c = document.createElement('canvas'); c.width = 600; c.height = 400;
+  const ctx = c.getContext('2d'); ctx.fillStyle = '#fff'; ctx.fillRect(0,0,600,400);
+  ctx.fillStyle = '#000'; ctx.font = '32px sans-serif'; ctx.fillText('go off', 40, 120);
+  const blob = await new Promise(r => c.toBlob(r, 'image/jpeg'));
+  const dt = new DataTransfer(); dt.items.add(new File([blob], 'p.jpg', { type: 'image/jpeg' }));
+  const input = document.querySelector('#photo');
+  input.files = dt.files;
+  input.dispatchEvent(new Event('change'));
+  await new Promise(r => setTimeout(r, 700));
+`;
+
+s = await B.evaluate(`
+  window.__visionFail = 'the image service is busy right now - try again in a moment';
+  window.__calls = [];
+  document.querySelector('[data-mode="photo"]').click();
+  await new Promise(r => setTimeout(r, 200));
+  ${feedPhoto}
+  return { alert: document.querySelector('.alert-msg')?.textContent,
+           retry: !!document.querySelector('#retry'),
+           typeInstead: !!document.querySelector('#type-instead'),
+           trace: document.querySelector('.alert .mono')?.textContent,
+           statusHidden: document.querySelector('#photo-status')?.hidden,
+           pickEnabled: !document.querySelector('#pick').disabled };
+`);
+ok('the failure is shown as an alert', /busy right now/.test(s.alert || ''), s.alert);
+ok('offers a retry', s.retry);
+ok('offers the typed form as a way out', s.typeInstead);
+ok('quotes the log id to look up', /77/.test(s.trace || ''), s.trace);
+ok('the progress line steps aside', s.statusHidden);
+ok('the picker is usable again', s.pickEnabled);
+
+s = await B.evaluate(`
+  window.__visionFail = null;
+  window.__draftReply = [{ term: 'go off', kind: 'phrasal-verb', confidence: 'high' }];
+  const before = window.__calls.filter(c => c.href.includes('/api/vision'));
+  document.querySelector('#retry').click();
+  await new Promise(r => setTimeout(r, 700));
+  const after = window.__calls.filter(c => c.href.includes('/api/vision'));
+  return { sentAgain: after.length - before.length,
+           sameImage: before.length > 0 && after[after.length - 1].body.image === before[0].body.image,
+           drafts: document.querySelectorAll('.draft').length,
+           alertGone: !document.querySelector('.alert') };
+`);
+eq('retry sends the photo again', s.sentAgain, 1);
+ok('  without asking for a second photo', s.sameImage);
+eq('  and the draft arrives', s.drafts, 1);
+ok('  and the error clears', s.alertGone);
+
+s = await B.evaluate(`
+  window.__visionFail = "today's free quota for reading photos is used up - it resets tomorrow";
+  window.__visionStatus = 429;
+  ${feedPhoto}
+  return { retry: !!document.querySelector('#retry'),
+           typeInstead: !!document.querySelector('#type-instead'),
+           msg: document.querySelector('.alert-msg')?.textContent };
+`);
+ok('no retry offered when the quota is spent', !s.retry, 'retry button should be absent');
+ok('  but typing is still offered', s.typeInstead);
+ok('  and the message says the quota resets', /resets tomorrow/.test(s.msg || ''), s.msg);
+
+s = await B.evaluate(`
+  document.querySelector('#type-instead').click();
+  await new Promise(r => setTimeout(r, 200));
+  return !!document.querySelector('#type-form');
+`);
+ok('"type it instead" opens the typed form', s);
+
+console.log('== recent reads are on the page, not in a terminal ==');
+s = await B.evaluate(`
+  window.__visionFail = null; window.__visionStatus = null;
+  window.__logs = [
+    { id: 9, at: '2026-09-28 04:15:00', ok: false, duration_ms: 46500, image_kb: 200,
+      model: null, items: null, error: 'the image service is busy right now',
+      attempts: [{ model: 'gemini-3.5-flash', status: 0, ms: 45000 },
+                 { model: 'gemini-3.7-flash', status: 429, ms: 700 }] },
+    { id: 8, at: '2026-09-28 04:10:00', ok: true, duration_ms: 21900, image_kb: 200,
+      model: 'gemini-3.5-flash', items: 5, error: null,
+      attempts: [{ model: 'gemini-3.5-flash', status: 200, ms: 21800 }] },
+  ];
+  document.querySelector('[data-mode="photo"]').click();
+  await new Promise(r => setTimeout(r, 500));
+  const panel = document.querySelector('#diag');
+  return { hidden: panel?.hidden, rows: document.querySelectorAll('.log tr:not(.log-detail)').length,
+           text: document.querySelector('#diag-body')?.textContent.replace(/\\s+/g, ' '),
+           canCopy: !!document.querySelector('#copy-log') };
+`);
+ok('the panel is shown once there is something in it', s.hidden === false, JSON.stringify(s.hidden));
+eq('one row per read', s.rows, 2);
+ok('  the failure names the models it tried', /3\.5-flash timeout/.test(s.text || ''), s.text);
+ok('  the success names the model that answered', /gemini-3\.5-flash · 5 items/.test(s.text || ''), s.text);
+ok('  each row carries its log id', /#9/.test(s.text || '') && /#8/.test(s.text || ''), s.text);
+ok('  and the whole lot can be copied', s.canCopy);
+
 
 console.log('== signing out ==');
 // Sign-out moved into the header bar, which every screen now shows.

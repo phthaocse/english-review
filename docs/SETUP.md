@@ -48,6 +48,14 @@ wrangler d1 execute knowledge --remote --file=./schema.sql
 Put the printed `database_id` and your client ID into `worker/wrangler.toml`,
 replacing both `REPLACE_ME` values.
 
+An already-running database picks up a new table the same way. Schema changes
+are also kept in `worker/migrations/`, but `--file=` needs an API token, so with
+a `wrangler login` session use `--command` and paste the statement:
+
+```bash
+wrangler d1 execute knowledge --remote --command "$(cat migrations/0002-vision-log.sql)"
+```
+
 Add yourself to the allowlist — nobody can sign in until this row exists:
 
 ```bash

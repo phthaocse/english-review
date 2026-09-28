@@ -128,7 +128,13 @@ function onAuthChangeOnce(fn) {
 }
 
 export class ApiError extends Error {
-  constructor(message, status) { super(message); this.status = status; }
+  // `trace` is the id of the row the Worker logged for this call, when it
+  // logged one, so a failure on screen can be looked up afterwards.
+  constructor(message, status, trace = null) {
+    super(message);
+    this.status = status;
+    this.trace = trace;
+  }
 }
 
 /** Call the API with the current token, renewing it first if it is about to expire. */
@@ -153,6 +159,8 @@ export async function api(path, { method = 'GET', body, retryOn401 = true } = {}
   let payload = null;
   try { payload = await res.json(); } catch { /* empty body */ }
 
-  if (!res.ok) throw new ApiError(payload?.error || `request failed (${res.status})`, res.status);
+  if (!res.ok) {
+    throw new ApiError(payload?.error || `request failed (${res.status})`, res.status, payload?.trace ?? null);
+  }
   return payload;
 }

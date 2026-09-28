@@ -13,9 +13,9 @@ const KINDS = [
   ['grammar-pattern', 'Grammar pattern'],
 ];
 
-// Phone photos are far larger than the model needs; a 1600px long edge reads
-// handwriting just as well and keeps the upload quick on mobile data.
-const MAX_EDGE = 1600;
+// Handwriting needs the pixels: shrunk to 1600px the model read 1 item of 5 and
+// took 39s; at 2300px it read all 5 in 26s. The cap only bounds the upload.
+const MAX_EDGE = 2400;
 const JPEG_QUALITY = 0.85;
 
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) =>
@@ -24,6 +24,7 @@ const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) =>
 let draft = [];      // items awaiting review
 let recent = [];
 let mode = 'type';
+let lastImage = null;   // kept so a failed read can be retried without a second photo
 
 export function renderCapture(view) {
   view.innerHTML = `
@@ -127,40 +128,157 @@ function renderPhotoForm(view) {
       <h3>Photograph your notebook</h3>
       <p class="muted" style="margin-top:0">A draft comes back for you to check. Nothing is saved until you confirm it.</p>
       <input type="file" id="photo" accept="image/*" capture="environment" hidden>
-      <div class="row">
-        <button class="btn" id="pick">Take or choose a photo</button>
-        <span id="photo-status" class="muted" style="font-size:.88rem"></span>
-      </div>
-      <div id="preview" style="margin-top:14px"></div>
+      <button class="btn wide" id="pick">Take or choose a photo</button>
+      <p class="reading" id="photo-status" hidden></p>
+      <div id="photo-error"></div>
+      <div id="preview"></div>
+      <details class="diag" id="diag" hidden>
+        <summary>Recent reads</summary>
+        <div id="diag-body"></div>
+      </details>
     </div>`;
 
   const input = view.querySelector('#photo');
-  const status = view.querySelector('#photo-status');
   view.querySelector('#pick').addEventListener('click', () => input.click());
 
   input.addEventListener('change', async () => {
     if (!input.files?.length) return;
+    const status = view.querySelector('#photo-status');
+    status.hidden = false;
     status.textContent = 'Preparing the image…';
     try {
-      const image = await prepareImage(input.files[0]);
-      view.querySelector('#preview').innerHTML =
-        `<img src="${image.preview}" alt="The page you photographed"
-              style="max-width:100%; border-radius:10px; border:1px solid var(--border)">`;
-      status.textContent = 'Reading the handwriting…';
-      const result = await api('/api/vision', { method: 'POST', body: {
-        image: image.base64, mimeType: 'image/jpeg',
-      }});
-      draft = result.items.map((item) => ({ ...item, keep: true }));
-      status.textContent = draft.length
-        ? `Found ${draft.length} item${draft.length === 1 ? '' : 's'} — check them below.`
-        : 'No English study notes found in that photo.';
-      renderDraft(view);
+      lastImage = await prepareImage(input.files[0]);
+      showPreview(view, lastImage);
+      await readPhoto(view);
     } catch (error) {
-      status.textContent = error.message;
+      showReadError(view, error);
     } finally {
-      input.value = '';
+      input.value = '';      // so picking the same file again still fires
     }
   });
+
+  loadDiagnostics(view);
+}
+
+/** Small by default: the draft to check matters more than the photo of it. */
+function showPreview(view, image) {
+  view.querySelector('#preview').innerHTML = `
+    <details class="shot">
+      <summary>Photo</summary>
+      <img src="${image.preview}" alt="The page you photographed">
+    </details>`;
+}
+
+/** Send the photo already in hand. Separate so a retry costs no second photo. */
+async function readPhoto(view) {
+  const status = view.querySelector('#photo-status');
+  const pick = view.querySelector('#pick');
+  view.querySelector('#photo-error').innerHTML = '';
+  pick.disabled = true;
+  status.hidden = false;
+
+  // A read can take a minute on the free tier, and a line that never changes
+  // looks like a hang, so it counts.
+  const since = Date.now();
+  const show = () => {
+    const seconds = Math.round((Date.now() - since) / 1000);
+    status.textContent = seconds > 25
+      ? `Reading the handwriting… ${seconds}s — it is slow when the free tier is busy`
+      : `Reading the handwriting… ${seconds}s`;
+  };
+  show();
+  const tick = setInterval(show, 1000);
+
+  try {
+    const result = await api('/api/vision', { method: 'POST', body: {
+      image: lastImage.base64, mimeType: 'image/jpeg',
+    }});
+    draft = result.items.map((item) => ({ ...item, keep: true }));
+    status.textContent = draft.length
+      ? `Found ${draft.length} item${draft.length === 1 ? '' : 's'} — check them below.`
+      : 'No English study notes found in that photo.';
+    renderDraft(view);
+  } catch (error) {
+    status.hidden = true;
+    showReadError(view, error);
+  } finally {
+    clearInterval(tick);
+    pick.disabled = false;
+    loadDiagnostics(view);
+  }
+}
+
+function showReadError(view, error) {
+  const box = view.querySelector('#photo-error');
+  if (!box) return;
+  const spent = /quota/i.test(error.message);
+  box.innerHTML = `
+    <div class="alert" role="alert">
+      <p class="alert-msg">${esc(error.message)}</p>
+      <div class="row">
+        ${lastImage && !spent ? '<button class="btn" id="retry">Try again</button>' : ''}
+        <button class="btn secondary" id="type-instead">Type it instead</button>
+        ${error.trace ? `<span class="muted mono">log #${esc(error.trace)}</span>` : ''}
+      </div>
+    </div>`;
+
+  box.querySelector('#retry')?.addEventListener('click', () => readPhoto(view));
+  box.querySelector('#type-instead')?.addEventListener('click', () => {
+    mode = 'type';
+    renderCapture(view);
+  });
+}
+
+// -------------------------------------------------------------- what happened --
+
+/** The last few reads, so a failure can be explained without the terminal. */
+async function loadDiagnostics(view) {
+  const panel = view.querySelector('#diag');
+  const body = view.querySelector('#diag-body');
+  if (!panel || !body) return;
+
+  let logs = [];
+  try {
+    ({ logs } = await api('/api/logs?limit=8'));
+  } catch {
+    panel.hidden = true;
+    return;
+  }
+  if (!logs.length) { panel.hidden = true; return; }
+
+  panel.hidden = false;
+  body.innerHTML = `
+    <table class="log">
+      <tbody>${logs.map((log) => `
+        <tr class="${log.ok ? '' : 'bad'}">
+          <td>${log.ok ? '✓' : '✕'}</td>
+          <td class="mono">${esc(when(log.at))}</td>
+          <td class="mono">${(log.duration_ms / 1000).toFixed(1)}s</td>
+          <td>${esc(log.ok ? `${log.model} · ${log.items} item${log.items === 1 ? '' : 's'}` : log.error)}</td>
+        </tr>
+        <tr class="log-detail"><td></td><td colspan="3" class="mono muted">
+          #${log.id} · ${log.image_kb ?? '?'}KB · ${esc(log.attempts.map(
+            (a) => `${a.model.replace('gemini-', '')} ${a.status || 'timeout'} ${Math.round(a.ms / 1000)}s`).join(' → '))}
+        </td></tr>`).join('')}
+      </tbody>
+    </table>
+    <button class="btn secondary small" id="copy-log">Copy for support</button>`;
+
+  body.querySelector('#copy-log').addEventListener('click', async (e) => {
+    try {
+      await navigator.clipboard.writeText(JSON.stringify(logs, null, 2));
+      e.target.textContent = 'Copied';
+    } catch {
+      e.target.textContent = 'Could not copy';
+    }
+  });
+}
+
+/** Times come back as UTC from SQLite; show them in the reader's own clock. */
+function when(at) {
+  const parsed = new Date(`${String(at).replace(' ', 'T')}Z`);
+  return Number.isNaN(parsed.getTime()) ? String(at)
+    : parsed.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
 }
 
 // ------------------------------------------------------------ review screen --
