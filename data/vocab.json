@@ -1,5 +1,5 @@
 {
- "generated": "2026-09-25 15:21",
+ "generated": "2026-09-29 11:34",
  "items": [
   {
    "id": "I'm not following",
@@ -518,6 +518,154 @@
    "senses": []
   },
   {
+   "id": "awe",
+   "term": "awe",
+   "kind": "vocab",
+   "type": "word",
+   "vi": "sự nể phục pha chút choáng ngợp, kính sợ",
+   "cefr": "b2",
+   "added": "2026-09-29",
+   "session": "2026-09-29 Whisky distilling",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/word",
+    "theme/whisky"
+   ],
+   "notesHtml": "<p>You wrote <em>awed</em>, the adjective. The noun patterns are <em>in awe</em> and <em>in awe <strong>of</strong> somebody</em> — Oxford defines the second as admiring somebody and being slightly frightened of them, so it is stronger than simple admiration.</p>",
+   "seeAlso": [
+    "devotion"
+   ],
+   "ipa": "/ɔː/",
+   "pos": [
+    "noun"
+   ],
+   "meaning": "a feeling of respect and slight fear, or of being very impressed",
+   "register": "neutral",
+   "pattern": "",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "The visitors stood **awed** by the scale of the warehouse.",
+     "text": "The visitors stood awed by the scale of the warehouse.",
+     "html": "<p>The visitors stood <strong>awed</strong> by the scale of the warehouse.</p>",
+     "gaps": [
+      "awed"
+     ]
+    },
+    {
+     "md": "‘It's magnificent,’ she whispered in **awe**.",
+     "text": "‘It's magnificent,’ she whispered in awe.",
+     "html": "<p>‘It's magnificent,’ she whispered in <strong>awe</strong>.</p>",
+     "gaps": [
+      "awe"
+     ]
+    }
+   ],
+   "senses": []
+  },
+  {
+   "id": "bacteria",
+   "term": "bacteria",
+   "kind": "vocab",
+   "type": "word",
+   "vi": "vi khuẩn (số nhiều; số ít là *bacterium*)",
+   "cefr": "b2",
+   "added": "2026-09-29",
+   "session": "2026-09-29 Whisky distilling",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/word",
+    "cefr/b2",
+    "theme/whisky"
+   ],
+   "notesHtml": "<p>A trap: <em>bacteria</em> is plural, so it takes <em>are</em>, not <em>is</em>. One of them is <em>a bacterium</em>. Vietnamese <em>vi khuẩn</em> does not mark number, which is exactly why this one slips.</p>",
+   "seeAlso": [
+    "yeast"
+   ],
+   "ipa": "/bækˈtɪəriə/",
+   "pos": [
+    "noun"
+   ],
+   "meaning": "the simplest and smallest forms of life, often a cause of disease",
+   "register": "neutral",
+   "pattern": "",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "Drying the malt kills the **bacteria** that would spoil the wash.",
+     "text": "Drying the malt kills the bacteria that would spoil the wash.",
+     "html": "<p>Drying the malt kills the <strong>bacteria</strong> that would spoil the wash.</p>",
+     "gaps": [
+      "bacteria"
+     ]
+    },
+    {
+     "md": "**Bacteria** are found in air, water and soil.",
+     "text": "Bacteria are found in air, water and soil.",
+     "html": "<p><strong>Bacteria</strong> are found in air, water and soil.</p>",
+     "gaps": [
+      "Bacteria"
+     ]
+    }
+   ],
+   "senses": []
+  },
+  {
+   "id": "barley",
+   "term": "barley",
+   "kind": "vocab",
+   "type": "word",
+   "vi": "lúa mạch",
+   "cefr": "c1",
+   "added": "2026-09-29",
+   "session": "2026-09-29 Whisky distilling",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/word",
+    "cefr/c1",
+    "theme/whisky"
+   ],
+   "notesHtml": "<p>You wrote it <em>Balley</em> from listening. Oxford's own example is the sentence you were watching: <em>Malt whisky is made from malted barley.</em></p>",
+   "seeAlso": [
+    "malt",
+    "grain",
+    "grist"
+   ],
+   "ipa": "/ˈbɑːli/",
+   "pos": [
+    "noun"
+   ],
+   "meaning": "a plant grown for its grain, used for making food, beer and whisky",
+   "register": "neutral",
+   "pattern": "",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "Single malt whisky is made from malted **barley** and nothing else.",
+     "text": "Single malt whisky is made from malted barley and nothing else.",
+     "html": "<p>Single malt whisky is made from malted <strong>barley</strong> and nothing else.</p>",
+     "gaps": [
+      "barley"
+     ]
+    },
+    {
+     "md": "Feed **barley** prices are set to rise.",
+     "text": "Feed barley prices are set to rise.",
+     "html": "<p>Feed <strong>barley</strong> prices are set to rise.</p>",
+     "gaps": [
+      "barley"
+     ]
+    }
+   ],
+   "senses": []
+  },
+  {
    "id": "beyond reason",
    "term": "beyond reason / past reason",
    "kind": "vocab",
@@ -762,6 +910,56 @@
    "senses": []
   },
   {
+   "id": "capsule",
+   "term": "capsule",
+   "kind": "vocab",
+   "type": "word",
+   "vi": "nắp bọc cổ chai; (nghĩa thường gặp) viên nang thuốc",
+   "cefr": "c1",
+   "added": "2026-09-29",
+   "session": "2026-09-29 Whisky distilling",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/word",
+    "cefr/c1",
+    "theme/whisky"
+   ],
+   "notesHtml": "<p>⚠️ Oxford lists the medicine capsule, a small plastic container and a space capsule — the bottle-top sense you heard is drinks-trade usage and is not in the dictionary.</p>",
+   "seeAlso": [
+    "cork"
+   ],
+   "ipa": "/ˈkæpsjuːl/",
+   "pos": [
+    "noun"
+   ],
+   "meaning": "the foil or plastic sleeve over the cork of a bottle",
+   "register": "neutral",
+   "pattern": "",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "A foil **capsule** covers the **cork** on every bottle.",
+     "text": "A foil capsule covers the cork on every bottle.",
+     "html": "<p>A foil <strong>capsule</strong> covers the <strong>cork</strong> on every bottle.</p>",
+     "gaps": [
+      "capsule",
+      "cork"
+     ]
+    },
+    {
+     "md": "The medicine can be taken in tablet or **capsule** form.",
+     "text": "The medicine can be taken in tablet or capsule form.",
+     "html": "<p>The medicine can be taken in tablet or <strong>capsule</strong> form.</p>",
+     "gaps": [
+      "capsule"
+     ]
+    }
+   ],
+   "senses": []
+  },
+  {
    "id": "cede ground",
    "term": "cede ground",
    "kind": "vocab",
@@ -957,6 +1155,55 @@
    "senses": []
   },
   {
+   "id": "concentrated",
+   "term": "concentrated",
+   "kind": "vocab",
+   "type": "word",
+   "vi": "cô đặc; (nghĩa khác) tập trung cao độ",
+   "cefr": "b2",
+   "added": "2026-09-29",
+   "session": "2026-09-29 Whisky distilling",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/word",
+    "theme/whisky"
+   ],
+   "notesHtml": "<p>Three senses: cô đặc (the liquid), determined (<em>a concentrated effort</em>), and packed into one place (<em>concentrated gunfire</em>).</p>",
+   "seeAlso": [
+    "dissolve",
+    "cure"
+   ],
+   "ipa": "/ˈkɒnsntreɪtɪd/",
+   "pos": [
+    "adjective"
+   ],
+   "meaning": "made stronger because water or other substances have been removed",
+   "register": "neutral",
+   "pattern": "",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "Each distillation leaves a more **concentrated** spirit.",
+     "text": "Each distillation leaves a more concentrated spirit.",
+     "html": "<p>Each distillation leaves a more <strong>concentrated</strong> spirit.</p>",
+     "gaps": [
+      "concentrated"
+     ]
+    },
+    {
+     "md": "**concentrated** orange juice",
+     "text": "concentrated orange juice",
+     "html": "<p><strong>concentrated</strong> orange juice</p>",
+     "gaps": [
+      "concentrated"
+     ]
+    }
+   ],
+   "senses": []
+  },
+  {
    "id": "contender",
    "term": "contender",
    "kind": "vocab",
@@ -1002,6 +1249,55 @@
      "html": "<p>That release made them a real <strong>contender</strong>.</p>",
      "gaps": [
       "contender"
+     ]
+    }
+   ],
+   "senses": []
+  },
+  {
+   "id": "cork",
+   "term": "cork",
+   "kind": "vocab",
+   "type": "word",
+   "vi": "nút bần; gỗ bần",
+   "cefr": "c2",
+   "added": "2026-09-29",
+   "session": "2026-09-29 Whisky distilling",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/word",
+    "cefr/c2",
+    "theme/whisky"
+   ],
+   "notesHtml": "<p>Uncountable for the material (<em>cork tiles</em>), countable for the stopper. <em>Corked</em> wine is wine spoilt by a bad cork.</p>",
+   "seeAlso": [
+    "capsule"
+   ],
+   "ipa": "/kɔːk/",
+   "pos": [
+    "noun"
+   ],
+   "meaning": "the stopper of a bottle; the soft bark of a Mediterranean oak it is made from",
+   "register": "neutral",
+   "pattern": "",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "The **cork** is sealed under a foil capsule.",
+     "text": "The cork is sealed under a foil capsule.",
+     "html": "<p>The <strong>cork</strong> is sealed under a foil capsule.</p>",
+     "gaps": [
+      "cork"
+     ]
+    },
+    {
+     "md": "Champagne **corks** were popping.",
+     "text": "Champagne corks were popping.",
+     "html": "<p>Champagne <strong>corks</strong> were popping.</p>",
+     "gaps": [
+      "corks"
      ]
     }
    ],
@@ -1287,6 +1583,94 @@
    ]
   },
   {
+   "id": "cure",
+   "term": "cure",
+   "kind": "vocab",
+   "type": "word",
+   "vi": "tuỳ nghĩa (xem bên dưới)",
+   "cefr": "b2",
+   "added": "2026-09-29",
+   "session": "2026-09-29 Whisky distilling",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/word",
+    "cefr/b2",
+    "theme/whisky"
+   ],
+   "notesHtml": "<p>The whisky sense is the food one: smoke and heat, not medicine. <em>Cured ham</em>, <em>dry-cured bacon</em> are the everyday examples.</p>",
+   "seeAlso": [
+    "malt",
+    "concentrated"
+   ],
+   "ipa": "/kjʊə(r)/",
+   "pos": [
+    "verb",
+    "noun"
+   ],
+   "meaning": "two unrelated senses — see below",
+   "register": "neutral",
+   "pattern": "",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "The malt is **cured** over a peat fire, which is where the smoky taste comes from.",
+     "text": "The malt is cured over a peat fire, which is where the smoky taste comes from.",
+     "html": "<p>The malt is <strong>cured</strong> over a peat fire, which is where the smoky taste comes from.</p>",
+     "gaps": [
+      "cured"
+     ]
+    },
+    {
+     "md": "Finding it early is the key to **curing** most cancers.",
+     "text": "Finding it early is the key to curing most cancers.",
+     "html": "<p>Finding it early is the key to <strong>curing</strong> most cancers.</p>",
+     "gaps": [
+      "curing"
+     ]
+    }
+   ],
+   "senses": [
+    {
+     "gloss": "to treat food or tobacco with smoke, salt or heat in order to preserve it",
+     "vi": "xử lý, ướp (để bảo quản)",
+     "example": {
+      "md": "The malt is **cured** over a peat fire.",
+      "text": "The malt is cured over a peat fire.",
+      "html": "<p>The malt is <strong>cured</strong> over a peat fire.</p>",
+      "gaps": [
+       "cured"
+      ]
+     }
+    },
+    {
+     "gloss": "to make a person healthy again after an illness",
+     "vi": "chữa khỏi (bệnh)",
+     "example": {
+      "md": "The doctor managed to **cure** her of her illness.",
+      "text": "The doctor managed to cure her of her illness.",
+      "html": "<p>The doctor managed to <strong>cure</strong> her of her illness.</p>",
+      "gaps": [
+       "cure"
+      ]
+     }
+    },
+    {
+     "gloss": "to deal with a problem successfully",
+     "vi": "khắc phục (vấn đề)",
+     "example": {
+      "md": "I finally managed to **cure** the rattling noise in my car.",
+      "text": "I finally managed to cure the rattling noise in my car.",
+      "html": "<p>I finally managed to <strong>cure</strong> the rattling noise in my car.</p>",
+      "gaps": [
+       "cure"
+      ]
+     }
+    }
+   ]
+  },
+  {
    "id": "dark horse",
    "term": "a dark horse",
    "kind": "vocab",
@@ -1555,6 +1939,55 @@
    ]
   },
   {
+   "id": "devotion",
+   "term": "devotion",
+   "kind": "vocab",
+   "type": "word",
+   "vi": "sự tận tuỵ, lòng tận tâm; lòng sùng kính (tôn giáo)",
+   "cefr": "c1",
+   "added": "2026-09-29",
+   "session": "2026-09-29 Whisky distilling",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/word",
+    "cefr/c1",
+    "theme/whisky"
+   ],
+   "notesHtml": "<p>Takes <em>to</em>, never <em>for</em>: <em>devotion <strong>to</strong> his family</em>. The third Oxford sense is religious worship, which is where Vietnamese splits — <em>tận tuỵ</em> for a person or job, <em>sùng kính</em> for religion.</p>",
+   "seeAlso": [
+    "awe"
+   ],
+   "ipa": "/dɪˈvəʊʃn/",
+   "pos": [
+    "noun"
+   ],
+   "meaning": "great love and care for somebody, or the giving of a lot of time and energy to something",
+   "register": "neutral",
+   "pattern": "",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "Two hundred years of **devotion** to the same recipe is part of what is being sold.",
+     "text": "Two hundred years of devotion to the same recipe is part of what is being sold.",
+     "html": "<p>Two hundred years of <strong>devotion</strong> to the same recipe is part of what is being sold.</p>",
+     "gaps": [
+      "devotion"
+     ]
+    },
+    {
+     "md": "Her **devotion** to the job left her with very little free time.",
+     "text": "Her devotion to the job left her with very little free time.",
+     "html": "<p>Her <strong>devotion</strong> to the job left her with very little free time.</p>",
+     "gaps": [
+      "devotion"
+     ]
+    }
+   ],
+   "senses": []
+  },
+  {
    "id": "disingenuous",
    "term": "disingenuous",
    "kind": "vocab",
@@ -1600,6 +2033,56 @@
      "html": "<p>It would be <strong>disingenuous</strong> of me to claim I had never seen it.</p>",
      "gaps": [
       "disingenuous"
+     ]
+    }
+   ],
+   "senses": []
+  },
+  {
+   "id": "dissolve",
+   "term": "dissolve",
+   "kind": "vocab",
+   "type": "word",
+   "vi": "hoà tan",
+   "cefr": "c1",
+   "added": "2026-09-29",
+   "session": "2026-09-29 Whisky distilling",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/word",
+    "cefr/c1",
+    "theme/whisky"
+   ],
+   "notesHtml": "<p>You wrote <em>disolved</em> — two s's, one l. Intransitive for the solid (<em>salt dissolves in water</em>), transitive for the person doing it (<em>dissolve the tablet in water</em>). A separate legal sense: <em>parliament was dissolved</em>, <em>their marriage was dissolved</em>.</p>",
+   "seeAlso": [
+    "concentrated",
+    "wort"
+   ],
+   "ipa": "/dɪˈzɒlv/",
+   "pos": [
+    "verb"
+   ],
+   "meaning": "(of a solid) to mix into a liquid and become part of it",
+   "register": "neutral",
+   "pattern": "",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "The sugars **dissolve** into the hot water in the mash tun.",
+     "text": "The sugars dissolve into the hot water in the mash tun.",
+     "html": "<p>The sugars <strong>dissolve</strong> into the hot water in the mash tun.</p>",
+     "gaps": [
+      "dissolve"
+     ]
+    },
+    {
+     "md": "Heat gently until the sugar **dissolves**.",
+     "text": "Heat gently until the sugar dissolves.",
+     "html": "<p>Heat gently until the sugar <strong>dissolves</strong>.</p>",
+     "gaps": [
+      "dissolves"
      ]
     }
    ],
@@ -2534,6 +3017,56 @@
    "senses": []
   },
   {
+   "id": "germinate",
+   "term": "germinate",
+   "kind": "vocab",
+   "type": "word",
+   "vi": "nảy mầm",
+   "cefr": "b2",
+   "added": "2026-09-29",
+   "session": "2026-09-29 Whisky distilling",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/word",
+    "theme/whisky"
+   ],
+   "notesHtml": "<p>You wrote <em>Germanate</em>; the stem is <em>germ-</em> as in <em>germination</em>. Oxford lists only <em>seed</em> as its subject, plus the figurative use for an idea. No CEFR level given, so this is outside the Oxford 5000.</p>",
+   "seeAlso": [
+    "sprout",
+    "malt",
+    "soak"
+   ],
+   "ipa": "/ˈdʒɜːmɪneɪt/",
+   "pos": [
+    "verb"
+   ],
+   "meaning": "(of a seed) to start to grow",
+   "register": "neutral",
+   "pattern": "",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "The soaked barley is left to **germinate** for about five days.",
+     "text": "The soaked barley is left to germinate for about five days.",
+     "html": "<p>The soaked barley is left to <strong>germinate</strong> for about five days.</p>",
+     "gaps": [
+      "germinate"
+     ]
+    },
+    {
+     "md": "An idea for a novel began to **germinate** in her mind.",
+     "text": "An idea for a novel began to germinate in her mind.",
+     "html": "<p>An idea for a novel began to <strong>germinate</strong> in her mind.</p>",
+     "gaps": [
+      "germinate"
+     ]
+    }
+   ],
+   "senses": []
+  },
+  {
    "id": "go ahead",
    "term": "go ahead",
    "kind": "vocab",
@@ -2830,6 +3363,106 @@
    ]
   },
   {
+   "id": "grain",
+   "term": "grain",
+   "kind": "vocab",
+   "type": "word",
+   "vi": "hạt ngũ cốc; hạt nhỏ li ti (cát, muối)",
+   "cefr": "b1",
+   "added": "2026-09-29",
+   "session": "2026-09-29 Whisky distilling",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/word",
+    "cefr/b1",
+    "theme/whisky"
+   ],
+   "notesHtml": "<p>Uncountable for the crop (<em>America's grain exports</em>), countable for one seed or particle (<em>a grain of salt</em>). A third sense is figurative and always negative: <em>There isn't a grain of truth in it.</em></p>",
+   "seeAlso": [
+    "barley",
+    "grist"
+   ],
+   "ipa": "/ɡreɪn/",
+   "pos": [
+    "noun"
+   ],
+   "meaning": "the small, hard seeds of food plants such as barley, wheat or rice",
+   "register": "neutral",
+   "pattern": "",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "Whisky can be made from malted barley or from other **grains** such as wheat and maize.",
+     "text": "Whisky can be made from malted barley or from other grains such as wheat and maize.",
+     "html": "<p>Whisky can be made from malted barley or from other <strong>grains</strong> such as wheat and maize.</p>",
+     "gaps": [
+      "grains"
+     ]
+    },
+    {
+     "md": "I got a **grain** of sand in my eye.",
+     "text": "I got a grain of sand in my eye.",
+     "html": "<p>I got a <strong>grain</strong> of sand in my eye.</p>",
+     "gaps": [
+      "grain"
+     ]
+    }
+   ],
+   "senses": []
+  },
+  {
+   "id": "grist",
+   "term": "grist",
+   "kind": "vocab",
+   "type": "word",
+   "vi": "bột/hạt đã nghiền; (nghĩa bóng) chất liệu hữu ích",
+   "cefr": "b2",
+   "added": "2026-09-29",
+   "session": "2026-09-29 Whisky distilling",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/word",
+    "theme/whisky"
+   ],
+   "notesHtml": "<p>⚠️ Oxford carries only the figurative sense and the idiom <em>grist to the mill</em>. The literal milling sense you heard is distilling usage; the dictionary's Word Origin does confirm it — Old English <em>grist</em> 'grinding', related to <em>grind</em>.</p>",
+   "seeAlso": [
+    "mash",
+    "malt",
+    "grain"
+   ],
+   "ipa": "/ɡrɪst/",
+   "pos": [
+    "noun"
+   ],
+   "meaning": "grain that has been milled ready for mashing; (figurative) useful material",
+   "register": "neutral",
+   "pattern": "",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "The dried malt is milled into **grist** before it meets the hot water.",
+     "text": "The dried malt is milled into grist before it meets the hot water.",
+     "html": "<p>The dried malt is milled into <strong>grist</strong> before it meets the hot water.</p>",
+     "gaps": [
+      "grist"
+     ]
+    },
+    {
+     "md": "Political scandals are all **grist** to the mill of the tabloids.",
+     "text": "Political scandals are all grist to the mill of the tabloids.",
+     "html": "<p>Political scandals are all <strong>grist</strong> to the mill of the tabloids.</p>",
+     "gaps": [
+      "grist"
+     ]
+    }
+   ],
+   "senses": []
+  },
+  {
    "id": "hand in your notice",
    "term": "hand in your notice",
    "kind": "vocab",
@@ -2925,6 +3558,55 @@
      "html": "<p>Only <strong>a handful of</strong> people came.</p>",
      "gaps": [
       "a handful of"
+     ]
+    }
+   ],
+   "senses": []
+  },
+  {
+   "id": "heat conductor",
+   "term": "heat conductor",
+   "kind": "vocab",
+   "type": "collocation",
+   "vi": "vật dẫn nhiệt",
+   "cefr": "c1",
+   "added": "2026-09-29",
+   "session": "2026-09-29 Whisky distilling",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/collocation",
+    "cefr/c1",
+    "theme/whisky"
+   ],
+   "notesHtml": "<p>Oxford's physics sense of <em>conductor</em> is <em>a substance that allows electricity or heat to pass along it or through it</em>, with <em>Wood is a poor conductor</em> as the example, so the pairing is sound. The IPA here is the two Oxford headwords read together. Same word, unrelated senses: an orchestra <em>conductor</em>, a bus <em>conductor</em>.</p>",
+   "seeAlso": [
+    "concentrated"
+   ],
+   "ipa": "/ˌhiːt kənˈdʌktə(r)/",
+   "pos": [
+    "noun phrase"
+   ],
+   "meaning": "a substance that lets heat pass through it",
+   "register": "neutral",
+   "pattern": "",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "Copper is an excellent **heat conductor**, which is why stills are made of it.",
+     "text": "Copper is an excellent heat conductor, which is why stills are made of it.",
+     "html": "<p>Copper is an excellent <strong>heat conductor</strong>, which is why stills are made of it.</p>",
+     "gaps": [
+      "heat conductor"
+     ]
+    },
+    {
+     "md": "Wood is a poor **conductor**.",
+     "text": "Wood is a poor conductor.",
+     "html": "<p>Wood is a poor <strong>conductor</strong>.</p>",
+     "gaps": [
+      "conductor"
      ]
     }
    ],
@@ -3474,6 +4156,54 @@
    "senses": []
   },
   {
+   "id": "levy",
+   "term": "levy",
+   "kind": "vocab",
+   "type": "word",
+   "vi": "đánh thuế, thu (khoản bắt buộc); khoản thu, thuế",
+   "cefr": "c1",
+   "added": "2026-09-29",
+   "session": "2026-09-29 Whisky distilling",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/word",
+    "cefr/c1",
+    "theme/whisky"
+   ],
+   "notesHtml": "<p>Formal, and almost always about money taken by authority. The noun takes <em>on</em>: <em>a levy on imports</em>. Related: <em>duty</em>, <em>tariff</em>, <em>excise</em>.</p>",
+   "seeAlso": [],
+   "ipa": "/ˈlevi/",
+   "pos": [
+    "noun",
+    "verb"
+   ],
+   "meaning": "(verb) to demand and collect a tax by official authority; (noun) the amount demanded",
+   "register": "neutral",
+   "pattern": "",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "A duty is **levied** on every bottle of spirits that leaves the warehouse.",
+     "text": "A duty is levied on every bottle of spirits that leaves the warehouse.",
+     "html": "<p>A duty is <strong>levied</strong> on every bottle of spirits that leaves the warehouse.</p>",
+     "gaps": [
+      "levied"
+     ]
+    },
+    {
+     "md": "The government put a **levy** on oil imports.",
+     "text": "The government put a levy on oil imports.",
+     "html": "<p>The government put a <strong>levy</strong> on oil imports.</p>",
+     "gaps": [
+      "levy"
+     ]
+    }
+   ],
+   "senses": []
+  },
+  {
    "id": "long-term retention",
    "term": "long-term retention",
    "kind": "vocab",
@@ -3662,6 +4392,211 @@
      "html": "<p>Repetition alone will not <strong>make it stick</strong>.</p>",
      "gaps": [
       "make it stick"
+     ]
+    }
+   ],
+   "senses": []
+  },
+  {
+   "id": "make up",
+   "term": "make up",
+   "kind": "vocab",
+   "type": "phrasal-verb",
+   "vi": "bịa ra (câu chuyện, lý do)",
+   "cefr": "b1",
+   "added": "2026-09-29",
+   "session": "2026-09-29 Courtroom testimony",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/phrasal-verb",
+    "cefr/b1",
+    "theme/legal"
+   ],
+   "notesHtml": "<p>Separable in the invent sense: <em>make up a story</em> or <em>make it up</em>. In a courtroom the accusation is exactly this one — that a witness invented what they said.</p>",
+   "seeAlso": [
+    "testify",
+    "witness"
+   ],
+   "ipa": "/ˌmeɪk ˈʌp/",
+   "pos": [
+    "phrasal verb"
+   ],
+   "meaning": "to invent a story or excuse, especially in order to deceive",
+   "register": "neutral",
+   "pattern": "",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "The defence claimed she had **made up** the whole story.",
+     "text": "The defence claimed she had made up the whole story.",
+     "html": "<p>The defence claimed she had <strong>made up</strong> the whole story.</p>",
+     "gaps": [
+      "made up"
+     ]
+    },
+    {
+     "md": "He **made up** some excuse about his daughter being sick.",
+     "text": "He made up some excuse about his daughter being sick.",
+     "html": "<p>He <strong>made up</strong> some excuse about his daughter being sick.</p>",
+     "gaps": [
+      "made up"
+     ]
+    }
+   ],
+   "senses": [
+    {
+     "gloss": "to invent a story or excuse, often to deceive",
+     "vi": "bịa ra",
+     "example": {
+      "md": "You **made** that **up**!",
+      "text": "You made that up!",
+      "html": "<p>You <strong>made</strong> that <strong>up</strong>!</p>",
+      "gaps": [
+       "made",
+       "up"
+      ]
+     }
+    },
+    {
+     "gloss": "to form or constitute something",
+     "vi": "chiếm, tạo thành",
+     "example": {
+      "md": "Women **make up** 56 per cent of the student numbers.",
+      "text": "Women make up 56 per cent of the student numbers.",
+      "html": "<p>Women <strong>make up</strong> 56 per cent of the student numbers.</p>",
+      "gaps": [
+       "make up"
+      ]
+     }
+    },
+    {
+     "gloss": "to replace something lost, or compensate",
+     "vi": "bù lại",
+     "example": {
+      "md": "Can I leave early and **make up** the time tomorrow?",
+      "text": "Can I leave early and make up the time tomorrow?",
+      "html": "<p>Can I leave early and <strong>make up</strong> the time tomorrow?</p>",
+      "gaps": [
+       "make up"
+      ]
+     }
+    },
+    {
+     "gloss": "to put cosmetics on a face",
+     "vi": "trang điểm",
+     "example": {
+      "md": "She was **made up** for the cameras.",
+      "text": "She was made up for the cameras.",
+      "html": "<p>She was <strong>made up</strong> for the cameras.</p>",
+      "gaps": [
+       "made up"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "malt",
+   "term": "malt",
+   "kind": "vocab",
+   "type": "word",
+   "vi": "mạch nha (lúa mạch đã ngâm, nảy mầm rồi sấy khô)",
+   "cefr": "c2",
+   "added": "2026-09-29",
+   "session": "2026-09-29 Whisky distilling",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/word",
+    "cefr/c2",
+    "theme/whisky"
+   ],
+   "notesHtml": "<p><em>Malting</em> — the word you heard — is the whole process: steep, germinate, dry. <em>Malted barley</em> is the result. A second Oxford sense is the drink itself: <em>a fine malt</em> means a malt whisky.</p>",
+   "seeAlso": [
+    "barley",
+    "germinate",
+    "steep",
+    "cure"
+   ],
+   "ipa": "/mɔːlt/",
+   "pos": [
+    "noun",
+    "verb"
+   ],
+   "meaning": "grain, usually barley, that has been left in water for a time and then dried, used for making beer and whisky",
+   "register": "neutral",
+   "pattern": "",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "The **malt** is dried over a peat fire before it is milled.",
+     "text": "The malt is dried over a peat fire before it is milled.",
+     "html": "<p>The <strong>malt</strong> is dried over a peat fire before it is milled.</p>",
+     "gaps": [
+      "malt"
+     ]
+    },
+    {
+     "md": "Single **malt** whisky comes from one distillery only.",
+     "text": "Single malt whisky comes from one distillery only.",
+     "html": "<p>Single <strong>malt</strong> whisky comes from one distillery only.</p>",
+     "gaps": [
+      "malt"
+     ]
+    }
+   ],
+   "senses": []
+  },
+  {
+   "id": "mash",
+   "term": "mash",
+   "kind": "vocab",
+   "type": "word",
+   "vi": "hỗn hợp mạch nha nghiền với nước nóng; (động từ) nghiền nhuyễn",
+   "cefr": "c1",
+   "added": "2026-09-29",
+   "session": "2026-09-29 Whisky distilling",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/word",
+    "cefr/c1",
+    "theme/whisky"
+   ],
+   "notesHtml": "<p>Oxford gives this exact sense — <em>a mixture of malt grains and hot water, used for making beer</em> — alongside mashed potato and animal feed. The vessel is a <em>mash tun</em>.</p>",
+   "seeAlso": [
+    "grist",
+    "wort",
+    "starch"
+   ],
+   "ipa": "/mæʃ/",
+   "pos": [
+    "noun",
+    "verb"
+   ],
+   "meaning": "a mixture of malt grains and hot water, used for making beer and whisky",
+   "register": "neutral",
+   "pattern": "",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "The grist is stirred into hot water to make the **mash**.",
+     "text": "The grist is stirred into hot water to make the mash.",
+     "html": "<p>The grist is stirred into hot water to make the <strong>mash</strong>.</p>",
+     "gaps": [
+      "mash"
+     ]
+    },
+    {
+     "md": "**Mash** the fruit up with a fork.",
+     "text": "Mash the fruit up with a fork.",
+     "html": "<p><strong>Mash</strong> the fruit up with a fork.</p>",
+     "gaps": [
+      "Mash"
      ]
     }
    ],
@@ -4468,6 +5403,57 @@
      "text": "All the arrangements are now in place for their visit.",
      "html": "<p>All the arrangements are now in place for their visit.</p>",
      "gaps": []
+    }
+   ],
+   "senses": []
+  },
+  {
+   "id": "rake",
+   "term": "rake",
+   "kind": "vocab",
+   "type": "word",
+   "vi": "cái cào; cào, san phẳng",
+   "cefr": "c2",
+   "added": "2026-09-29",
+   "session": "2026-09-29 Whisky distilling",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/word",
+    "cefr/c2",
+    "theme/whisky"
+   ],
+   "notesHtml": "<p>⚠️ <em>Rotating rake</em> is a description of the machine, not a fixed phrase — Oxford has <em>rake</em> alone. The verb also means to search (<em>she raked around in her bag</em>) and, in an idiom, to criticise severely: <em>raked over the coals</em>.</p>",
+   "seeAlso": [
+    "malt",
+    "cure"
+   ],
+   "ipa": "/reɪk/",
+   "pos": [
+    "noun",
+    "verb"
+   ],
+   "meaning": "a tool with a long handle and a row of points, used for gathering or levelling",
+   "register": "neutral",
+   "pattern": "",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "A rotating **rake** turns the grain so that it dries evenly.",
+     "text": "A rotating rake turns the grain so that it dries evenly.",
+     "html": "<p>A rotating <strong>rake</strong> turns the grain so that it dries evenly.</p>",
+     "gaps": [
+      "rake"
+     ]
+    },
+    {
+     "md": "The leaves have been **raked** into a pile.",
+     "text": "The leaves have been raked into a pile.",
+     "html": "<p>The leaves have been <strong>raked</strong> into a pile.</p>",
+     "gaps": [
+      "raked"
+     ]
     }
    ],
    "senses": []
@@ -5351,6 +6337,105 @@
    "senses": []
   },
   {
+   "id": "sleep around",
+   "term": "sleep around",
+   "kind": "vocab",
+   "type": "phrasal-verb",
+   "vi": "ngủ lang, quan hệ với nhiều người",
+   "cefr": "b2",
+   "added": "2026-09-29",
+   "session": "2026-09-29 Courtroom testimony",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/phrasal-verb",
+    "theme/legal"
+   ],
+   "notesHtml": "<p>⚠️ Oxford labels this <em>informal, disapproving</em> — it is a judgement, not a neutral description, and in a courtroom it is an attack on a witness's character. Safe to recognise; risky to use about a real person.</p>",
+   "seeAlso": [
+    "witness",
+    "trial"
+   ],
+   "ipa": "/ˌsliːp əˈraʊnd/",
+   "pos": [
+    "phrasal verb"
+   ],
+   "meaning": "to have sex with a lot of different people",
+   "register": "informal, disapproving",
+   "pattern": "",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "The defence tried to suggest that she **slept around**.",
+     "text": "The defence tried to suggest that she slept around.",
+     "html": "<p>The defence tried to suggest that she <strong>slept around</strong>.</p>",
+     "gaps": [
+      "slept around"
+     ]
+    },
+    {
+     "md": "He was accused of **sleeping around** while his wife was ill.",
+     "text": "He was accused of sleeping around while his wife was ill.",
+     "html": "<p>He was accused of <strong>sleeping around</strong> while his wife was ill.</p>",
+     "gaps": [
+      "sleeping around"
+     ]
+    }
+   ],
+   "senses": []
+  },
+  {
+   "id": "soak",
+   "term": "soak",
+   "kind": "vocab",
+   "type": "word",
+   "vi": "ngâm (trong nước)",
+   "cefr": "c1",
+   "added": "2026-09-29",
+   "session": "2026-09-29 Whisky distilling",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/word",
+    "cefr/c1",
+    "theme/whisky"
+   ],
+   "notesHtml": "<p>Three senses in Oxford: put in liquid, make thoroughly wet (<em>the rain soaked the spectators</em>), and pass through (<em>blood had soaked through the bandage</em>). In the distillery the technical word is <a class=\"xref\" data-term=\"steep\">steep</a>.</p>",
+   "seeAlso": [
+    "steep",
+    "germinate"
+   ],
+   "ipa": "/səʊk/",
+   "pos": [
+    "verb"
+   ],
+   "meaning": "to put something in liquid for a time so that it becomes completely wet",
+   "register": "neutral",
+   "pattern": "",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "The barley is **soaked** in water for two days before it will germinate.",
+     "text": "The barley is soaked in water for two days before it will germinate.",
+     "html": "<p>The barley is <strong>soaked</strong> in water for two days before it will germinate.</p>",
+     "gaps": [
+      "soaked"
+     ]
+    },
+    {
+     "md": "I usually **soak** the beans overnight.",
+     "text": "I usually soak the beans overnight.",
+     "html": "<p>I usually <strong>soak</strong> the beans overnight.</p>",
+     "gaps": [
+      "soak"
+     ]
+    }
+   ],
+   "senses": []
+  },
+  {
    "id": "spend time",
    "term": "spend time",
    "kind": "vocab",
@@ -5393,6 +6478,57 @@
      "html": "<p>Don't <strong>spend time</strong> optimising this yet.</p>",
      "gaps": [
       "spend time"
+     ]
+    }
+   ],
+   "senses": []
+  },
+  {
+   "id": "sprout",
+   "term": "sprout",
+   "kind": "vocab",
+   "type": "word",
+   "vi": "nảy mầm; mầm cây",
+   "cefr": "c2",
+   "added": "2026-09-29",
+   "session": "2026-09-29 Whisky distilling",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/word",
+    "cefr/c2",
+    "theme/whisky"
+   ],
+   "notesHtml": "<p>Your note said <em>root and leaf sprout</em> — that is the description of what appears during malting, not a fixed phrase. As a noun, <em>sprout</em> on its own usually means the vegetable (<em>Brussels sprout</em>) in British English.</p>",
+   "seeAlso": [
+    "germinate",
+    "malt"
+   ],
+   "ipa": "/spraʊt/",
+   "pos": [
+    "verb",
+    "noun"
+   ],
+   "meaning": "(of a plant or seed) to produce new leaves or roots; to start to grow",
+   "register": "neutral",
+   "pattern": "",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "Once the grain **sprouts**, a root and a leaf shoot appear.",
+     "text": "Once the grain sprouts, a root and a leaf shoot appear.",
+     "html": "<p>Once the grain <strong>sprouts</strong>, a root and a leaf shoot appear.</p>",
+     "gaps": [
+      "sprouts"
+     ]
+    },
+    {
+     "md": "The seeds will **sprout** in a few days.",
+     "text": "The seeds will sprout in a few days.",
+     "html": "<p>The seeds will <strong>sprout</strong> in a few days.</p>",
+     "gaps": [
+      "sprout"
      ]
     }
    ],
@@ -5545,6 +6681,105 @@
      "html": "<p>Discussions have once again <strong>stalled</strong>.</p>",
      "gaps": [
       "stalled"
+     ]
+    }
+   ],
+   "senses": []
+  },
+  {
+   "id": "starch",
+   "term": "starch",
+   "kind": "vocab",
+   "type": "word",
+   "vi": "tinh bột",
+   "cefr": "c2",
+   "added": "2026-09-29",
+   "session": "2026-09-29 Whisky distilling",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/word",
+    "cefr/c2",
+    "theme/whisky"
+   ],
+   "notesHtml": "<p>Uncountable for the substance, countable when talking about types (<em>cut down on starches</em>). A second sense is the spray used to stiffen shirts.</p>",
+   "seeAlso": [
+    "grain",
+    "mash"
+   ],
+   "ipa": "/stɑːtʃ/",
+   "pos": [
+    "noun"
+   ],
+   "meaning": "a white carbohydrate food substance found in potatoes, flour, rice and grain",
+   "register": "neutral",
+   "pattern": "",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "Germination turns the **starch** in the grain into sugar.",
+     "text": "Germination turns the starch in the grain into sugar.",
+     "html": "<p>Germination turns the <strong>starch</strong> in the grain into sugar.</p>",
+     "gaps": [
+      "starch"
+     ]
+    },
+    {
+     "md": "There's too much **starch** in your diet.",
+     "text": "There's too much starch in your diet.",
+     "html": "<p>There's too much <strong>starch</strong> in your diet.</p>",
+     "gaps": [
+      "starch"
+     ]
+    }
+   ],
+   "senses": []
+  },
+  {
+   "id": "steep",
+   "term": "steep",
+   "kind": "vocab",
+   "type": "word",
+   "vi": "ngâm (ngũ cốc, thực phẩm) trong chất lỏng",
+   "cefr": "b2",
+   "added": "2026-09-29",
+   "session": "2026-09-29 Whisky distilling",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/word",
+    "theme/whisky"
+   ],
+   "notesHtml": "<p>Careful: the adjective <em>steep</em> (B2) — <em>a steep hill</em>, <em>a steep rise in prices</em> — is a different word that happens to be spelt the same. The verb also has a formal figurative sense: <em>a city steeped in history</em>.</p>",
+   "seeAlso": [
+    "soak",
+    "malt"
+   ],
+   "ipa": "/stiːp/",
+   "pos": [
+    "verb"
+   ],
+   "meaning": "to leave something in a liquid for some time so that it softens or takes in the taste",
+   "register": "neutral",
+   "pattern": "",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "The barley is **steeped** in water until it begins to sprout.",
+     "text": "The barley is steeped in water until it begins to sprout.",
+     "html": "<p>The barley is <strong>steeped</strong> in water until it begins to sprout.</p>",
+     "gaps": [
+      "steeped"
+     ]
+    },
+    {
+     "md": "**Steep** the fruit in brandy overnight.",
+     "text": "Steep the fruit in brandy overnight.",
+     "html": "<p><strong>Steep</strong> the fruit in brandy overnight.</p>",
+     "gaps": [
+      "Steep"
      ]
     }
    ],
@@ -5968,6 +7203,56 @@
    "senses": []
   },
   {
+   "id": "testify",
+   "term": "testify",
+   "kind": "vocab",
+   "type": "word",
+   "vi": "làm chứng, khai (trước toà)",
+   "cefr": "c1",
+   "added": "2026-09-29",
+   "session": "2026-09-29 Courtroom testimony",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/word",
+    "cefr/c1",
+    "theme/legal"
+   ],
+   "notesHtml": "<p>Patterns: <em>testify <strong>against</strong> somebody</em>, <em>testify <strong>for</strong> the defence</em>, <em>testify <strong>that</strong>…</em>. The noun is <em>testimony</em> — what the witness actually says. Outside court it is formal: <em>as employers will testify</em>.</p>",
+   "seeAlso": [
+    "witness",
+    "trial"
+   ],
+   "ipa": "/ˈtestɪfaɪ/",
+   "pos": [
+    "verb"
+   ],
+   "meaning": "to state formally that something is true, especially as a witness in court",
+   "register": "neutral",
+   "pattern": "",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "She refused to **testify** against her husband.",
+     "text": "She refused to testify against her husband.",
+     "html": "<p>She refused to <strong>testify</strong> against her husband.</p>",
+     "gaps": [
+      "testify"
+     ]
+    },
+    {
+     "md": "He **testified** that he had seen the defendant that night.",
+     "text": "He testified that he had seen the defendant that night.",
+     "html": "<p>He <strong>testified</strong> that he had seen the defendant that night.</p>",
+     "gaps": [
+      "testified"
+     ]
+    }
+   ],
+   "senses": []
+  },
+  {
    "id": "the same X as Y",
    "term": "the same X as Y",
    "kind": "vocab",
@@ -6153,6 +7438,93 @@
     }
    ],
    "senses": []
+  },
+  {
+   "id": "trial",
+   "term": "trial",
+   "kind": "vocab",
+   "type": "word",
+   "vi": "phiên toà, vụ xét xử; cuộc thử nghiệm",
+   "cefr": "b2",
+   "added": "2026-09-29",
+   "session": "2026-09-29 Courtroom testimony",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/word",
+    "cefr/b2",
+    "theme/legal"
+   ],
+   "notesHtml": "<p><em>On trial</em> = being tried in court. <em>Stand trial</em> = go through one. Separately, <em>trial and error</em> is the way you learn a tool by poking at it.</p>",
+   "seeAlso": [
+    "witness",
+    "testify"
+   ],
+   "ipa": "/ˈtraɪəl/",
+   "pos": [
+    "noun"
+   ],
+   "meaning": "a formal examination of evidence in court to decide whether somebody is guilty",
+   "register": "neutral",
+   "pattern": "",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "He's **on trial** for murder.",
+     "text": "He's on trial for murder.",
+     "html": "<p>He's <strong>on trial</strong> for murder.</p>",
+     "gaps": [
+      "on trial"
+     ]
+    },
+    {
+     "md": "The drug is going through clinical **trials**.",
+     "text": "The drug is going through clinical trials.",
+     "html": "<p>The drug is going through clinical <strong>trials</strong>.</p>",
+     "gaps": [
+      "trials"
+     ]
+    }
+   ],
+   "senses": [
+    {
+     "gloss": "a formal examination of evidence in court",
+     "vi": "phiên toà, vụ xét xử",
+     "example": {
+      "md": "He went **on trial** for murder in May.",
+      "text": "He went on trial for murder in May.",
+      "html": "<p>He went <strong>on trial</strong> for murder in May.</p>",
+      "gaps": [
+       "on trial"
+      ]
+     }
+    },
+    {
+     "gloss": "a test of ability, quality or performance",
+     "vi": "cuộc thử nghiệm",
+     "example": {
+      "md": "a randomized controlled **trial**",
+      "text": "a randomized controlled trial",
+      "html": "<p>a randomized controlled <strong>trial</strong></p>",
+      "gaps": [
+       "trial"
+      ]
+     }
+    },
+    {
+     "gloss": "something that causes difficulty or suffering",
+     "vi": "thử thách, nỗi khổ",
+     "example": {
+      "md": "the **trials** and tribulations of married life",
+      "text": "the trials and tribulations of married life",
+      "html": "<p>the <strong>trials</strong> and tribulations of married life</p>",
+      "gaps": [
+       "trials"
+      ]
+     }
+    }
+   ]
   },
   {
    "id": "turn out",
@@ -6597,6 +7969,55 @@
    "senses": []
   },
   {
+   "id": "washback",
+   "term": "washback",
+   "kind": "vocab",
+   "type": "word",
+   "vi": "thùng lên men (trong nhà máy whisky)",
+   "cefr": "b2",
+   "added": "2026-09-29",
+   "session": "2026-09-29 Whisky distilling",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/word",
+    "theme/whisky"
+   ],
+   "notesHtml": "<p>⚠️ Not in the Oxford Learner's Dictionary — distillery equipment. The liquid that comes out of it is <em>the wash</em>, and that is what gets distilled.</p>",
+   "seeAlso": [
+    "wort",
+    "yeast"
+   ],
+   "ipa": "",
+   "pos": [
+    "noun"
+   ],
+   "meaning": "the large vessel in which wort is fermented into a beer-like liquid",
+   "register": "neutral",
+   "pattern": "",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "The wort is pumped into a **washback** and the yeast goes in after it.",
+     "text": "The wort is pumped into a washback and the yeast goes in after it.",
+     "html": "<p>The wort is pumped into a <strong>washback</strong> and the yeast goes in after it.</p>",
+     "gaps": [
+      "washback"
+     ]
+    },
+    {
+     "md": "Fermentation in the **washback** takes two or three days.",
+     "text": "Fermentation in the washback takes two or three days.",
+     "html": "<p>Fermentation in the <strong>washback</strong> takes two or three days.</p>",
+     "gaps": [
+      "washback"
+     ]
+    }
+   ],
+   "senses": []
+  },
+  {
    "id": "well acquainted with",
    "term": "be well acquainted with something",
    "kind": "vocab",
@@ -6732,6 +8153,206 @@
      "html": "<p>The migration ran <strong>without a hitch</strong>.</p>",
      "gaps": [
       "without a hitch"
+     ]
+    }
+   ],
+   "senses": []
+  },
+  {
+   "id": "witness",
+   "term": "witness",
+   "kind": "vocab",
+   "type": "word",
+   "vi": "nhân chứng; chứng kiến",
+   "cefr": "b2",
+   "added": "2026-09-29",
+   "session": "2026-09-29 Courtroom testimony",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/word",
+    "cefr/b2",
+    "theme/legal"
+   ],
+   "notesHtml": "<p><em>Witness <strong>to</strong> something</em> for the person, <em>witness something</em> for the verb — no preposition. The fixed phrase <em>bear witness to something</em> means to be evidence of it.</p>",
+   "seeAlso": [
+    "testify",
+    "trial"
+   ],
+   "ipa": "/ˈwɪtnəs/",
+   "pos": [
+    "noun",
+    "verb"
+   ],
+   "meaning": "a person who saw something happen, or who gives evidence in court; to see something happen",
+   "register": "neutral",
+   "pattern": "",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "The defence called their first **witness**.",
+     "text": "The defence called their first witness.",
+     "html": "<p>The defence called their first <strong>witness</strong>.</p>",
+     "gaps": [
+      "witness"
+     ]
+    },
+    {
+     "md": "Police have appealed for anyone who **witnessed** the incident.",
+     "text": "Police have appealed for anyone who witnessed the incident.",
+     "html": "<p>Police have appealed for anyone who <strong>witnessed</strong> the incident.</p>",
+     "gaps": [
+      "witnessed"
+     ]
+    }
+   ],
+   "senses": [
+    {
+     "gloss": "a person who gives evidence in court",
+     "vi": "nhân chứng (tại toà)",
+     "example": {
+      "md": "He was hired as an expert **witness** in the trial.",
+      "text": "He was hired as an expert witness in the trial.",
+      "html": "<p>He was hired as an expert <strong>witness</strong> in the trial.</p>",
+      "gaps": [
+       "witness"
+      ]
+     }
+    },
+    {
+     "gloss": "a person who sees something happen and can describe it",
+     "vi": "người chứng kiến",
+     "example": {
+      "md": "Police have appealed for **witnesses** to the accident.",
+      "text": "Police have appealed for witnesses to the accident.",
+      "html": "<p>Police have appealed for <strong>witnesses</strong> to the accident.</p>",
+      "gaps": [
+       "witnesses"
+      ]
+     }
+    },
+    {
+     "gloss": "to see something happen, typically a crime or an accident",
+     "vi": "chứng kiến",
+     "example": {
+      "md": "She **witnessed** the attack from her window.",
+      "text": "She witnessed the attack from her window.",
+      "html": "<p>She <strong>witnessed</strong> the attack from her window.</p>",
+      "gaps": [
+       "witnessed"
+      ]
+     }
+    },
+    {
+     "gloss": "to be present when a document is signed, and sign it yourself",
+     "vi": "làm chứng ký tên",
+     "example": {
+      "md": "The will was signed in the presence of two **witnesses**.",
+      "text": "The will was signed in the presence of two witnesses.",
+      "html": "<p>The will was signed in the presence of two <strong>witnesses</strong>.</p>",
+      "gaps": [
+       "witnesses"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "wort",
+   "term": "wort",
+   "kind": "vocab",
+   "type": "word",
+   "vi": "dịch đường (nước ngọt rút ra từ mash, trước khi lên men)",
+   "cefr": "b2",
+   "added": "2026-09-29",
+   "session": "2026-09-29 Whisky distilling",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/word",
+    "theme/whisky"
+   ],
+   "notesHtml": "<p>⚠️ Not in the Oxford Learner's Dictionary — a brewing and distilling term. I have not verified the pronunciation, so the IPA is left empty rather than guessed; check Collins or Merriam-Webster if you want it.</p>",
+   "seeAlso": [
+    "mash",
+    "washback",
+    "dissolve"
+   ],
+   "ipa": "",
+   "pos": [
+    "noun"
+   ],
+   "meaning": "the sweet liquid drawn off the mash, before yeast turns it into alcohol",
+   "register": "neutral",
+   "pattern": "",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "The **wort** is cooled and run into the washback.",
+     "text": "The wort is cooled and run into the washback.",
+     "html": "<p>The <strong>wort</strong> is cooled and run into the washback.</p>",
+     "gaps": [
+      "wort"
+     ]
+    },
+    {
+     "md": "Sugar from the malt dissolves into the **wort**.",
+     "text": "Sugar from the malt dissolves into the wort.",
+     "html": "<p>Sugar from the malt dissolves into the <strong>wort</strong>.</p>",
+     "gaps": [
+      "wort"
+     ]
+    }
+   ],
+   "senses": []
+  },
+  {
+   "id": "yeast",
+   "term": "yeast",
+   "kind": "vocab",
+   "type": "word",
+   "vi": "men, nấm men",
+   "cefr": "c2",
+   "added": "2026-09-29",
+   "session": "2026-09-29 Whisky distilling",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/word",
+    "cefr/c2",
+    "theme/whisky"
+   ],
+   "notesHtml": "<p>Uncountable. The verb for what it does is <em>ferment</em>.</p>",
+   "seeAlso": [
+    "washback",
+    "bacteria"
+   ],
+   "ipa": "/jiːst/",
+   "pos": [
+    "noun"
+   ],
+   "meaning": "a fungus used in making beer and wine, or to make bread rise",
+   "register": "neutral",
+   "pattern": "",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "**Yeast** is added to the washback, where it turns the sugar into alcohol.",
+     "text": "Yeast is added to the washback, where it turns the sugar into alcohol.",
+     "html": "<p><strong>Yeast</strong> is added to the washback, where it turns the sugar into alcohol.</p>",
+     "gaps": [
+      "Yeast"
+     ]
+    },
+    {
+     "md": "The dough needs **yeast** to rise.",
+     "text": "The dough needs yeast to rise.",
+     "html": "<p>The dough needs <strong>yeast</strong> to rise.</p>",
+     "gaps": [
+      "yeast"
      ]
     }
    ],
@@ -7769,6 +9390,18 @@
    "date": "2026-09-23",
    "theme": "Scaling engineering writing — infrastructure vocabulary, failure adjectives, risk idioms",
    "itemCount": "26"
+  },
+  {
+   "id": "2026-09-29 Courtroom testimony",
+   "date": "2026-09-29",
+   "theme": "Giving evidence in court",
+   "itemCount": "5"
+  },
+  {
+   "id": "2026-09-29 Whisky distilling",
+   "date": "2026-09-29",
+   "theme": "How single malt whisky is made",
+   "itemCount": "24"
   }
  ]
 }
