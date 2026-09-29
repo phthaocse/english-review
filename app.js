@@ -966,7 +966,11 @@ function wireDeckPicker() {
   });
 }
 
-/** Every card in the set at once, for picking one out rather than flipping to it. */
+/**
+ * Every card in the set at once, for picking one out rather than flipping to
+ * it. Terms only: this tab exists to make you recall the meaning, so printing
+ * it beside the word would defeat the one thing the screen is for.
+ */
 function renderCardList() {
   const deck = state.deck;
   view.innerHTML = `
@@ -977,7 +981,6 @@ function renderCardList() {
         if (!item) return '';
         return `<li><button class="card-row" data-i="${i}">
           <b>${esc(item.term)}</b>
-          <span class="card-row-gloss">${esc(item.meaning || item.vi || '')}</span>
           <span class="pill">${esc(TYPE_LABEL[item.type] || item.type)}</span>
         </button></li>`;
       }).join('')}

@@ -268,12 +268,15 @@ s = await B.evaluate(`
            card: !!document.querySelector('#flashcard'),
            first: rows[0]?.textContent.replace(/\\s+/g, ' ').trim(),
            firstTerm: m.state.byId.get(m.state.deck.ids[0])?.term,
-           hasGloss: !!rows[0]?.querySelector('.card-row-gloss')?.textContent };
+           meanings: rows.some(r => {
+             const item = m.state.byId.get(m.state.deck.ids[rows.indexOf(r)]);
+             return item?.meaning && r.textContent.includes(item.meaning);
+           }) };
 `);
 eq('every card in the set is listed', s.rows, s.deck);
 ok('  the card screen steps aside', !s.card);
 ok('  each row leads with the term', (s.first || '').startsWith(s.firstTerm), s.first);
-ok('  and carries its meaning', s.hasGloss);
+ok('  and gives no meaning away - the point is to recall it', !s.meanings);
 
 s = await B.evaluate(`
   const m = await import('./app.js');
