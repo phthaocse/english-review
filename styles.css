@@ -511,3 +511,25 @@ body.signed-out .view { padding-top: 12vh; max-width: 460px; }
   color: var(--text); background: var(--surface);
   border: 1px solid var(--border); border-radius: 10px;
 }
+
+/* Today's sitting is the number that moves; the set behind it is the number
+   that matters. Both visible, only one of them large. */
+.deck-progress { margin: 16px 0 10px; }
+.deck-count { margin: 0; font-size: .9rem; color: var(--text); font-variant-numeric: tabular-nums; }
+.deck-sub {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  margin: 5px 0 0; font-size: .8rem; color: var(--muted);
+}
+.deck-sub select {
+  padding: 2px 6px; font: inherit; font-size: .78rem; color: var(--muted);
+  background: var(--surface-2); border: 1px solid var(--border); border-radius: 6px;
+}
+
+.done { text-align: center; }
+.done .row { justify-content: center; margin-top: 16px; }
+.done .deck-progress { max-width: 280px; margin: 16px auto 4px; }
+.done .deck-sub { justify-content: center; }
+.done-tick {
+  margin: 0 auto 10px; width: 46px; height: 46px; line-height: 46px;
+  font-size: 1.4rem; color: var(--good); background: var(--good-soft); border-radius: 50%;
+}
