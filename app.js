@@ -16,6 +16,7 @@ const state = {
   deck: null,
   deckSet: 'all',
   pickingSet: false,
+  cardsView: 'card',
   query: '',
   filter: 'all',
 };
@@ -74,7 +75,7 @@ function route() {
   if (!currentUser()) return renderSignInGate();
 
   if (section === 'capture') return renderCapture(view);
-  if (section === 'cards') return renderCards();
+  if (section === 'cards') return renderCards({ fresh: true });
   if (section === 'lookup') return renderLookup();
   if (section === 'progress') return renderProgress();
   if (section === 'item') return renderItem(decodeURIComponent(rest.join('/')));
@@ -816,9 +817,22 @@ function setDeck(deck) {
   renderCards();
 }
 
-function renderCards() {
+/**
+ * @param {{fresh?: boolean}} opts `fresh` means you have just arrived on the
+ *   screen or switched set, which deals a card at random rather than resuming.
+ *   Walking on from there still follows the shuffled order, so a sitting keeps
+ *   covering new ground instead of landing on the same few by chance.
+ */
+function renderCards({ fresh = false } = {}) {
   if (!state.deck || state.deck.scope !== state.deckSet) {
-    state.deck = loadDeck() || newDeck();
+    const existing = loadDeck();
+    state.deck = existing || newDeck();
+    if (!existing) saveDeck(state.deck);   // a set keeps the order it was dealt
+    fresh = true;
+  }
+  if (fresh && state.deck.ids.length) {
+    state.deck = { ...state.deck, shown: false,
+                   index: Math.floor(Math.random() * state.deck.ids.length) };
   }
   const deck = state.deck;
 
@@ -827,6 +841,7 @@ function renderCards() {
     wireDeckPicker();
     return;
   }
+  if (state.cardsView === 'list') return renderCardList();
   if (deck.index >= deck.ids.length) return renderSetFinished();
 
   const item = state.byId.get(deck.ids[deck.index]);
@@ -904,6 +919,10 @@ function deckLine() {
   return `
     <div class="deck-line">
       <p>${esc(set?.label || 'Everything')}${position ? ` · <b>${position}</b>` : ''}</p>
+      <button class="icon-btn small" id="deck-list" type="button"
+              aria-pressed="${state.cardsView === 'list'}"
+              aria-label="${state.cardsView === 'list' ? 'Back to the cards' : 'List every card in this set'}"
+              >${state.cardsView === 'list' ? '×' : '☰'}</button>
       <button class="icon-btn small" id="deck-switch" type="button"
               aria-expanded="${state.pickingSet ? 'true' : 'false'}"
               aria-label="Choose a different set">⋯</button>
@@ -927,6 +946,12 @@ function deckOptions() {
 }
 
 function wireDeckPicker() {
+  view.querySelector('#deck-list')?.addEventListener('click', () => {
+    state.cardsView = state.cardsView === 'list' ? 'card' : 'list';
+    state.pickingSet = false;
+    renderCards();
+  });
+
   view.querySelector('#deck-switch')?.addEventListener('click', () => {
     state.pickingSet = !state.pickingSet;
     renderCards();
@@ -939,6 +964,31 @@ function wireDeckPicker() {
     state.deck = null;      // each set keeps its own place, picked up on return
     renderCards();
   });
+}
+
+/** Every card in the set at once, for picking one out rather than flipping to it. */
+function renderCardList() {
+  const deck = state.deck;
+  view.innerHTML = `
+    ${deckLine()}
+    <ol class="card-list">
+      ${deck.ids.map((id, i) => {
+        const item = state.byId.get(id);
+        if (!item) return '';
+        return `<li><button class="card-row" data-i="${i}">
+          <b>${esc(item.term)}</b>
+          <span class="card-row-gloss">${esc(item.meaning || item.vi || '')}</span>
+          <span class="pill">${esc(TYPE_LABEL[item.type] || item.type)}</span>
+        </button></li>`;
+      }).join('')}
+    </ol>`;
+
+  wireDeckPicker();
+  view.querySelectorAll('.card-row').forEach((row) =>
+    row.addEventListener('click', () => {
+      state.cardsView = 'card';
+      setDeck({ ...deck, index: Number(row.dataset.i), shown: false });
+    }));
 }
 
 /** Every card in the set has been through. */

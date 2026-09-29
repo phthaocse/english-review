@@ -36,7 +36,7 @@ ok('a card is shown', !!s.term, s.term);
 ok('its kind is labelled', /\w/.test(s.kind || ''), s.kind);
 ok('the back is hidden', !s.back);
 ok('it says what to do', /tap to show/i.test(s.hint || ''), s.hint);
-ok('the position is shown', /· 1 of \d+$/.test(s.count || ''), s.count);
+ok('the position is shown', /· \d+ of \d+$/.test(s.count || ''), s.count);
 eq('the tab is marked current', s.tab, 'page');
 ok('the meaning is not on the page yet', !s.meaning);
 
@@ -67,6 +67,7 @@ ok('the button now moves on', /next/i.test(s.next || ''), s.next);
 console.log('== moving through the deck ==');
 s = await B.evaluate(`
   const first = document.querySelector('.flash-term').textContent;
+  const countBefore = document.querySelector('.deck-line p').textContent.replace(/\s+/g, ' ').trim();
   document.querySelector('#deck-next').click();
   await new Promise(r => setTimeout(r, 120));
   const second = document.querySelector('.flash-term').textContent;
@@ -74,13 +75,13 @@ s = await B.evaluate(`
   const count = document.querySelector('.deck-line p').textContent.replace(/\s+/g, ' ').trim();
   document.querySelector('#deck-prev').click();
   await new Promise(r => setTimeout(r, 120));
-  return { first, second, closedAgain, count,
+  return { first, second, closedAgain, count, countBefore,
            backToFirst: document.querySelector('.flash-term').textContent === first,
            stillHidden: !document.querySelector('.flash-back') };
 `);
 ok('next shows a different card', s.first !== s.second, `${s.first} → ${s.second}`);
 ok('the new card starts face down', s.closedAgain);
-ok('the counter moves', /2 of/.test(s.count), s.count);
+ok('the counter moves', s.count !== s.countBefore, `${s.countBefore} -> ${s.count}`);
 ok('back returns to the previous card', s.backToFirst);
 ok('and it is face down again, not remembered as open', s.stillHidden);
 
@@ -124,7 +125,7 @@ s = await B.evaluate(`
            count: document.querySelector('.deck-line p')?.textContent.replace(/\s+/g, ' ').trim() };
 `);
 eq('choosing pronunciation shows a pronunciation card', s.type, 'pronunciation-rule');
-ok('and the deck restarts', /· 1 of/.test((s.count || '').trim()), s.count);
+ok('and it is dealt from that set', /Pronunciation · \d+ of 4/.test((s.count || '').trim()), s.count);
 
 console.log('== the deck is the whole group, not a sample ==');
 s = await B.evaluate(`
@@ -141,39 +142,43 @@ s = await B.evaluate(`
 `);
 eq('every item is in the deck', s.deck, s.total);
 eq('  each one once', s.unique, s.total);
-ok('  and one line says where you are', s.count.endsWith(`1 of ${s.total}`), s.count);
+ok('  and one line says where you are', new RegExp(`· \\d+ of ${s.total}$`).test(s.count), s.count);
 ok('  with a bar-free, single number', !/today|in this set/.test(s.count), s.count);
 ok('  and no second counter competing with it', !s.bar, 'a progress meter is still there');
 
-console.log('== it remembers where you stopped ==');
+console.log('== arriving deals a card at random ==');
 s = await B.evaluate(`
   const m = await import('./app.js');
-  for (let i = 0; i < 3; i++) {
-    document.querySelector('#flashcard').click();   // show
+  const landed = [];
+  for (let i = 0; i < 12; i++) {
+    location.hash = '#/lookup'; window.dispatchEvent(new HashChangeEvent('hashchange'));
     await new Promise(r => setTimeout(r, 60));
-    document.querySelector('#deck-next').click();   // move on
-    await new Promise(r => setTimeout(r, 60));
+    location.hash = '#/cards'; window.dispatchEvent(new HashChangeEvent('hashchange'));
+    await new Promise(r => setTimeout(r, 80));
+    landed.push(m.state.deck.index);
   }
-  const term = document.querySelector('.flash-term').textContent;
-  const stored = JSON.parse(localStorage.getItem('english-review/deck'));
-
-  // Leave the section and come back, as if it were tomorrow morning.
-  m.state.deck = null;
-  location.hash = '#/lookup'; window.dispatchEvent(new HashChangeEvent('hashchange'));
-  await new Promise(r => setTimeout(r, 150));
-  location.hash = '#/cards'; window.dispatchEvent(new HashChangeEvent('hashchange'));
-  await new Promise(r => setTimeout(r, 200));
-  return { savedIndex: stored.all.index, term,
-           resumedTerm: document.querySelector('.flash-term').textContent,
-           count: document.querySelector('.deck-line p').textContent.trim().split('·').pop().trim().split(' ')[0],
-           faceDown: !document.querySelector('.flash-back') };
+  return { landed, distinct: new Set(landed).size, faceDown: !document.querySelector('.flash-back') };
 `);
-eq('the place is written down', s.savedIndex, 3);
-eq('  and picked up on return', s.resumedTerm, s.term);
-eq('  at the same number', s.count, '4');
-ok('  face down, ready to be recalled', s.faceDown);
+ok('twelve arrivals are not the same card', s.distinct > 6, `only ${s.distinct} distinct: ${s.landed}`);
+ok('  and each one starts face down', s.faceDown);
 
-console.log('== each group keeps its own place ==');
+console.log('== walking on from there still follows the order ==');
+s = await B.evaluate(`
+  const m = await import('./app.js');
+  const start = m.state.deck.index;
+  const order = m.state.deck.ids;
+  document.querySelector('#flashcard').click();
+  await new Promise(r => setTimeout(r, 60));
+  document.querySelector('#deck-next').click();
+  await new Promise(r => setTimeout(r, 120));
+  return { moved: m.state.deck.index === start + 1,
+           term: document.querySelector('.flash-term').textContent,
+           expected: m.state.byId.get(order[start + 1])?.term };
+`);
+ok('next is the next card in the shuffle, not another random one', s.moved);
+eq('  and it is the one the order says', s.term, s.expected);
+
+console.log('== each set keeps its own order ==');
 s = await B.evaluate(`
   const m = await import('./app.js');
   document.querySelector('#deck-switch').click();
@@ -181,22 +186,28 @@ s = await B.evaluate(`
   const pick = document.querySelector('#deck-set');
   pick.value = 'pron'; pick.dispatchEvent(new Event('change'));
   await new Promise(r => setTimeout(r, 150));
-  document.querySelector('#flashcard').click();
-  await new Promise(r => setTimeout(r, 60));
-  document.querySelector('#deck-next').click();
-  await new Promise(r => setTimeout(r, 120));
-  const pronAt = m.state.deck.index;
+  const pronOrder = m.state.deck.ids.join(',');
+
   document.querySelector('#deck-switch').click();
   await new Promise(r => setTimeout(r, 100));
   document.querySelector('#deck-set').value = 'all';
   document.querySelector('#deck-set').dispatchEvent(new Event('change'));
   await new Promise(r => setTimeout(r, 150));
-  const allAt = m.state.deck.index;
+  const allOrder = m.state.deck.ids.join(',');
+
+  document.querySelector('#deck-switch').click();
+  await new Promise(r => setTimeout(r, 100));
+  document.querySelector('#deck-set').value = 'pron';
+  document.querySelector('#deck-set').dispatchEvent(new Event('change'));
+  await new Promise(r => setTimeout(r, 150));
+
   const stored = JSON.parse(localStorage.getItem('english-review/deck'));
-  return { pronAt, allAt, groups: Object.keys(stored).sort() };
+  return { sameOrder: m.state.deck.ids.join(',') === pronOrder,
+           differentSets: pronOrder !== allOrder,
+           groups: Object.keys(stored).sort() };
 `);
-eq('pronunciation kept its own position', s.pronAt, 1);
-eq('and everything kept the earlier one', s.allAt, 3);
+ok('coming back to a set does not reshuffle it', s.sameOrder);
+ok('  and the sets are genuinely different', s.differentSets);
 ok('both are stored side by side', s.groups.includes('all') && s.groups.includes('pron'), s.groups.join(','));
 
 console.log('== a deck built before new words still works ==');
@@ -210,11 +221,13 @@ s = await B.evaluate(`
   m.state.deck = null; m.state.deckSet = 'all';
   location.hash = '#/cards'; window.dispatchEvent(new HashChangeEvent('hashchange'));
   await new Promise(r => setTimeout(r, 200));
-  return { size: m.state.deck.ids.length, total: ids.length,
-           onParked: document.querySelector('.flash-term').textContent === m.state.byId.get(parked).term };
+  return { size: m.state.deck.ids.length, total: ids.length, parked,
+           showing: document.querySelector('.flash-term')?.textContent,
+           known: m.state.deck.ids.every(id => !!m.state.byId.get(id)) };
 `);
 eq('the deck is rebuilt to include them', s.size, s.total);
-ok('  without losing the card you were on', s.onParked);
+ok('  every card in it still resolves', s.known);
+ok('  and one of them is on screen', !!s.showing, s.showing);
 
 console.log('== a session is a set you can pick ==');
 s = await B.evaluate(`
@@ -243,22 +256,59 @@ ok('  and dated in plain words', /\d+ \w+ · /.test(s.session.label), s.session.
 ok('  with a count', /\(\d+\)$/.test(s.session.label.trim()), s.session.label);
 eq('picking one deals only that session', s.deck, s.expected);
 ok('  every card belongs to it', s.allFromThatSession);
-ok('  and the deck starts at the top', /· 1 of/.test(s.count), s.count);
+ok('  and it opens somewhere inside it', new RegExp(`· \\d+ of ${s.expected}$`).test(s.count), s.count);
 
-console.log('== the end of the deck offers the real thing ==');
+console.log('== the whole set can be listed and picked from ==');
 s = await B.evaluate(`
   const m = await import('./app.js');
-  m.state.deck = { ...m.state.deck, index: m.state.deck.ids.length };   // past the last card
-  location.hash = '#/cards';
-  window.dispatchEvent(new HashChangeEvent('hashchange'));
+  document.querySelector('#deck-list').click();
+  await new Promise(r => setTimeout(r, 200));
+  const rows = [...document.querySelectorAll('.card-row')];
+  return { rows: rows.length, deck: m.state.deck.ids.length,
+           card: !!document.querySelector('#flashcard'),
+           first: rows[0]?.textContent.replace(/\\s+/g, ' ').trim(),
+           firstTerm: m.state.byId.get(m.state.deck.ids[0])?.term,
+           hasGloss: !!rows[0]?.querySelector('.card-row-gloss')?.textContent };
+`);
+eq('every card in the set is listed', s.rows, s.deck);
+ok('  the card screen steps aside', !s.card);
+ok('  each row leads with the term', (s.first || '').startsWith(s.firstTerm), s.first);
+ok('  and carries its meaning', s.hasGloss);
+
+s = await B.evaluate(`
+  const m = await import('./app.js');
+  const rows = [...document.querySelectorAll('.card-row')];
+  const wanted = m.state.byId.get(m.state.deck.ids[7]).term;
+  rows[7].click();
+  await new Promise(r => setTimeout(r, 200));
+  return { term: document.querySelector('.flash-term')?.textContent, wanted,
+           index: m.state.deck.index, list: !!document.querySelector('.card-row') };
+`);
+eq('tapping a row opens that card', s.term, s.wanted);
+eq('  at its place in the set', s.index, 7);
+ok('  and closes the list', !s.list);
+
+console.log('== walking off the end offers the real thing ==');
+s = await B.evaluate(`
+  const m = await import('./app.js');
+  document.querySelector('#deck-list').click();
+  await new Promise(r => setTimeout(r, 200));
+  const rows = [...document.querySelectorAll('.card-row')];
+  rows[rows.length - 1].click();                 // the last card in the set
+  await new Promise(r => setTimeout(r, 150));
+  document.querySelector('#flashcard').click();  // show it
+  await new Promise(r => setTimeout(r, 80));
+  document.querySelector('#deck-next').click();  // and step past it
   await new Promise(r => setTimeout(r, 200));
   return { text: document.body.innerText,
            again: !!document.querySelector('#deck-again'),
-           practise: !!document.querySelector('a[href="#/review"]') };
+           practise: !!document.querySelector('a[href="#/review"]'),
+           card: !!document.querySelector('#flashcard') };
 `);
-ok('it offers another deck', s.again);
-ok('and points at Practise for the graded version', s.practise);
-ok('saying plainly that seeing is not knowing', /not the same as being able to use it/i.test(s.text), '');
+ok('stepping past the last card ends the set', !s.card);
+ok('  it offers another pass', s.again);
+ok('  and points at Practise for the graded version', s.practise);
+ok('  saying plainly that seeing is not knowing', /not the same as being able to use it/i.test(s.text), '');
 
 const appErrors = B.consoleErrors.filter((e) => !/GSI_LOGGER|FedCM|client ID/.test(e));
 ok('no application errors', appErrors.length === 0, appErrors.slice(0, 3).join(' | '));

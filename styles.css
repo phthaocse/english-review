@@ -538,3 +538,23 @@ body.signed-out .view { padding-top: 12vh; max-width: 460px; }
   background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
 }
 .done { max-width: 620px; margin-left: auto; margin-right: auto; }
+
+/* Every card in the set at once: for picking one out rather than flipping to
+   it. Term first, because that is what you are scanning for. */
+.card-list { max-width: 620px; margin: 0 auto; padding: 0; list-style: none; }
+.card-list li { margin: 0; }
+.card-row {
+  display: flex; align-items: baseline; gap: 10px; width: 100%;
+  padding: 11px 12px; text-align: left; font: inherit; color: var(--text);
+  background: none; border: 0; border-bottom: 1px solid var(--border); cursor: pointer;
+}
+.card-row:hover, .card-row:focus-visible { background: var(--surface-2); outline: none; }
+.card-row b { flex: 0 0 auto; font-weight: 600; }
+.card-row-gloss {
+  flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  font-size: .85rem; color: var(--muted);
+}
+@media (max-width: 700px) {
+  .card-row { flex-wrap: wrap; gap: 4px 8px; }
+  .card-row-gloss { flex: 1 0 100%; white-space: normal; }
+}
