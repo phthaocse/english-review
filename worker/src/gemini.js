@@ -114,8 +114,12 @@ async function askModel(model, image, env, fetchImpl) {
     return { status: 0, ms: Date.now() - started };   // timed out or unreachable
   }
 
-  if (!res.ok) return { status: res.status, ms: Date.now() - started, detail: await reason(res, env) };
-  return { status: 200, ms: Date.now() - started, payload: await res.json() };
+  // Which data centre the relay actually sits in. The location hint is best
+  // effort, so this is the only way to know it landed where Google serves.
+  const colo = res.headers?.get?.('x-relay-colo') || null;
+
+  if (!res.ok) return { status: res.status, ms: Date.now() - started, colo, detail: await reason(res, env) };
+  return { status: 200, ms: Date.now() - started, colo, payload: await res.json() };
 }
 
 /**
@@ -154,13 +158,19 @@ const blockedByLocation = (attempts) => attempts.length > 0
  * the same photo rather than the reader getting a dead end.
  */
 export async function readPhoto(image, env, { regions = REGIONS, relay = viaRegion } = {}) {
+  const tried = [];      // every region's attempts, so the log tells the whole story
   let last;
+
   for (const region of regions) {
     try {
-      return await draftFromImage(image, env, { fetchImpl: relay(env, region), region });
+      const draft = await draftFromImage(image, env, { fetchImpl: relay(env, region), region });
+      return { ...draft, attempts: [...tried, ...draft.attempts] };
     } catch (error) {
+      const here = error.attempts || [];
+      tried.push(...here);
+      error.attempts = [...tried];
       last = error;
-      if (!blockedByLocation(error.attempts || [])) throw error;
+      if (!blockedByLocation(here)) throw error;   // only a blocked region earns another go
     }
   }
   throw last;
@@ -187,8 +197,9 @@ export async function draftFromImage(image, env, { fetchImpl = fetch, region = n
 
   for (const model of chain) {
     if (Date.now() - startedAt > CHAIN_DEADLINE_MS) break;
-    const { status, ms, detail, payload } = await askModel(model, image, env, fetchImpl);
-    attempts.push({ model, status, ms, ...(region ? { region } : {}), ...(detail ? { detail } : {}) });
+    const { status, ms, colo, detail, payload } = await askModel(model, image, env, fetchImpl);
+    attempts.push({ model, status, ms, ...(region ? { region } : {}), ...(colo ? { colo } : {}),
+                    ...(detail ? { detail } : {}) });
     if (status === 200) return { items: parseItems(payload), model, attempts };
     if (status === RATE_LIMITED) exhausted += 1;
     else if (!isTransient(status)) refused = status;

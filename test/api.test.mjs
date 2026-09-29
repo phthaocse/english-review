@@ -323,7 +323,9 @@ console.log('== the call to Google leaves from a region Google serves ==');
   await viaRegion(fakeEnv, 'apac-se')('https://generativelanguage.googleapis.com/v1beta/interactions',
                                       { method: 'POST', headers: { 'x-goog-api-key': 'k' }, body: '{"model":"m"}' });
   eq('the object is pinned to the region', sent.options.locationHint, 'apac-se');
-  eq('  and named after it, so the pin sticks', sent.id.name, 'apac-se');
+  // The name carries a generation so a relay that lands somewhere blocked can
+  // be escaped by asking for a new one.
+  ok('  and named after it, so the pin sticks', sent.id.name.startsWith('apac-se:'), sent.id.name);
   eq('  the real destination rides in a header', sent.init.headers['x-target'],
      'https://generativelanguage.googleapis.com/v1beta/interactions');
   eq('  the key still goes to Google', sent.init.headers['x-goog-api-key'], 'k');
@@ -336,6 +338,17 @@ console.log('== the call to Google leaves from a region Google serves ==');
   await plain('https://example.test', { method: 'POST' });
   ok('no binding means a direct call, not a crash', direct);
   globalThis.fetch = patchedFetch;
+
+  // A blocked first region must still appear in the log, not vanish behind the
+  // region that worked.
+  const seen = [];
+  const draft2 = await readPhoto({ base64: 'AAAA' }, env, {
+    regions: ['first', 'second'],
+    relay: (_e, region) => async () => { seen.push(region); return region === 'first' ? blocked(region) : answer(); },
+  });
+  eq('every region it tried is in the log', draft2.attempts.length, 4);
+  eq('  the blocked one first', draft2.attempts[0].region, 'first');
+  eq('  then the one that answered', draft2.attempts.at(-1).region, 'second');
 
   ok('the regions tried are ones Google serves', REGIONS.length >= 2, REGIONS.join(','));
 }

@@ -259,7 +259,7 @@ async function loadDiagnostics(view) {
         <tr class="log-detail"><td></td><td colspan="3" class="mono muted">
           #${log.id} · ${log.image_kb ?? '?'}KB · ${esc(log.attempts.map(
             (a) => `${a.model.replace('gemini-', '')} ${a.status || 'timeout'} ${Math.round(a.ms / 1000)}s`
-                   + (a.detail ? ` (${a.detail})` : '')).join(' → '))}
+                   + (a.colo ? ` @${a.colo}` : '') + (a.detail ? ` (${a.detail})` : '')).join(' → '))}
         </td></tr>`).join('')}
       </tbody>
     </table>
