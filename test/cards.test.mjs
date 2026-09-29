@@ -110,10 +110,12 @@ s = await B.evaluate(`
 `);
 ok('flipping does not touch the schedule', s.same);
 
-console.log('== the group chips narrow the deck ==');
+console.log('== the picker narrows the deck ==');
 s = await B.evaluate(`
   const m = await import('./app.js');
-  document.querySelector('[data-scope=pron]').click();
+  const pick = document.querySelector('#deck-set');
+  pick.value = 'pron';
+  pick.dispatchEvent(new Event('change'));
   await new Promise(r => setTimeout(r, 150));
   const term = document.querySelector('.flash-term')?.textContent;
   return { type: m.state.byId.get(term)?.type,
@@ -126,7 +128,7 @@ console.log('== the deck is the whole group, not a sample ==');
 s = await B.evaluate(`
   const m = await import('./app.js');
   localStorage.removeItem('english-review/deck');
-  m.state.deck = null; m.state.filter = 'all';
+  m.state.deck = null; m.state.deckSet = 'all';
   location.hash = '#/cards'; window.dispatchEvent(new HashChangeEvent('hashchange'));
   await new Promise(r => setTimeout(r, 200));
   return { total: m.state.items.length, deck: m.state.deck.ids.length,
@@ -170,14 +172,16 @@ ok('  face down, ready to be recalled', s.faceDown);
 console.log('== each group keeps its own place ==');
 s = await B.evaluate(`
   const m = await import('./app.js');
-  document.querySelector('[data-scope=pron]').click();
+  const pick = document.querySelector('#deck-set');
+  pick.value = 'pron'; pick.dispatchEvent(new Event('change'));
   await new Promise(r => setTimeout(r, 150));
   document.querySelector('#flashcard').click();
   await new Promise(r => setTimeout(r, 60));
   document.querySelector('#deck-next').click();
   await new Promise(r => setTimeout(r, 120));
   const pronAt = m.state.deck.index;
-  document.querySelector('[data-scope=all]').click();
+  document.querySelector('#deck-set').value = 'all';
+  document.querySelector('#deck-set').dispatchEvent(new Event('change'));
   await new Promise(r => setTimeout(r, 150));
   const allAt = m.state.deck.index;
   const stored = JSON.parse(localStorage.getItem('english-review/deck'));
@@ -195,7 +199,7 @@ s = await B.evaluate(`
   localStorage.setItem('english-review/deck', JSON.stringify({
     all: { ids: ids.slice(0, -2), index: 5 } }));
   const parked = ids[5];
-  m.state.deck = null; m.state.filter = 'all';
+  m.state.deck = null; m.state.deckSet = 'all';
   location.hash = '#/cards'; window.dispatchEvent(new HashChangeEvent('hashchange'));
   await new Promise(r => setTimeout(r, 200));
   return { size: m.state.deck.ids.length, total: ids.length,
@@ -203,6 +207,30 @@ s = await B.evaluate(`
 `);
 eq('the deck is rebuilt to include them', s.size, s.total);
 ok('  without losing the card you were on', s.onParked);
+
+console.log('== a session is a set you can pick ==');
+s = await B.evaluate(`
+  const m = await import('./app.js');
+  const pick = document.querySelector('#deck-set');
+  const options = [...pick.options].map(o => ({ value: o.value, label: o.textContent }));
+  const session = options.find(o => o.value.startsWith('session:'));
+  pick.value = session.value;
+  pick.dispatchEvent(new Event('change'));
+  await new Promise(r => setTimeout(r, 200));
+  const wanted = session.value.slice('session:'.length);
+  return { session, groups: [...pick.querySelectorAll('optgroup')].map(g => g.label),
+           deck: m.state.deck.ids.length,
+           allFromThatSession: m.state.deck.ids.every(id => m.state.byId.get(id).session === wanted),
+           expected: m.state.items.filter(i => i.session === wanted).length,
+           count: document.querySelector('.deck-count').textContent.trim() };
+`);
+ok('sessions are offered as sets', !!s.session, JSON.stringify(s.groups));
+ok('  grouped under a heading', s.groups.includes('Sessions') && s.groups.includes('Kind'), s.groups.join(','));
+ok('  and dated in plain words', /\d+ \w+ · /.test(s.session.label), s.session.label);
+ok('  with a count', /\(\d+\)$/.test(s.session.label.trim()), s.session.label);
+eq('picking one deals only that session', s.deck, s.expected);
+ok('  every card belongs to it', s.allFromThatSession);
+ok('  and the deck starts at the top', s.count.startsWith('1 of'), s.count);
 
 console.log('== the end of the deck offers the real thing ==');
 s = await B.evaluate(`

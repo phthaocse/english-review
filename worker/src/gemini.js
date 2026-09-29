@@ -33,19 +33,26 @@ export const MAX_IMAGE_BYTES = 4 * 1024 * 1024;
 export const KINDS = ['word', 'phrasal-verb', 'idiom', 'collocation',
                       'conversational', 'grammar-pattern'];
 
-// Deliberately does NOT ask for IPA or CEFR. Those are verified against Oxford
-// during enrichment; a guess here would be a plausible-sounding fabrication,
-// which is the failure this whole system is built to avoid.
+// Deliberately does NOT ask for IPA, CEFR or a grammar pattern. Those are
+// checked against Oxford later, and a plausible guess is the failure this whole
+// system exists to avoid. A meaning and a gloss are different: the review screen
+// is right there, and a draft of bare words is not worth reviewing.
 const PROMPT = `You are reading a photograph of handwritten English study notes.
+
+The writer is Vietnamese, learning English at about B2. A page is often a bare
+list of words with nothing beside them; a usable draft still comes back filled
+in, because a word with no meaning is no use to revise from.
 
 Extract every English word or phrase the writer was learning. For each one give:
 - term: the headword, lower-cased unless it is a proper noun, with no leading article
 - kind: one of ${KINDS.join(', ')}
-- meaning: a short English definition, only if you can read one in the notes or
-  are confident of the everyday sense
-- vi: the Vietnamese gloss ONLY if it is written in the photo; otherwise null
-- example: an example sentence ONLY if one appears in the photo; otherwise null.
-  Wrap the target word in **double asterisks**.
+- meaning: ALWAYS — a short English definition, in the sense the page is using
+  it. If the page gives one, use theirs. If not, supply it yourself.
+- vi: ALWAYS — a short Vietnamese gloss with full diacritics, the one a learner
+  would want beside the word. Theirs if the page has one, otherwise yours.
+- example: one natural sentence showing the word in use, with the target wrapped
+  in **double asterisks**. Take the writer's own sentence when the page has one;
+  otherwise write a plain, everyday sentence of your own.
 - pattern: the grammatical pattern the word takes, ONLY if the notes show one —
   e.g. "spend + on / + -ing (not for)", "accuse sb of sth". Otherwise null.
 - source_note: any context the writer recorded about where they met it
@@ -56,9 +63,11 @@ Rules:
   the order they are written. Do not stop after the first few.
 - Each field holds the final value only — never your reasoning, alternatives,
   restatements or commentary. Work it out before you answer, not in the field.
-- Transcribe, do not invent. If the handwriting is unclear, use low confidence
-  and put your best reading in term.
-- Never invent a Vietnamese gloss, an example, or a pattern that is not in the photo.
+- Transcribe the TERM, do not invent it. If the handwriting is unclear, use low
+  confidence and put your best reading in term.
+- Meaning, Vietnamese and the example may be yours. The pattern may not: a
+  grammar pattern is checked against a dictionary later, and a plausible guess
+  there is worse than a blank.
 - Do not supply pronunciation or CEFR level; those are verified elsewhere.
 - Return an empty list if the image contains no English study notes.`;
 

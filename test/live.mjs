@@ -102,13 +102,14 @@ if (given) {
   fs.copyFileSync(path.resolve(given), `${WORK}/note.jpg`);
   console.log(`photo: ${given}`);
 } else {
-  await browser.goto(`file://${ROOT}/test/fixtures/note.html`);
+  const fixture = process.env.FIXTURE || 'note';
+  await browser.goto(`file://${ROOT}/test/fixtures/${fixture}.html`);
   await browser.screenshot(`${WORK}/note.png`, 1000, 1300, { fullPage: true });
   // A PNG is not what a camera produces; re-encode so the model sees a photo.
   const { execFileSync } = await import('node:child_process');
   execFileSync('sips', ['-s', 'format', 'jpeg', '-s', 'formatOptions', '85',
                         `${WORK}/note.png`, '--out', `${WORK}/note.jpg`], { stdio: 'ignore' });
-  console.log('photo: test/fixtures/note.html, rendered');
+  console.log(`photo: test/fixtures/${fixture}.html, rendered`);
 }
 console.log(`        ${Math.round(fs.statSync(`${WORK}/note.jpg`).size / 1024)}KB\n`);
 

@@ -498,3 +498,16 @@ body.signed-out .view { padding-top: 12vh; max-width: 460px; }
   vertical-align: middle; background: var(--border); border-radius: 2px; overflow: hidden;
 }
 .deck-bar i { display: block; height: 100%; background: var(--accent); }
+
+/* Which set of cards to flip through. A list, not chips: there is one entry
+   per study session and they keep coming. */
+.deck-pick { display: block; margin-top: 16px; }
+.deck-pick span {
+  display: block; margin-bottom: 6px; font-size: .78rem;
+  letter-spacing: .06em; text-transform: uppercase; color: var(--muted);
+}
+.deck-pick select {
+  width: 100%; padding: 11px 12px; font: inherit; font-size: .95rem;
+  color: var(--text); background: var(--surface);
+  border: 1px solid var(--border); border-radius: 10px;
+}

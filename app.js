@@ -14,6 +14,7 @@ const state = {
   generated: '',
   session: null,
   deck: null,
+  deckSet: 'all',
   query: '',
   filter: 'all',
 };
@@ -724,8 +725,47 @@ function renderItem(id) {
 
 const DECK_KEY = 'english-review/deck';
 
+/**
+ * The sets worth flipping through: everything, the three kinds, and every
+ * session — "the whisky words from Tuesday" is the subset you actually want.
+ */
+function deckSets() {
+  const sets = [{ key: 'all', label: 'Everything', count: state.items.length, group: '' }];
+
+  for (const [key, cfg] of Object.entries(SCOPES)) {
+    if (!cfg.types) continue;
+    const count = state.items.filter((i) => cfg.types.includes(i.type)).length;
+    if (count) sets.push({ key, label: cfg.label, count, group: 'Kind' });
+  }
+
+  const bySession = new Map();
+  for (const item of state.items) {
+    if (item.session) bySession.set(item.session, (bySession.get(item.session) || 0) + 1);
+  }
+  [...bySession].sort((a, b) => b[0].localeCompare(a[0])).forEach(([session, count]) =>
+    sets.push({ key: `session:${session}`, label: sessionLabel(session), count, group: 'Sessions' }));
+
+  return sets;
+}
+
+/** "2026-09-29 Whisky distilling" reads better as "29 Sep · Whisky distilling". */
+function sessionLabel(session) {
+  const [, date, title] = /^(\d{4})-(\d{2})-(\d{2}) (.*)$/.exec(session)
+    ? [null, session.slice(0, 10), session.slice(11)] : [null, null, session];
+  if (!date) return session;
+  const when = new Date(`${date}T00:00:00`);
+  const month = Number.isNaN(when.getTime()) ? '' :
+    when.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+  return month ? `${month} · ${title}` : title;
+}
+
 function cardPool() {
-  const scope = SCOPES[state.filter] || SCOPES.all;
+  const key = state.deckSet;
+  if (key.startsWith('session:')) {
+    const session = key.slice('session:'.length);
+    return state.items.filter((i) => i.session === session);
+  }
+  const scope = SCOPES[key] || SCOPES.all;
   return scope.types ? state.items.filter((i) => scope.types.includes(i.type)) : state.items;
 }
 
@@ -734,7 +774,7 @@ function newDeck(startAt = null) {
   const seen = (item) => state.progress.cards[item.id]?.seen ?? 0;
   const ids = shuffle(cardPool()).sort((a, b) => seen(a) - seen(b)).map((i) => i.id);
   const resumed = startAt ? ids.indexOf(startAt) : -1;
-  return { scope: state.filter, ids, index: resumed < 0 ? 0 : resumed, shown: false };
+  return { scope: state.deckSet, ids, index: resumed < 0 ? 0 : resumed, shown: false };
 }
 
 /**
@@ -750,7 +790,7 @@ const readDecks = () => {
 };
 
 function loadDeck() {
-  const saved = readDecks()[state.filter];
+  const saved = readDecks()[state.deckSet];
   if (!saved?.ids?.length) return null;
 
   // A rebuilt vault means new ids; keep the place if that card survived.
@@ -758,7 +798,7 @@ function loadDeck() {
   if (saved.ids.length !== pool.size || saved.ids.some((id) => !pool.has(id))) {
     return newDeck(saved.ids[saved.index]);
   }
-  return { ...saved, scope: state.filter, shown: false };
+  return { ...saved, scope: state.deckSet, shown: false };
 }
 
 function saveDeck(deck) {
@@ -776,7 +816,7 @@ function setDeck(deck) {
 }
 
 function renderCards() {
-  if (!state.deck || state.deck.scope !== state.filter) {
+  if (!state.deck || state.deck.scope !== state.deckSet) {
     state.deck = loadDeck() || newDeck();
   }
   const deck = state.deck;
@@ -858,19 +898,36 @@ function cardsHeader() {
     <h2 class="section">Cards</h2>
     <p class="lede">Every word and phrase you have recorded, one at a time. It keeps your place,
     so a minute a day gets through the lot. Nothing here is graded.</p>
-    <div class="filters" role="group" aria-label="What to flip through">
-      ${Object.entries(SCOPES).map(([key, cfg]) => `
-        <button class="chip" data-scope="${key}" aria-pressed="${state.filter === key}">${cfg.label}</button>`).join('')}
-    </div>`;
+    <label class="deck-pick">
+      <span>Flip through</span>
+      <select id="deck-set">${deckOptions()}</select>
+    </label>`;
+}
+
+function deckOptions() {
+  const sets = deckSets();
+  let html = '';
+  let group = null;
+  for (const set of sets) {
+    if (set.group !== group) {
+      if (group) html += '</optgroup>';
+      group = set.group;
+      if (group) html += `<optgroup label="${esc(group)}">`;
+    }
+    html += `<option value="${esc(set.key)}" ${set.key === state.deckSet ? 'selected' : ''}>`
+          + `${esc(set.label)} (${set.count})</option>`;
+  }
+  return html + (group ? '</optgroup>' : '');
 }
 
 function wireCardScopes() {
-  view.querySelectorAll('[data-scope]').forEach((b) =>
-    b.addEventListener('click', () => {
-      state.filter = b.dataset.scope;
-      state.deck = null;      // each group keeps its own place, picked up on return
-      renderCards();
-    }));
+  const picker = view.querySelector('#deck-set');
+  if (!picker) return;
+  picker.addEventListener('change', () => {
+    state.deckSet = picker.value;
+    state.deck = null;      // each set keeps its own place, picked up on return
+    renderCards();
+  });
 }
 
 function renderDeckEnd() {
