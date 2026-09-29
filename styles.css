@@ -458,7 +458,8 @@ body.signed-out .view { padding-top: 12vh; max-width: 460px; }
 
 .flashcard {
   display: flex; flex-direction: column; justify-content: center;
-  min-height: 210px; padding: 28px 22px; cursor: pointer;
+  min-height: min(52vh, 340px); max-width: 620px; margin: 0 auto;
+  padding: 32px 26px; cursor: pointer;
   background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
   text-align: center; transition: border-color .15s ease;
 }
@@ -466,7 +467,7 @@ body.signed-out .view { padding-top: 12vh; max-width: 460px; }
 .flashcard.is-open { text-align: left; cursor: pointer; }
 .flashcard.is-open .flash-front { text-align: center; }
 
-.flash-term { margin: 0; font-size: 1.7rem; font-weight: 600; line-height: 1.25; }
+.flash-term { margin: 0; font-size: clamp(1.7rem, 5vw, 2.4rem); font-weight: 600; line-height: 1.2; }
 .flash-kind {
   margin: 8px 0 0; font-size: .72rem; letter-spacing: .07em;
   text-transform: uppercase; color: var(--muted);
@@ -483,7 +484,7 @@ body.signed-out .view { padding-top: 12vh; max-width: 460px; }
 .flash-examples { margin: 14px 0 0; padding-left: 20px; }
 .flash-examples li { margin-bottom: 6px; }
 
-.deck-nav { margin-top: 16px; }
+.deck-nav { max-width: 620px; margin: 16px auto 0; }
 .deck-nav .btn { min-width: 108px; }
 
 @media (max-width: 700px) {
@@ -501,7 +502,6 @@ body.signed-out .view { padding-top: 12vh; max-width: 460px; }
 
 /* Which set of cards to flip through. A list, not chips: there is one entry
    per study session and they keep coming. */
-.deck-pick { display: block; margin-top: 16px; }
 .deck-pick span {
   display: block; margin-bottom: 6px; font-size: .78rem;
   letter-spacing: .06em; text-transform: uppercase; color: var(--muted);
@@ -514,22 +514,27 @@ body.signed-out .view { padding-top: 12vh; max-width: 460px; }
 
 /* Today's sitting is the number that moves; the set behind it is the number
    that matters. Both visible, only one of them large. */
-.deck-progress { margin: 16px 0 10px; }
 .deck-count { margin: 0; font-size: .9rem; color: var(--text); font-variant-numeric: tabular-nums; }
-.deck-sub {
-  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
-  margin: 5px 0 0; font-size: .8rem; color: var(--muted);
-}
-.deck-sub select {
-  padding: 2px 6px; font: inherit; font-size: .78rem; color: var(--muted);
-  background: var(--surface-2); border: 1px solid var(--border); border-radius: 6px;
-}
 
 .done { text-align: center; }
 .done .row { justify-content: center; margin-top: 16px; }
-.done .deck-progress { max-width: 280px; margin: 16px auto 4px; }
-.done .deck-sub { justify-content: center; }
 .done-tick {
   margin: 0 auto 10px; width: 46px; height: 46px; line-height: 46px;
   font-size: 1.4rem; color: var(--good); background: var(--good-soft); border-radius: 50%;
 }
+
+/* One line above the card: which set, where you are, and a way to change it
+   that stays out of the way until asked for. */
+.deck-line {
+  display: flex; align-items: center; gap: 10px;
+  max-width: 620px; margin: 4px auto 12px;
+}
+.deck-line p { margin: 0; flex: 1; font-size: .85rem; color: var(--muted); }
+.deck-line b { color: var(--text); font-variant-numeric: tabular-nums; font-weight: 600; }
+.icon-btn.small { width: 30px; height: 30px; font-size: 1rem; line-height: 1; }
+.deck-select {
+  display: block; width: 100%; max-width: 620px; margin: 0 auto 14px;
+  padding: 11px 12px; font: inherit; font-size: .95rem; color: var(--text);
+  background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+}
+.done { max-width: 620px; margin-left: auto; margin-right: auto; }

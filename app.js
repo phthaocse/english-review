@@ -15,6 +15,7 @@ const state = {
   session: null,
   deck: null,
   deckSet: 'all',
+  pickingSet: false,
   query: '',
   filter: 'all',
 };
@@ -718,10 +719,12 @@ function renderItem(id) {
 }
 
 // ------------------------------------------------------------- card view --
-// A flip-through for the minute before a meeting: the term alone, then
-// everything about it. Nothing here is graded and nothing is scheduled —
-// recognising a word you are shown is not evidence you can produce it, which
-// is what Practise is for. This is for keeping things warm.
+// A flip-through, and nothing else. This is Anki's Preview screen, not its
+// reviewer: no grading, no scheduling, and no daily cap — Anki's cap exists to
+// bound the reviews a new card generates tomorrow, and nothing here schedules
+// anything, so importing it would be borrowing a rule without its reason.
+//
+// What stays on screen: the card, where you are in the set, and the way on.
 
 const DECK_KEY = 'english-review/deck';
 
@@ -750,13 +753,11 @@ function deckSets() {
 
 /** "2026-09-29 Whisky distilling" reads better as "29 Sep · Whisky distilling". */
 function sessionLabel(session) {
-  const [, date, title] = /^(\d{4})-(\d{2})-(\d{2}) (.*)$/.exec(session)
-    ? [null, session.slice(0, 10), session.slice(11)] : [null, null, session];
-  if (!date) return session;
-  const when = new Date(`${date}T00:00:00`);
-  const month = Number.isNaN(when.getTime()) ? '' :
-    when.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
-  return month ? `${month} · ${title}` : title;
+  const match = /^(\d{4}-\d{2}-\d{2}) (.+)$/.exec(session);
+  if (!match) return session;
+  const when = new Date(`${match[1]}T00:00:00`);
+  if (Number.isNaN(when.getTime())) return match[2];
+  return `${when.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })} · ${match[2]}`;
 }
 
 function cardPool() {
@@ -769,38 +770,16 @@ function cardPool() {
   return scope.types ? state.items.filter((i) => scope.types.includes(i.type)) : state.items;
 }
 
-// A sitting has to end somewhere. The deck covers the whole set over time; a
-// day's worth is what you actually finish, and finishing is the point.
-const SITTINGS = [10, 20, 40];
-const DEFAULT_SITTING = 20;
-const today = () => new Date().toISOString().slice(0, 10);
-
-/** Every item in the group, least-seen first so a daily skim rotates. */
-function newDeck(startAt = null, size = DEFAULT_SITTING) {
+/** Every item in the set, least-seen first, so a daily skim rotates. */
+function newDeck(startAt = null) {
   const seen = (item) => state.progress.cards[item.id]?.seen ?? 0;
   const ids = shuffle(cardPool()).sort((a, b) => seen(a) - seen(b)).map((i) => i.id);
   const resumed = startAt ? ids.indexOf(startAt) : -1;
-  return { scope: state.deckSet, ids, index: resumed < 0 ? 0 : resumed, shown: false,
-           size, day: today(), doneToday: 0, passes: 0 };
-}
-
-/** How much of a sitting is left, and how much of the set. */
-function progressOf(deck) {
-  const size = Math.min(deck.size || DEFAULT_SITTING, deck.ids.length);
-  const left = deck.ids.length - deck.index;
-  return {
-    size,
-    doneToday: deck.doneToday || 0,
-    remainingToday: Math.max(0, Math.min(size - (deck.doneToday || 0), left)),
-    seen: deck.index,
-    total: deck.ids.length,
-    left,
-    days: Math.ceil(left / size),
-  };
+  return { scope: state.deckSet, ids, index: resumed < 0 ? 0 : resumed, shown: false, passes: 0 };
 }
 
 /**
- * The deck outlives the visit: 156 cards is weeks of morning skims, so where
+ * The deck outlives the visit: 185 cards is weeks of morning skims, so where
  * you got to is worth more than the shuffle that produced the order.
  */
 const readDecks = () => {
@@ -820,16 +799,13 @@ function loadDeck() {
   if (saved.ids.length !== pool.size || saved.ids.some((id) => !pool.has(id))) {
     return newDeck(saved.ids[saved.index]);
   }
-  // A new day means a fresh sitting; the place in the rotation carries over.
-  const fresh = saved.day === today() ? saved : { ...saved, day: today(), doneToday: 0 };
-  return { ...fresh, size: fresh.size || DEFAULT_SITTING, scope: state.deckSet, shown: false };
+  return { ...saved, scope: state.deckSet, shown: false };
 }
 
 function saveDeck(deck) {
   try {
     const decks = readDecks();
-    decks[deck.scope] = { ids: deck.ids, index: deck.index, size: deck.size,
-                          day: deck.day, doneToday: deck.doneToday, passes: deck.passes || 0 };
+    decks[deck.scope] = { ids: deck.ids, index: deck.index, passes: deck.passes || 0 };
     localStorage.setItem(DECK_KEY, JSON.stringify(decks));
   } catch { /* private window: the deck still works for this visit */ }
 }
@@ -847,20 +823,17 @@ function renderCards() {
   const deck = state.deck;
 
   if (!deck.ids.length) {
-    view.innerHTML = `${cardsHeader()}<p class="empty">Nothing in this group yet.</p>`;
-    wireCardScopes();
+    view.innerHTML = `${deckLine()}<p class="empty">Nothing in this set yet.</p>`;
+    wireDeckPicker();
     return;
   }
-  const done = progressOf(deck);
   if (deck.index >= deck.ids.length) return renderSetFinished();
-  if (done.remainingToday <= 0) return renderDayDone();
 
   const item = state.byId.get(deck.ids[deck.index]);
   if (!item) return setDeck({ ...deck, index: deck.index + 1 });
 
   view.innerHTML = `
-    ${cardsHeader()}
-    ${progressBlock(deck)}
+    ${deckLine()}
 
     <div class="flashcard ${deck.shown ? 'is-open' : ''}" id="flashcard"
          role="button" tabindex="0" aria-expanded="${deck.shown}">
@@ -879,15 +852,11 @@ function renderCards() {
       <a class="chiplink" href="#/item/${encodeURIComponent(item.id)}">Open the note</a>
     </div>`;
 
-  wireCardScopes();
+  wireDeckPicker();
   const flip = () => { state.deck.shown = true; renderCards(); };
-  const next = () => (deck.shown
-    ? setDeck({ ...deck, index: deck.index + 1, doneToday: (deck.doneToday || 0) + 1, shown: false })
-    : flip());
+  const next = () => (deck.shown ? setDeck({ ...deck, index: deck.index + 1, shown: false }) : flip());
   const back = () => {
-    if (deck.index === 0) return;
-    setDeck({ ...deck, index: deck.index - 1,
-              doneToday: Math.max(0, (deck.doneToday || 0) - 1), shown: false });
+    if (deck.index > 0) setDeck({ ...deck, index: deck.index - 1, shown: false });
   };
 
   const card = view.querySelector('#flashcard');
@@ -896,9 +865,9 @@ function renderCards() {
   view.querySelector('#deck-prev').addEventListener('click', (e) => { e.stopPropagation(); back(); });
   card.focus();
 
-  view.onkeydown = null;
   document.onkeydown = (e) => {
     if (!location.hash.startsWith('#/cards')) { document.onkeydown = null; return; }
+    if (e.target.tagName === 'SELECT') return;
     if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); deck.shown ? next() : flip(); }
     if (e.key === 'ArrowRight') next();
     if (e.key === 'ArrowLeft') back();
@@ -922,22 +891,30 @@ function cardBack(item) {
       <p class="rightline">${(item.correctHtml || [''])[0].replace(/^<p>|<\/p>$/g, '')}</p>` : ''}`;
 }
 
-function cardsHeader() {
+/**
+ * One line above the card: which set, where you are in it, and a way to change
+ * set that stays folded away until it is wanted.
+ */
+function deckLine() {
+  const deck = state.deck;
+  const set = deckSets().find((s) => s.key === state.deckSet);
+  const position = deck && deck.ids.length
+    ? `${Math.min(deck.index + 1, deck.ids.length)} of ${deck.ids.length}` : '';
+
   return `
-    <h2 class="section">Cards</h2>
-    <p class="lede">Every word and phrase you have recorded, one at a time. It keeps your place,
-    so a minute a day gets through the lot. Nothing here is graded.</p>
-    <label class="deck-pick">
-      <span>Flip through</span>
-      <select id="deck-set">${deckOptions()}</select>
-    </label>`;
+    <div class="deck-line">
+      <p>${esc(set?.label || 'Everything')}${position ? ` · <b>${position}</b>` : ''}</p>
+      <button class="icon-btn small" id="deck-switch" type="button"
+              aria-expanded="${state.pickingSet ? 'true' : 'false'}"
+              aria-label="Choose a different set">⋯</button>
+    </div>
+    ${state.pickingSet ? `<select id="deck-set" class="deck-select">${deckOptions()}</select>` : ''}`;
 }
 
 function deckOptions() {
-  const sets = deckSets();
   let html = '';
   let group = null;
-  for (const set of sets) {
+  for (const set of deckSets()) {
     if (set.group !== group) {
       if (group) html += '</optgroup>';
       group = set.group;
@@ -949,50 +926,26 @@ function deckOptions() {
   return html + (group ? '</optgroup>' : '');
 }
 
-function wireCardScopes() {
-  view.querySelector('#deck-size')?.addEventListener('change', (e) =>
-    setDeck({ ...state.deck, size: Number(e.target.value) }));
+function wireDeckPicker() {
+  view.querySelector('#deck-switch')?.addEventListener('click', () => {
+    state.pickingSet = !state.pickingSet;
+    renderCards();
+  });
 
   const picker = view.querySelector('#deck-set');
-  if (!picker) return;
-  picker.addEventListener('change', () => {
+  picker?.addEventListener('change', () => {
     state.deckSet = picker.value;
+    state.pickingSet = false;
     state.deck = null;      // each set keeps its own place, picked up on return
     renderCards();
   });
-}
-
-/** The sitting is over. Say where that leaves you, and how far off the end is. */
-function renderDayDone() {
-  const p = progressOf(state.deck);
-  const setName = deckSets().find((set) => set.key === state.deckSet)?.label || 'this set';
-
-  view.innerHTML = `
-    ${cardsHeader()}
-    <div class="card block done">
-      <p class="done-tick" aria-hidden="true">✓</p>
-      <h3>Done for today</h3>
-      <p class="muted">${p.doneToday} card${p.doneToday === 1 ? '' : 's'} from ${esc(setName)}.</p>
-      ${progressBlock(state.deck, { detail: true })}
-      <p class="next-hint">${p.left
-        ? `${p.left} left in this set — about ${p.days} more day${p.days === 1 ? '' : 's'} at ${p.size} a day.`
-        : 'That is the whole set.'}</p>
-      <div class="row">
-        ${p.left ? '<button class="btn" id="deck-more">Keep going</button>' : ''}
-        <a class="btn secondary" href="#/review">Practise instead</a>
-      </div>
-    </div>`;
-
-  wireCardScopes();
-  view.querySelector('#deck-more')?.addEventListener('click', () =>
-    setDeck({ ...state.deck, doneToday: 0 }));
 }
 
 /** Every card in the set has been through. */
 function renderSetFinished() {
   const deck = state.deck;
   view.innerHTML = `
-    ${cardsHeader()}
+    ${deckLine()}
     <div class="card block done">
       <p class="done-tick" aria-hidden="true">✓</p>
       <h3>That is all ${deck.ids.length}</h3>
@@ -1005,33 +958,9 @@ function renderSetFinished() {
         <a class="btn secondary" href="#/review">Practise instead</a>
       </div>
     </div>`;
-  wireCardScopes();
+  wireDeckPicker();
   view.querySelector('#deck-again').addEventListener('click', () =>
-    setDeck({ ...newDeck(null, deck.size), passes: (deck.passes || 0) + 1 }));
-}
-
-/**
- * Where you are: today's sitting, which is the number that moves, and the set
- * behind it, which is the number that matters.
- */
-function progressBlock(deck, { detail = false } = {}) {
-  const p = progressOf(deck);
-  const doneNow = Math.min(p.doneToday, p.size);
-  const position = Math.min(p.doneToday + 1, p.size);
-
-  return `
-    <div class="deck-progress">
-      <p class="deck-count">
-        ${detail ? `${doneNow} of ${p.size} today` : `${position} of ${p.size} today`}
-        <span class="deck-bar"><i style="width:${(doneNow / p.size) * 100}%"></i></span>
-      </p>
-      <p class="deck-sub">${p.seen} of ${p.total} in this set${
-        detail || p.left === 0 ? '' : ` · ${p.left} to go`}
-        ${SITTINGS.includes(p.size) ? `<select id="deck-size" aria-label="Cards a day">${
-          SITTINGS.map((n) => `<option value="${n}" ${n === deck.size ? 'selected' : ''}>${n} a day</option>`).join('')
-        }</select>` : ''}
-      </p>
-    </div>`;
+    setDeck({ ...newDeck(), passes: (deck.passes || 0) + 1 }));
 }
 
 // ---------------------------------------------------------- progress view --

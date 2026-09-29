@@ -27,7 +27,7 @@ let s = await B.evaluate(`
            kind: document.querySelector('.flash-kind')?.textContent,
            back: !!document.querySelector('.flash-back'),
            hint: document.querySelector('.flash-hint')?.textContent,
-           count: document.querySelector('.deck-count')?.textContent,
+           count: document.querySelector('.deck-line p')?.textContent,
            tab: document.querySelector('.tabs [data-tab=cards]')?.getAttribute('aria-current'),
            meaning: document.body.innerText.includes(m.state.byId.get(
              document.querySelector('.flash-term').textContent)?.meaning || '\\u0000') };
@@ -36,7 +36,7 @@ ok('a card is shown', !!s.term, s.term);
 ok('its kind is labelled', /\w/.test(s.kind || ''), s.kind);
 ok('the back is hidden', !s.back);
 ok('it says what to do', /tap to show/i.test(s.hint || ''), s.hint);
-ok('the position is shown', /1 of \d+ today/.test(s.count || ''), s.count);
+ok('the position is shown', /· 1 of \d+$/.test(s.count || ''), s.count);
 eq('the tab is marked current', s.tab, 'page');
 ok('the meaning is not on the page yet', !s.meaning);
 
@@ -71,7 +71,7 @@ s = await B.evaluate(`
   await new Promise(r => setTimeout(r, 120));
   const second = document.querySelector('.flash-term').textContent;
   const closedAgain = !document.querySelector('.flash-back');
-  const count = document.querySelector('.deck-count').textContent;
+  const count = document.querySelector('.deck-line p').textContent.replace(/\s+/g, ' ').trim();
   document.querySelector('#deck-prev').click();
   await new Promise(r => setTimeout(r, 120));
   return { first, second, closedAgain, count,
@@ -113,16 +113,18 @@ ok('flipping does not touch the schedule', s.same);
 console.log('== the picker narrows the deck ==');
 s = await B.evaluate(`
   const m = await import('./app.js');
+  document.querySelector('#deck-switch').click();
+  await new Promise(r => setTimeout(r, 100));
   const pick = document.querySelector('#deck-set');
   pick.value = 'pron';
   pick.dispatchEvent(new Event('change'));
   await new Promise(r => setTimeout(r, 150));
   const term = document.querySelector('.flash-term')?.textContent;
   return { type: m.state.byId.get(m.state.deck.ids[m.state.deck.index])?.type,
-           count: document.querySelector('.deck-count')?.textContent.replace(/\s+/g, ' ').trim() };
+           count: document.querySelector('.deck-line p')?.textContent.replace(/\s+/g, ' ').trim() };
 `);
 eq('choosing pronunciation shows a pronunciation card', s.type, 'pronunciation-rule');
-ok('and the deck restarts', /^1 of/.test((s.count || '').trim()), s.count);
+ok('and the deck restarts', /· 1 of/.test((s.count || '').trim()), s.count);
 
 console.log('== the deck is the whole group, not a sample ==');
 s = await B.evaluate(`
@@ -133,15 +135,15 @@ s = await B.evaluate(`
   await new Promise(r => setTimeout(r, 200));
   return { total: m.state.items.length, deck: m.state.deck.ids.length,
            unique: new Set(m.state.deck.ids).size,
-           count: document.querySelector('.deck-count')?.textContent.replace(/\\s+/g, ' ').trim(),
+           count: document.querySelector('.deck-line p')?.textContent.replace(/\\s+/g, ' ').trim(),
            sub: document.querySelector('.deck-sub')?.textContent.replace(/\\s+/g, ' ').trim(),
-           bar: !!document.querySelector('.deck-bar i') };
+           bar: !!document.querySelector('.deck-bar') };
 `);
 eq('every item is in the deck', s.deck, s.total);
 eq('  each one once', s.unique, s.total);
-ok('  today is what the big number counts', /^1 of \d+ today/.test(s.count), s.count);
-ok('  and the whole set is underneath it', s.sub.includes(`of ${s.total} in this set`), s.sub);
-ok('  with a bar showing how far through you are', s.bar);
+ok('  and one line says where you are', s.count.endsWith(`1 of ${s.total}`), s.count);
+ok('  with a bar-free, single number', !/today|in this set/.test(s.count), s.count);
+ok('  and no second counter competing with it', !s.bar, 'a progress meter is still there');
 
 console.log('== it remembers where you stopped ==');
 s = await B.evaluate(`
@@ -163,7 +165,7 @@ s = await B.evaluate(`
   await new Promise(r => setTimeout(r, 200));
   return { savedIndex: stored.all.index, term,
            resumedTerm: document.querySelector('.flash-term').textContent,
-           count: document.querySelector('.deck-count').textContent.trim().split(' ')[0],
+           count: document.querySelector('.deck-line p').textContent.trim().split('·').pop().trim().split(' ')[0],
            faceDown: !document.querySelector('.flash-back') };
 `);
 eq('the place is written down', s.savedIndex, 3);
@@ -174,6 +176,8 @@ ok('  face down, ready to be recalled', s.faceDown);
 console.log('== each group keeps its own place ==');
 s = await B.evaluate(`
   const m = await import('./app.js');
+  document.querySelector('#deck-switch').click();
+  await new Promise(r => setTimeout(r, 100));
   const pick = document.querySelector('#deck-set');
   pick.value = 'pron'; pick.dispatchEvent(new Event('change'));
   await new Promise(r => setTimeout(r, 150));
@@ -182,6 +186,8 @@ s = await B.evaluate(`
   document.querySelector('#deck-next').click();
   await new Promise(r => setTimeout(r, 120));
   const pronAt = m.state.deck.index;
+  document.querySelector('#deck-switch').click();
+  await new Promise(r => setTimeout(r, 100));
   document.querySelector('#deck-set').value = 'all';
   document.querySelector('#deck-set').dispatchEvent(new Event('change'));
   await new Promise(r => setTimeout(r, 150));
@@ -213,99 +219,31 @@ ok('  without losing the card you were on', s.onParked);
 console.log('== a session is a set you can pick ==');
 s = await B.evaluate(`
   const m = await import('./app.js');
+  document.querySelector('#deck-switch').click();
+  await new Promise(r => setTimeout(r, 100));
   const pick = document.querySelector('#deck-set');
   const options = [...pick.options].map(o => ({ value: o.value, label: o.textContent }));
   const session = options.find(o => o.value.startsWith('session:'));
+  // Read the groups while the picker is open: choosing a set closes it.
+  const groups = [...pick.querySelectorAll('optgroup')].map(g => g.label);
   pick.value = session.value;
   pick.dispatchEvent(new Event('change'));
   await new Promise(r => setTimeout(r, 200));
   const wanted = session.value.slice('session:'.length);
-  return { session, groups: [...pick.querySelectorAll('optgroup')].map(g => g.label),
+  return { session, groups,
            deck: m.state.deck.ids.length,
            allFromThatSession: m.state.deck.ids.every(id => m.state.byId.get(id).session === wanted),
            expected: m.state.items.filter(i => i.session === wanted).length,
-           count: document.querySelector('.deck-count').textContent.trim() };
+           count: document.querySelector('.deck-line p').textContent.trim() };
 `);
 ok('sessions are offered as sets', !!s.session, JSON.stringify(s.groups));
-ok('  grouped under a heading', s.groups.includes('Sessions') && s.groups.includes('Kind'), s.groups.join(','));
+ok('  grouped under a heading', s.groups.includes('Sessions') && s.groups.includes('Kind'),
+   `saw: ${s.groups.join(',') || 'none'}`);
 ok('  and dated in plain words', /\d+ \w+ · /.test(s.session.label), s.session.label);
 ok('  with a count', /\(\d+\)$/.test(s.session.label.trim()), s.session.label);
 eq('picking one deals only that session', s.deck, s.expected);
 ok('  every card belongs to it', s.allFromThatSession);
-ok('  and the deck starts at the top', s.count.startsWith('1 of'), s.count);
-
-console.log('== a sitting ends, and says where that leaves you ==');
-s = await B.evaluate(`
-  const m = await import('./app.js');
-  localStorage.removeItem('english-review/deck');
-  m.state.deck = null; m.state.deckSet = 'all';
-  location.hash = '#/cards'; window.dispatchEvent(new HashChangeEvent('hashchange'));
-  await new Promise(r => setTimeout(r, 200));
-
-  // Set a short sitting, then work through it.
-  const size = document.querySelector('#deck-size');
-  size.value = '10'; size.dispatchEvent(new Event('change'));
-  await new Promise(r => setTimeout(r, 150));
-  for (let i = 0; i < 10; i++) {
-    document.querySelector('#flashcard').click();
-    await new Promise(r => setTimeout(r, 40));
-    document.querySelector('#deck-next').click();
-    await new Promise(r => setTimeout(r, 40));
-  }
-  return { text: document.body.innerText.replace(/\\s+/g, ' '),
-           card: !!document.querySelector('#flashcard'),
-           keepGoing: !!document.querySelector('#deck-more'),
-           practise: !!document.querySelector('a[href="#/review"]'),
-           index: m.state.deck.index, doneToday: m.state.deck.doneToday };
-`);
-ok('ten cards ends the sitting', !s.card, 'a card was still on screen');
-ok('  it says so', /Done for today/i.test(s.text), s.text.slice(0, 120));
-ok('  with how many that was', /10 cards/.test(s.text), s.text.slice(0, 200));
-ok('  how far into the set you are', /10 of 185 in this set/.test(s.text), s.text.slice(0, 300));
-ok('  and how many days are left at this rate', /more days at 10 a day/.test(s.text), s.text.slice(0, 400));
-ok('  you can carry on if you want to', s.keepGoing);
-ok('  or go and be tested instead', s.practise);
-eq('  the place in the set moved by ten', s.index, 10);
-
-console.log('== tomorrow starts a fresh sitting at the same place ==');
-s = await B.evaluate(`
-  const m = await import('./app.js');
-  const decks = JSON.parse(localStorage.getItem('english-review/deck'));
-  decks.all.day = '2020-01-01';          // as if the last sitting were long ago
-  localStorage.setItem('english-review/deck', JSON.stringify(decks));
-  m.state.deck = null;
-  location.hash = '#/lookup'; window.dispatchEvent(new HashChangeEvent('hashchange'));
-  await new Promise(r => setTimeout(r, 120));
-  location.hash = '#/cards'; window.dispatchEvent(new HashChangeEvent('hashchange'));
-  await new Promise(r => setTimeout(r, 200));
-  return { card: !!document.querySelector('#flashcard'),
-           count: document.querySelector('.deck-count').textContent.replace(/\\s+/g, ' ').trim(),
-           sub: document.querySelector('.deck-sub').textContent.replace(/\\s+/g, ' ').trim(),
-           index: m.state.deck.index, doneToday: m.state.deck.doneToday };
-`);
-ok('a new day deals cards again', s.card);
-eq('  the sitting starts from zero', s.doneToday, 0);
-eq('  but not the set', s.index, 10);
-ok('  the counter is today, not the set', /^1 of 10 today/.test(s.count), s.count);
-ok('  and the set is the quiet line', /10 of 185 in this set · 175 to go/.test(s.sub), s.sub);
-
-console.log('== keep going deals more of the same day ==');
-s = await B.evaluate(`
-  const m = await import('./app.js');
-  for (let i = 0; i < 10; i++) {
-    document.querySelector('#flashcard').click();
-    await new Promise(r => setTimeout(r, 40));
-    document.querySelector('#deck-next').click();
-    await new Promise(r => setTimeout(r, 40));
-  }
-  document.querySelector('#deck-more').click();
-  await new Promise(r => setTimeout(r, 150));
-  return { card: !!document.querySelector('#flashcard'), index: m.state.deck.index,
-           count: document.querySelector('.deck-count').textContent.replace(/\\s+/g, ' ').trim() };
-`);
-ok('another sitting is dealt on request', s.card);
-eq('  carrying on from where it stopped', s.index, 20);
-ok('  counting from one again', /^1 of 10 today/.test(s.count), s.count);
+ok('  and the deck starts at the top', /· 1 of/.test(s.count), s.count);
 
 console.log('== the end of the deck offers the real thing ==');
 s = await B.evaluate(`
