@@ -426,6 +426,14 @@ body.signed-out .view { padding-top: 12vh; max-width: 460px; }
   font-variant-numeric: tabular-nums;
 }
 
+/* Shown while a read is running, so coming back to the screen explains itself
+   rather than offering a picker that does nothing. */
+.busy {
+  margin: 14px 0 0; padding: 10px 14px; border-radius: 10px;
+  background: var(--accent-soft); color: var(--accent);
+  font-size: .92rem; line-height: 1.45;
+}
+
 .alert {
   margin-top: 14px; padding: 14px; border-radius: 10px;
   background: var(--bad-soft); border: 1px solid var(--bad);

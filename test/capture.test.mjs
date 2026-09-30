@@ -42,6 +42,9 @@ await B.addInitScript(`
     }
     if (href.includes('/api/logs')) return reply({ logs: window.__logs || [] });
     if (href.includes('/api/vision')) {
+      if (window.__holdVision) {
+        await new Promise((r) => { window.__releaseVision = r; });
+      }
       if (window.__visionFail) {
         return reply({ error: window.__visionFail, trace: 77 }, window.__visionStatus || 503);
       }
@@ -316,6 +319,63 @@ ok('a collocation Oxford does not know is labelled unverified',
 ok('  but still arrives with a meaning to review', (s[1]?.meaning || '').length > 0, s[1]?.meaning);
 ok('  and its placeholder says to check it', /check this one/.test(s[1]?.placeholder || ''), s[1]?.placeholder);
 ok('  with no dictionary line, because there is none', s[1]?.dict === null, s[1]?.dict);
+
+console.log('== a read in flight survives leaving the screen ==');
+await B.evaluate(`
+  document.querySelector('#discard-draft')?.click();
+  await new Promise(r => setTimeout(r, 200));
+  // Hold the vision call open so the read is genuinely still running.
+  window.__holdVision = true;
+  window.__draftReply = [{ term: 'held', kind: 'word', meaning: 'x', confidence: 'high' }];
+  document.querySelector('[data-mode="photo"]').click();
+  await new Promise(r => setTimeout(r, 150));
+  const c = document.createElement('canvas'); c.width = 40; c.height = 40;
+  const blob = await new Promise(r => c.toBlob(r, 'image/jpeg'));
+  const dt = new DataTransfer();
+  dt.items.add(new File([blob], 'p.jpg', { type: 'image/jpeg' }));
+  const input = document.querySelector('#photo');
+  input.files = dt.files;
+  input.dispatchEvent(new Event('change'));
+  await new Promise(r => setTimeout(r, 700));
+`);
+s = await B.evaluate(`return {
+  disabled: document.querySelector('#pick')?.disabled,
+  label: document.querySelector('#pick')?.textContent.trim(),
+  status: document.querySelector('#photo-status')?.textContent || '',
+}`);
+ok('the picker is shut while a read is running', s.disabled === true, JSON.stringify(s));
+ok('  and says why', /reading/i.test(s.label), s.label);
+ok('  with a count that is running', /Reading the handwriting/.test(s.status), s.status);
+
+// Leave the screen and come back - this is what used to lose the guard.
+s = await B.evaluate(`
+  location.hash = '#/lookup'; window.dispatchEvent(new HashChangeEvent('hashchange'));
+  await new Promise(r => setTimeout(r, 200));
+  location.hash = '#/capture'; window.dispatchEvent(new HashChangeEvent('hashchange'));
+  await new Promise(r => setTimeout(r, 1400));
+  return {
+    disabled: document.querySelector('#pick')?.disabled,
+    status: document.querySelector('#photo-status')?.textContent || '',
+    banner: !!document.querySelector('#reading-banner'),
+  };
+`);
+ok('coming back, the picker is still shut', s.disabled === true, JSON.stringify(s));
+ok('  the count carried on rather than disappearing',
+   /Reading the handwriting… [1-9]/.test(s.status), s.status);
+ok('  and a banner warns against sending a second photo', s.banner, JSON.stringify(s));
+
+// Let it finish and check the screen returns to normal.
+s = await B.evaluate(`
+  window.__holdVision = false;
+  window.__releaseVision && window.__releaseVision();
+  await new Promise(r => setTimeout(r, 900));
+  return { disabled: document.querySelector('#pick')?.disabled,
+           banner: !!document.querySelector('#reading-banner'),
+           drafts: document.querySelectorAll('.draft').length };
+`);
+ok('once it finishes the picker opens again', s.disabled !== true, JSON.stringify(s));
+ok('  the warning is gone', !s.banner, JSON.stringify(s));
+ok('  and the draft arrived', s.drafts > 0, JSON.stringify(s));
 
 console.log('== signing out ==');
 // Sign-out moved into the header bar, which every screen now shows.

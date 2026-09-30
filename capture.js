@@ -26,6 +26,12 @@ let recent = [];
 let mode = 'type';
 let lastImage = null;   // kept so a failed read can be retried without a second photo
 
+// A read in flight, held here rather than in the DOM. The screen is rebuilt
+// whenever you come back to it, so a button marked disabled and a line counting
+// seconds both vanish on the way out - and a second photo could be sent while
+// the first was still being read, spending another of the day's requests.
+let reading = null;     // { since } while a photo is being read
+
 export function renderCapture(view) {
   view.innerHTML = `
     <h2 class="section">Capture</h2>
@@ -35,6 +41,8 @@ export function renderCapture(view) {
       <button class="chip" data-mode="type" aria-pressed="${mode === 'type'}">Type it</button>
       <button class="chip" data-mode="photo" aria-pressed="${mode === 'photo'}">Photograph a page</button>
     </div>
+    ${reading ? '<p class="busy" id="reading-banner">A photo is being read — wait for it rather'
+              + ' than sending another, because each one costs a request.</p>' : ''}
 
     <div id="capture-body"></div>
     <div id="draft-area"></div>
@@ -127,8 +135,9 @@ function renderPhotoForm(view) {
       <h3>Photograph your notebook</h3>
       <p class="muted" style="margin-top:0">A draft comes back for you to check. Nothing is saved until you confirm it.</p>
       <input type="file" id="photo" accept="image/*" capture="environment" hidden>
-      <button class="btn wide" id="pick">Take or choose a photo</button>
-      <p class="reading" id="photo-status" hidden></p>
+      <button class="btn wide" id="pick" ${reading ? 'disabled' : ''}>${
+        reading ? 'Reading a photo…' : 'Take or choose a photo'}</button>
+      <p class="reading" id="photo-status" ${reading ? '' : 'hidden'}></p>
       <div id="photo-error"></div>
       <div id="preview"></div>
       <details class="diag" id="diag" hidden>
@@ -138,10 +147,13 @@ function renderPhotoForm(view) {
     </div>`;
 
   const input = view.querySelector('#photo');
-  view.querySelector('#pick').addEventListener('click', () => input.click());
+  view.querySelector('#pick').addEventListener('click', () => { if (!reading) input.click(); });
+
+  // Coming back mid-read: pick the count up where it left off.
+  reflectReading(view);
 
   input.addEventListener('change', async () => {
-    if (!input.files?.length) return;
+    if (!input.files?.length || reading) return;
     const status = view.querySelector('#photo-status');
     status.hidden = false;
     status.textContent = 'Preparing the image…';
@@ -182,40 +194,63 @@ function mergeReport(term, merged) {
 }
 
 /** Send the photo already in hand. Separate so a retry costs no second photo. */
-async function readPhoto(view) {
-  const status = view.querySelector('#photo-status');
+/**
+ * Put `reading` on the screen: the picker, the counting line and the warning.
+ *
+ * One function, re-found in the live document each time, because the screen is
+ * rebuilt whenever you leave and come back. Holding those nodes in a closure is
+ * what used to lose the guard and let a second photo go out.
+ */
+function reflectReading(view) {
   const pick = view.querySelector('#pick');
-  view.querySelector('#photo-error').innerHTML = '';
-  pick.disabled = true;
-  status.hidden = false;
+  if (pick) {
+    pick.disabled = !!reading;
+    pick.textContent = reading ? 'Reading a photo…' : 'Take or choose a photo';
+  }
 
-  // A read can take a minute on the free tier, and a line that never changes
-  // looks like a hang, so it counts.
-  const since = Date.now();
-  const show = () => {
-    const seconds = Math.round((Date.now() - since) / 1000);
+  const status = view.querySelector('#photo-status');
+  if (status && reading) {
+    // A read can take a minute on the free tier, and a line that never changes
+    // looks like a hang, so it counts up.
+    const seconds = Math.round((Date.now() - reading.since) / 1000);
+    status.hidden = false;
     status.textContent = seconds > 25
       ? `Reading the handwriting… ${seconds}s — it is slow when the free tier is busy`
       : `Reading the handwriting… ${seconds}s`;
-  };
-  show();
-  const tick = setInterval(show, 1000);
+  }
+
+  const banner = view.querySelector('#reading-banner');
+  if (banner && !reading) banner.remove();
+}
+
+async function readPhoto(view) {
+  view.querySelector('#photo-error').innerHTML = '';
+  reading = { since: Date.now() };
+  reflectReading(view);
+  const tick = setInterval(() => reflectReading(view), 1000);
+
+  // Idempotent, and called before the result is drawn, so whatever renders next
+  // renders into an unlocked screen.
+  const stop = () => { clearInterval(tick); reading = null; reflectReading(view); };
 
   try {
     const result = await api('/api/vision', { method: 'POST', body: {
       image: lastImage.base64, mimeType: 'image/jpeg',
     }});
     draft = result.items.map((item) => ({ ...item, keep: true }));
-    status.textContent = draft.length
+    stop();
+    const status = view.querySelector('#photo-status');
+    if (status) status.textContent = draft.length
       ? `Found ${draft.length} item${draft.length === 1 ? '' : 's'} — check them below.`
       : 'No English study notes found in that photo.';
     renderDraft(view);
   } catch (error) {
-    status.hidden = true;
+    stop();
+    const status = view.querySelector('#photo-status');
+    if (status) status.hidden = true;
     showReadError(view, error);
   } finally {
-    clearInterval(tick);
-    pick.disabled = false;
+    stop();
     loadDiagnostics(view);
   }
 }
