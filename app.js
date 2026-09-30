@@ -17,6 +17,7 @@ const state = {
   deckSet: 'all',
   pickingSet: false,
   cardsView: 'card',
+  fromCard: false,
   query: '',
   filter: 'all',
 };
@@ -74,8 +75,15 @@ function route() {
   // Nothing is usable until you are signed in — including looking words up.
   if (!currentUser()) return renderSignInGate();
 
+  // Leaving the cards/note pair for anywhere else ends the round trip.
+  if (section !== 'item' && section !== 'cards') state.fromCard = false;
+
   if (section === 'capture') return renderCapture(view);
-  if (section === 'cards') return renderCards({ fresh: true });
+  if (section === 'cards') {
+    const resuming = state.fromCard;   // came back from a note; keep the place
+    state.fromCard = false;
+    return renderCards({ fresh: !resuming });
+  }
   if (section === 'lookup') return renderLookup();
   if (section === 'progress') return renderProgress();
   if (section === 'item') return renderItem(decodeURIComponent(rest.join('/')));
@@ -647,7 +655,8 @@ function renderItem(id) {
   const senses = item.senses || [];
 
   view.innerHTML = `
-    <a class="backlink" href="#/lookup">← Back to look up</a>
+    <a class="backlink" href="${state.fromCard ? '#/cards' : '#/lookup'}">${
+      state.fromCard ? '← Back to the card' : '← Back to look up'}</a>
 
     <div class="card item-head">
       <h2 class="item-term">${esc(item.term)}</h2>
@@ -864,7 +873,7 @@ function renderCards({ fresh = false } = {}) {
     <div class="row deck-nav">
       <button class="btn secondary" id="deck-prev" ${deck.index === 0 ? 'disabled' : ''}>← Back</button>
       <button class="btn" id="deck-next">${deck.shown ? 'Next →' : 'Show'}</button>
-      <a class="chiplink" href="#/item/${encodeURIComponent(item.id)}">Open the note</a>
+      <a class="chiplink" id="deck-note" href="#/item/${encodeURIComponent(item.id)}">Open the note</a>
     </div>`;
 
   wireDeckPicker();
@@ -878,6 +887,7 @@ function renderCards({ fresh = false } = {}) {
   card.addEventListener('click', () => (deck.shown ? next() : flip()));
   view.querySelector('#deck-next').addEventListener('click', (e) => { e.stopPropagation(); next(); });
   view.querySelector('#deck-prev').addEventListener('click', (e) => { e.stopPropagation(); back(); });
+  view.querySelector('#deck-note').addEventListener('click', () => { state.fromCard = true; });
   card.focus();
 
   document.onkeydown = (e) => {
@@ -893,6 +903,7 @@ function renderCards({ fresh = false } = {}) {
 function cardBack(item) {
   const examples = (item.examples || []).filter((e) => e.html).slice(0, 2);
   return `
+    ${item.ipa ? `<p class="flash-ipa">${esc(item.ipa)}</p>` : ''}
     ${item.meaning ? `<p class="flash-meaning">${esc(item.meaning)}</p>` : ''}
     ${item.ruleHtml && !item.meaning ? `<div class="flash-meaning">${item.ruleHtml}</div>` : ''}
     ${item.vi ? `<p class="flash-vi">${esc(item.vi)}</p>` : ''}

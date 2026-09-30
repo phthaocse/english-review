@@ -475,6 +475,7 @@ body.signed-out .view { padding-top: 12vh; max-width: 460px; }
 .flash-hint { margin: 18px 0 0; font-size: .84rem; color: var(--muted); }
 
 .flash-back { margin-top: 20px; padding-top: 18px; border-top: 1px solid var(--border); }
+.flash-ipa { font-family: var(--mono); color: var(--muted); margin: 0 0 8px; font-size: .92rem; }
 .flash-meaning { margin: 0; font-size: 1.05rem; }
 .flash-vi { margin: 8px 0 0; color: var(--accent); }
 .flash-image {

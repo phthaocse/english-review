@@ -313,6 +313,64 @@ ok('  it offers another pass', s.again);
 ok('  and points at Practise for the graded version', s.practise);
 ok('  saying plainly that seeing is not knowing', /not the same as being able to use it/i.test(s.text), '');
 
+console.log('== the note remembers which card sent you ==');
+s = await B.evaluate(`
+  const m = await import('./app.js');
+  location.hash = '#/cards'; window.dispatchEvent(new HashChangeEvent('hashchange'));
+  await new Promise(r => setTimeout(r, 80));
+  const from = { index: m.state.deck.index, id: m.state.deck.ids[m.state.deck.index] };
+  document.querySelector('#deck-note').click();
+  await new Promise(r => setTimeout(r, 80));
+  const link = document.querySelector('.backlink');
+  const note = { label: link?.textContent.trim(), href: link?.getAttribute('href'),
+                 term: document.querySelector('.item-term')?.textContent };
+  link.click();
+  await new Promise(r => setTimeout(r, 120));
+  return { from, note, landedOn: m.state.deck.index,
+           sameCard: m.state.deck.ids[m.state.deck.index] === from.id,
+           faceDown: !document.querySelector('.flash-back'),
+           term: document.querySelector('.flash-term')?.textContent };
+`);
+eq('the note opened is the card you were on', s.note.term, s.term);
+eq('  its back link points at the cards, not look up', s.note.href, '#/cards');
+ok('  and says so', /back to the card/i.test(s.note.label || ''), s.note.label);
+ok('going back lands on the same card, not a new random one', s.sameCard,
+   `left ${s.from.index}, came back to ${s.landedOn}`);
+ok('  and it is face down again, ready to be recalled', s.faceDown);
+
+console.log('== a note reached any other way still goes back to look up ==');
+s = await B.evaluate(`
+  location.hash = '#/lookup'; window.dispatchEvent(new HashChangeEvent('hashchange'));
+  await new Promise(r => setTimeout(r, 80));
+  const m = await import('./app.js');
+  location.hash = '#/item/' + encodeURIComponent(m.state.items[0].id);
+  window.dispatchEvent(new HashChangeEvent('hashchange'));
+  await new Promise(r => setTimeout(r, 80));
+  const link = document.querySelector('.backlink');
+  return { href: link?.getAttribute('href'), label: link?.textContent.trim() };
+`);
+eq('  it points back at look up', s.href, '#/lookup');
+ok('  and says so', /back to look up/i.test(s.label || ''), s.label);
+
+console.log('== the card carries the pronunciation, on the answer side ==');
+s = await B.evaluate(`
+  const m = await import('./app.js');
+  const withIpa = m.state.items.find((i) => i.ipa);
+  m.state.deckSet = 'all';
+  m.state.deck = { scope: 'all', ids: [withIpa.id], index: 0, shown: false, passes: 0 };
+  location.hash = '#/cards'; window.dispatchEvent(new HashChangeEvent('hashchange'));
+  await new Promise(r => setTimeout(r, 80));
+  m.state.deck.index = 0; m.state.deck.shown = false;
+  const front = { ipa: !!document.querySelector('.flash-ipa') };
+  document.querySelector('#flashcard').click();
+  await new Promise(r => setTimeout(r, 80));
+  return { front, ipa: document.querySelector('.flash-ipa')?.textContent, expected: withIpa.ipa,
+           order: [...document.querySelectorAll('.flash-back > *')].map((e) => e.className) };
+`);
+ok('the front does not give the pronunciation away', !s.front.ipa);
+eq('  the back carries it', s.ipa, s.expected);
+ok('  above the meaning, where you read it first', s.order[0] === 'flash-ipa', s.order.join(','));
+
 const appErrors = B.consoleErrors.filter((e) => !/GSI_LOGGER|FedCM|client ID/.test(e));
 ok('no application errors', appErrors.length === 0, appErrors.slice(0, 3).join(' | '));
 
