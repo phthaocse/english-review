@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="A scowling figure holding up a cheerful grinning mask beside its own face">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <!-- the person, shoulders and head -->
+  <path d="M42 240 L42 212 Q124 176 202 214 L202 240 Z" fill="#4f46e5"/>
+  <circle cx="122" cy="108" r="58" fill="#4f46e5"/>
+  <!-- the face they actually wear -->
+  <g fill="#eef0f5">
+    <circle cx="102" cy="98" r="8"/><circle cx="146" cy="98" r="8"/>
+  </g>
+  <g stroke="#eef0f5" stroke-width="5" stroke-linecap="round">
+    <path d="M90 80 L112 88"/><path d="M158 80 L136 88"/>
+  </g>
+  <path d="M98 148 Q122 124 146 148" fill="none" stroke="#c0392f" stroke-width="7" stroke-linecap="round"/>
+  <!-- the arm holding the other face up -->
+  <path d="M176 214 L210 172" stroke="#4f46e5" stroke-width="20" stroke-linecap="round"/>
+  <circle cx="214" cy="168" r="14" fill="#4f46e5"/>
+  <!-- the face they show, grinning, held over the edge of their own -->
+  <ellipse cx="216" cy="110" rx="42" ry="52" fill="#e0b73a" stroke="#c9a227" stroke-width="4"/>
+  <g fill="#7b8399">
+    <ellipse cx="202" cy="98" rx="8" ry="10"/><ellipse cx="234" cy="98" rx="8" ry="10"/>
+  </g>
+  <path d="M198 126 Q216 148 236 126" fill="none" stroke="#7b8399" stroke-width="6" stroke-linecap="round"/>
+</svg>

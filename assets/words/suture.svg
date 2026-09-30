@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="A cut in the skin pulled shut and held closed by four evenly spaced stitches of thread">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <!-- the skin the cut is in -->
+  <rect x="16" y="32" width="288" height="176" rx="34" fill="#ccd1dc" stroke="#9aa2b4" stroke-width="6"/>
+  <!-- the cut, held closed rather than gaping -->
+  <path d="M50 124 Q 104 112 160 120 T 270 116" fill="none" stroke="#c0392f"
+        stroke-width="7" stroke-linecap="round"/>
+  <!-- the stitches, and the punctures where the thread goes in and comes out -->
+  <g stroke="#4f46e5" stroke-width="8" stroke-linecap="round">
+    <path d="M84 92 L100 152"/>
+    <path d="M132 88 L148 148"/>
+    <path d="M180 88 L196 148"/>
+    <path d="M228 84 L244 144"/>
+  </g>
+  <g fill="#4f46e5">
+    <circle cx="104" cy="148" r="6"/><circle cx="152" cy="144" r="6"/>
+    <circle cx="200" cy="144" r="6"/><circle cx="248" cy="140" r="6"/>
+  </g>
+  <g fill="#8e2a22">
+    <circle cx="86" cy="96" r="4"/><circle cx="134" cy="92" r="4"/>
+    <circle cx="182" cy="92" r="4"/><circle cx="230" cy="88" r="4"/>
+  </g>
+</svg>

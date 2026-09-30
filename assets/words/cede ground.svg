@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="A frontier line pushed backwards so that a band of land which used to belong to one side is now shaded as the other side's">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <!-- what the first side still holds -->
+  <rect x="24" y="54" width="94" height="144" fill="#4f46e5" opacity=".55"/>
+  <!-- the strip just handed over: the rival's shading, the old owner's outline still on it -->
+  <rect x="118" y="54" width="78" height="144" fill="#9aa2b4" opacity=".55"/>
+  <rect x="121" y="57" width="72" height="138" fill="none" stroke="#4f46e5" stroke-width="3" stroke-dasharray="8 7"/>
+  <!-- what the rival already held -->
+  <rect x="196" y="54" width="100" height="144" fill="#7b8399" opacity=".8"/>
+  <!-- the edge of the whole map -->
+  <rect x="24" y="54" width="272" height="144" fill="none" stroke="#7b8399" stroke-width="4"/>
+  <!-- where the frontier used to run -->
+  <path d="M196 48 L196 204" stroke="#7b8399" stroke-width="5" stroke-dasharray="10 8"/>
+  <!-- where it runs now, and which way it moved -->
+  <path d="M118 44 L118 208" stroke="#c0392f" stroke-width="7"/>
+  <g fill="#c0392f">
+    <rect x="142" y="122" width="48" height="8"/>
+    <path d="M146 114 L128 126 L146 138 Z"/>
+  </g>
+</svg>

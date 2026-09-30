@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="Rod shaped and round single cells seen hugely magnified, one of them pinched in the middle as it splits in two">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <!-- the bright circle of a microscope field, which is what says hugely magnified -->
+  <circle cx="160" cy="120" r="103" fill="#ffffff" stroke="#9aa2b4" stroke-width="7"/>
+  <!-- two rod cells -->
+  <g fill="#4f46e5" stroke="#3730a3" stroke-width="3">
+    <rect x="-38" y="-14" width="76" height="28" rx="14" transform="translate(124,78) rotate(-24)"/>
+    <rect x="-33" y="-13" width="66" height="26" rx="13" transform="translate(204,152) rotate(28)"/>
+  </g>
+  <!-- the tail on the lower rod, so it reads as alive and not as a bar -->
+  <path d="M232 170 q 14 12 26 3 q 12 -9 22 3" stroke="#3730a3" stroke-width="4"
+        fill="none" stroke-linecap="round"/>
+  <!-- a round cell -->
+  <circle cx="212" cy="76" r="23" fill="#4f46e5" stroke="#3730a3" stroke-width="3"/>
+  <!-- one cell caught dividing: a single body pinched to a waist in the middle -->
+  <path d="M112 141 Q122 143 128 153 Q134 143 144 141 A21 21 0 1 1 144 183
+           Q134 181 128 171 Q122 181 112 183 A21 21 0 1 1 112 141 Z"
+        fill="#4f46e5" stroke="#3730a3" stroke-width="3"/>
+</svg>

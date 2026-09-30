@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="Two figures of identical build set either side of a line, each braced and leaning in towards the other">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <!-- the ground they are both set on -->
+  <rect x="14" y="194" width="292" height="9" rx="4" fill="#7b8399"/>
+  <!-- the line between them, which neither has crossed yet -->
+  <path d="M160 40 L160 206" stroke="#c0392f" stroke-width="6"/>
+  <g stroke="#4f46e5" fill="#4f46e5" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="120" cy="100" r="17" stroke="none"/>
+    <path d="M112 118 L80 152" fill="none" stroke-width="15"/>
+    <path d="M80 152 L46 194" fill="none" stroke-width="12"/>
+    <path d="M80 152 L112 176 L106 194" fill="none" stroke-width="12"/>
+    <path d="M104 126 L138 140" fill="none" stroke-width="11"/>
+    <path d="M104 126 L72 130" fill="none" stroke-width="11"/>
+  </g>
+  <g transform="translate(320 0) scale(-1 1)" stroke="#7b8399" fill="#7b8399" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="120" cy="100" r="17" stroke="none"/>
+    <path d="M112 118 L80 152" fill="none" stroke-width="15"/>
+    <path d="M80 152 L46 194" fill="none" stroke-width="12"/>
+    <path d="M80 152 L112 176 L106 194" fill="none" stroke-width="12"/>
+    <path d="M104 126 L138 140" fill="none" stroke-width="11"/>
+    <path d="M104 126 L72 130" fill="none" stroke-width="11"/>
+  </g>
+</svg>

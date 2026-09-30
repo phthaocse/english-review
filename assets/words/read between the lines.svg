@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="A written page whose plain lines are dark and even, with a fainter extra line of writing showing in the gap between two of them">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <!-- the page -->
+  <rect x="48" y="18" width="224" height="206" rx="5" fill="#ffffff" stroke="#9aa2b4" stroke-width="5"/>
+  <!-- the ruling -->
+  <g stroke="#cdd3e0" stroke-width="3">
+    <path d="M70 62 L250 62"/><path d="M70 100 L250 100"/><path d="M70 150 L250 150"/>
+    <path d="M70 188 L250 188"/>
+  </g>
+  <!-- what is actually written, as even bars of type -->
+  <g fill="#7b8399">
+    <rect x="70" y="44" width="180" height="12" rx="6"/>
+    <rect x="70" y="82" width="146" height="12" rx="6"/>
+    <rect x="70" y="132" width="170" height="12" rx="6"/>
+    <rect x="70" y="170" width="120" height="12" rx="6"/>
+  </g>
+  <!-- the sentence nobody wrote down, sitting in the gap between two lines -->
+  <g fill="#4f46e5" opacity=".5">
+    <rect x="84" y="111" width="120" height="8" rx="4"/>
+    <rect x="212" y="111" width="30" height="8" rx="4"/>
+  </g>
+  <!-- what the reader is actually looking at -->
+  <g fill="#4f46e5">
+    <path d="M22 100 L52 115 L22 130 Z"/>
+  </g>
+</svg>

@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="A small two-part frame on the left and the same frame on the right grown to nine parts">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <!-- the starting thing: two sections only -->
+  <g fill="#4f46e5">
+    <rect x="34" y="96" width="34" height="28" rx="3"/>
+    <rect x="72" y="96" width="34" height="28" rx="3"/>
+  </g>
+  <!-- the move from small to full -->
+  <g stroke="#4f46e5" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M118 110 H146"/><path d="M138 102 L148 110 L138 118"/>
+  </g>
+  <!-- the same two sections again, so the eye sees what was kept -->
+  <g fill="#4f46e5">
+    <rect x="170" y="66" width="34" height="28" rx="3"/>
+    <rect x="208" y="66" width="34" height="28" rx="3"/>
+  </g>
+  <!-- everything that was added onto it -->
+  <g fill="#4f46e5" fill-opacity=".22" stroke="#4f46e5" stroke-width="2.5" stroke-dasharray="6 4">
+    <rect x="236" y="66" width="34" height="28" rx="3"/>
+    <rect x="170" y="100" width="34" height="28" rx="3"/>
+    <rect x="208" y="100" width="34" height="28" rx="3"/>
+    <rect x="246" y="100" width="34" height="28" rx="3"/>
+    <rect x="170" y="134" width="34" height="28" rx="3"/>
+    <rect x="208" y="134" width="34" height="28" rx="3"/>
+    <rect x="246" y="134" width="34" height="28" rx="3"/>
+  </g>
+</svg>

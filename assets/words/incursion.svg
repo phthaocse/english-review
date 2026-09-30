@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="Armed arrows pushing across a marked frontier into the shaded country on the other side">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <!-- the territory being entered -->
+  <rect x="172" y="0" width="148" height="240" fill="#4f46e5" opacity=".16"/>
+  <!-- the frontier itself, drawn as a border is drawn on a map -->
+  <path d="M172 0 L172 240" stroke="#7b8399" stroke-width="7" stroke-dasharray="18 14"/>
+  <!-- border posts, so the dashed line reads as a border and not as a fold -->
+  <g fill="#7b8399">
+    <rect x="164" y="18" width="16" height="26" rx="3"/>
+    <rect x="164" y="196" width="16" height="26" rx="3"/>
+  </g>
+  <!-- the crossing: one heavy thrust with two lighter ones behind it -->
+  <path d="M28 104 L216 104 L216 84 L282 120 L216 156 L216 136 L28 136 Z" fill="#c0392f"/>
+  <path d="M44 48 L206 48 L206 36 L248 58 L206 80 L206 68 L44 68 Z" fill="#c0392f" opacity=".7"/>
+  <path d="M44 172 L206 172 L206 160 L248 182 L206 204 L206 192 L44 192 Z" fill="#c0392f" opacity=".7"/>
+</svg>

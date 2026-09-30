@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="Sweet liquid running out of the tap of a mash tun into a jug below, with the spent grain left sitting in the tun">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <!-- the tun the mash is sitting in -->
+  <path d="M30 22 L48 132 Q49 146 63 146 L175 146 Q189 146 190 132 L208 22 Z"
+        fill="#9aa2b4" stroke="#7b8399" stroke-width="6" stroke-linejoin="round"/>
+  <!-- what is left of the liquid above the bed, draining away -->
+  <path d="M45 100 L50 120 L188 120 L193 100 Z" fill="#e0b73a" opacity=".6"/>
+  <!-- the grain bed, which stays behind when the liquid is drawn off -->
+  <path d="M50 120 L54 140 L184 140 L188 120 Z" fill="#c9a227"/>
+  <g fill="#e0b73a" stroke="#a8841c" stroke-width="3">
+    <ellipse cx="78" cy="120" rx="19" ry="11"/><ellipse cx="120" cy="124" rx="19" ry="11"/>
+    <ellipse cx="162" cy="120" rx="19" ry="11"/>
+  </g>
+  <!-- the tap it is drawn off through -->
+  <rect x="186" y="122" width="46" height="16" rx="3" fill="#7b8399"/>
+  <rect x="218" y="130" width="16" height="24" rx="2" fill="#7b8399"/>
+  <path d="M204 106 L204 124" stroke="#4f46e5" stroke-width="8" stroke-linecap="round"/>
+  <path d="M190 106 L218 106" stroke="#4f46e5" stroke-width="8" stroke-linecap="round"/>
+  <!-- the wort running out -->
+  <path d="M226 154 C 228 172, 236 180, 244 188" fill="none" stroke="#e0b73a"
+        stroke-width="12" stroke-linecap="round"/>
+  <!-- the jug catching it, filling up -->
+  <path d="M206 202 L214 232 Q215 238 222 238 L288 238 Q295 238 296 232 L304 202 Z" fill="#e0b73a"/>
+  <path d="M200 184 L212 232 Q213 238 220 238 L290 238 Q297 238 298 232 L310 184"
+        fill="none" stroke="#7b8399" stroke-width="6" stroke-linejoin="round"/>
+</svg>

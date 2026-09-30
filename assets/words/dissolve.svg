@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="A sugar cube standing in a glass of water, half of it already eaten away, its dashed original outline still marked and grains of it drifting off into the water">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <!-- the water and its surface -->
+  <path d="M102 86 L109 214 L211 214 L218 86 Z" fill="#4f46e5" opacity=".2"/>
+  <path d="M102 86 H218" stroke="#4f46e5" stroke-width="4"/>
+  <!-- the glass -->
+  <path d="M96 50 L108 216 L212 216 L224 50" fill="none" stroke="#7b8399" stroke-width="6" stroke-linejoin="round"/>
+  <!-- how big the cube was before it went in -->
+  <g fill="none" stroke="#7b8399" stroke-width="3" stroke-dasharray="7 5">
+    <rect x="122" y="154" width="62" height="58"/>
+    <path d="M122 154 L142 134 L204 134 L184 154"/>
+    <path d="M184 154 L184 212"/>
+  </g>
+  <!-- what is left of it, eaten back on the side the water has got at -->
+  <path d="M122 212 L122 154 L156 154 L164 168 L150 179 L166 192 L152 203 L158 212 Z"
+        fill="#ffffff" stroke="#7b8399" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M122 154 L142 134 L176 134 L156 154 Z"
+        fill="#dfe3ec" stroke="#7b8399" stroke-width="3" stroke-linejoin="round"/>
+  <!-- the cube going into the water and becoming part of it -->
+  <g fill="#ffffff" stroke="#7b8399" stroke-width="2">
+    <circle cx="178" cy="166" r="6" opacity="1"/>
+    <circle cx="194" cy="150" r="5.5" opacity="0.95"/>
+    <circle cx="178" cy="136" r="5" opacity="0.85"/>
+    <circle cx="200" cy="128" r="5" opacity="0.75"/>
+    <circle cx="184" cy="114" r="4.5" opacity="0.6"/>
+    <circle cx="202" cy="104" r="4" opacity="0.5"/>
+    <circle cx="164" cy="126" r="4.5" opacity="0.7"/>
+    <circle cx="190" cy="94" r="3.5" opacity="0.4"/>
+    <circle cx="206" cy="164" r="5" opacity="0.8"/>
+    <circle cx="160" cy="106" r="3.5" opacity="0.45"/>
+    <circle cx="174" cy="96" r="3" opacity="0.35"/>
+    <circle cx="150" cy="128" r="3" opacity="0.4"/>
+  </g>
+</svg>

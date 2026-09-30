@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="Grains that have each sprouted a shoot, spread out on a perforated floor with warm air rising up through the holes to dry them">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <!-- warm air coming up from under the floor, through the bed and away -->
+  <g stroke="#c0392f" stroke-width="5" fill="none" stroke-linecap="round">
+    <path d="M94 236 q -12 -18 0 -36 q 12 -18 0 -36 q -12 -18 0 -36 q 12 -18 0 -36"/>
+    <path d="M160 236 q -12 -18 0 -36 q 12 -18 0 -36 q -12 -18 0 -36 q 12 -18 0 -36"/>
+    <path d="M226 236 q -12 -18 0 -36 q 12 -18 0 -36 q -12 -18 0 -36 q 12 -18 0 -36"/>
+  </g>
+  <g fill="#c0392f">
+    <path d="M83 94 L105 94 L94 72 Z"/><path d="M149 94 L171 94 L160 72 Z"/>
+    <path d="M215 94 L237 94 L226 72 Z"/>
+  </g>
+  <!-- the drying floor, perforated so the air can come through -->
+  <rect x="10" y="178" width="300" height="20" fill="#9aa2b4" stroke="#7b8399" stroke-width="4"/>
+  <g fill="#eef0f5">
+    <circle cx="40" cy="188" r="5"/><circle cx="76" cy="188" r="5"/><circle cx="112" cy="188" r="5"/>
+    <circle cx="148" cy="188" r="5"/><circle cx="184" cy="188" r="5"/><circle cx="220" cy="188" r="5"/>
+    <circle cx="256" cy="188" r="5"/><circle cx="288" cy="188" r="5"/>
+  </g>
+  <!-- the grain lying on it, each kernel with the shoot that says it has germinated -->
+  <g fill="#e0b73a" stroke="#a8841c" stroke-width="3">
+    <ellipse cx="64" cy="160" rx="25" ry="16"/><ellipse cx="124" cy="164" rx="25" ry="16"/>
+    <ellipse cx="196" cy="160" rx="25" ry="16"/><ellipse cx="256" cy="164" rx="25" ry="16"/>
+  </g>
+  <g stroke="#2f6b4f" stroke-width="6" fill="none" stroke-linecap="round">
+    <path d="M62 146 q -10 -20 10 -34"/><path d="M126 150 q 10 -20 -10 -34"/>
+    <path d="M194 146 q -10 -20 10 -34"/><path d="M258 150 q 10 -20 -10 -34"/>
+  </g>
+  <!-- the rootlets, the other half of what germinating does -->
+  <g stroke="#2f6b4f" stroke-width="3" fill="none" stroke-linecap="round">
+    <path d="M84 168 q 14 4 22 12"/><path d="M144 172 q 14 2 22 8"/>
+    <path d="M216 168 q 14 4 22 12"/><path d="M276 172 q 12 2 20 8"/>
+  </g>
+</svg>

@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="Two stacks of chips shoved into the middle of a card table while a coin spins in the air above, its outcome not yet known">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <!-- the coin in the air: this is what the money is riding on -->
+  <g stroke="#9aa2b4" stroke-width="4" fill="none" stroke-dasharray="8 7">
+    <path d="M118 40 A42 26 0 0 0 202 40"/>
+    <path d="M202 68 A42 26 0 0 0 118 68"/>
+  </g>
+  <ellipse cx="160" cy="54" rx="28" ry="10" fill="#e0b73a" stroke="#c9a227" stroke-width="3"
+           transform="rotate(-24 160 54)"/>
+  <!-- the table -->
+  <ellipse cx="160" cy="168" rx="146" ry="60" fill="#2f6b4f"/>
+  <ellipse cx="160" cy="168" rx="130" ry="48" fill="none" stroke="#eef0f5" stroke-width="3" opacity=".35"/>
+  <!-- both players shoving their money forward -->
+  <g fill="#7b8399">
+    <rect x="18" y="164" width="26" height="8"/>
+    <path d="M42 156 L62 168 L42 180 Z"/>
+    <rect x="276" y="164" width="26" height="8"/>
+    <path d="M278 156 L258 168 L278 180 Z"/>
+  </g>
+  <!-- one player's stake, in the middle where it cannot be taken back -->
+  <g fill="#4f46e5" stroke="#eef0f5" stroke-width="2">
+    <ellipse cx="122" cy="186" rx="26" ry="9"/>
+    <ellipse cx="122" cy="176" rx="26" ry="9"/>
+    <ellipse cx="122" cy="166" rx="26" ry="9"/>
+    <ellipse cx="122" cy="156" rx="26" ry="9"/>
+  </g>
+  <!-- the other player's, matching it -->
+  <g fill="#c0392f" stroke="#eef0f5" stroke-width="2">
+    <ellipse cx="198" cy="186" rx="26" ry="9"/>
+    <ellipse cx="198" cy="176" rx="26" ry="9"/>
+    <ellipse cx="198" cy="166" rx="26" ry="9"/>
+    <ellipse cx="198" cy="156" rx="26" ry="9"/>
+  </g>
+</svg>

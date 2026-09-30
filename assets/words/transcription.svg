@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="The spelling of a word written above the symbols for the sounds it is actually made of, with an arrow from one to the other">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <!-- how the word is spelt -->
+  <text x="160" y="84" text-anchor="middle" font-family="Georgia, Times, serif"
+        font-size="52" font-weight="bold" fill="#4f46e5">knight</text>
+  <!-- the crossing from letters to sounds -->
+  <g fill="none" stroke="#7b8399" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M160 108 V146"/>
+  </g>
+  <path d="M160 160 L146 136 L174 136 Z" fill="#7b8399"/>
+  <!-- how it is actually said, written in the slashes that mark a transcription -->
+  <text x="160" y="212" text-anchor="middle" font-family="Helvetica, Arial, sans-serif"
+        font-size="48" font-weight="bold" fill="#c0392f">/na&#618;t/</text>
+</svg>

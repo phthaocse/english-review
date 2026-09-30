@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="A potato cut through, the pale flat face turned towards us, with a magnified circle showing the grains packed inside it">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <!-- the potato: skin on the outside, cut off square on the near end -->
+  <path d="M152 86 Q96 74 64 110 Q28 150 56 188 Q90 218 152 206 Z"
+        fill="#c9a227" stroke="#8a6a12" stroke-width="3"/>
+  <g fill="#8a6a12">
+    <ellipse cx="92" cy="114" rx="8" ry="5" transform="rotate(-25 92 114)"/>
+    <ellipse cx="74" cy="178" rx="7" ry="4" transform="rotate(20 74 178)"/>
+  </g>
+  <!-- the face the knife left, paler than the skin -->
+  <ellipse cx="152" cy="146" rx="27" ry="60" fill="#e0b73a" stroke="#8a6a12" stroke-width="3"/>
+  <!-- the patch of it being looked at closely -->
+  <circle cx="152" cy="140" r="17" fill="none" stroke="#7b8399" stroke-width="3"/>
+  <g stroke="#7b8399" stroke-width="3">
+    <path d="M166 129 L198 92"/><path d="M168 152 L204 124"/>
+  </g>
+  <!-- what is in there: the pale grains themselves -->
+  <circle cx="244" cy="74" r="54" fill="#eef0f5" stroke="#7b8399" stroke-width="4"/>
+  <g fill="#ffffff" stroke="#9aa2b4" stroke-width="2">
+    <ellipse cx="222" cy="56" rx="11" ry="8" transform="rotate(-20 222 56)"/>
+    <ellipse cx="252" cy="50" rx="10" ry="7" transform="rotate(15 252 50)"/>
+    <ellipse cx="268" cy="74" rx="11" ry="8" transform="rotate(30 268 74)"/>
+    <ellipse cx="230" cy="88" rx="10" ry="7" transform="rotate(-10 230 88)"/>
+    <ellipse cx="256" cy="96" rx="9" ry="6" transform="rotate(40 256 96)"/>
+    <ellipse cx="216" cy="82" rx="8" ry="5" transform="rotate(0 216 82)"/>
+    <ellipse cx="246" cy="70" rx="9" ry="6" transform="rotate(-35 246 70)"/>
+    <ellipse cx="272" cy="54" rx="8" ry="5" transform="rotate(20 272 54)"/>
+    <ellipse cx="238" cy="62" rx="7" ry="5" transform="rotate(50 238 62)"/>
+  </g>
+</svg>

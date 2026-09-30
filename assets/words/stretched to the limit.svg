@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="A rubber band looped over two pegs and hauled so far apart that it has gone thin and is straining along its length">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <!-- being pulled hard from both ends -->
+  <g fill="#7b8399">
+    <rect x="22" y="136" width="24" height="8"/>
+    <path d="M28 128 L8 140 L28 152 Z"/>
+    <rect x="274" y="136" width="24" height="8"/>
+    <path d="M292 128 L312 140 L292 152 Z"/>
+  </g>
+  <!-- the band itself: once round, now a long thin loop drawn tight -->
+  <path d="M74 122 Q170 132 246 122 A16 16 0 0 1 246 158 Q170 148 74 158 A16 16 0 0 1 74 122 Z"
+        fill="none" stroke="#4f46e5" stroke-width="6"/>
+  <!-- what it is stretched over -->
+  <g fill="#9aa2b4" stroke="#7b8399" stroke-width="3">
+    <circle cx="74" cy="140" r="13"/>
+    <circle cx="246" cy="140" r="13"/>
+  </g>
+  <!-- the strain showing: it will not take any more -->
+  <g stroke="#c0392f" stroke-width="4" stroke-linecap="round">
+    <path d="M132 126 L132 110"/><path d="M160 129 L160 113"/><path d="M188 128 L188 112"/>
+    <path d="M132 151 L132 167"/><path d="M160 148 L160 164"/><path d="M188 149 L188 165"/>
+  </g>
+</svg>

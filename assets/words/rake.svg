@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="A long-handled rake with a row of teeth being pulled through loose grain, leaving it combed into neat lines">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <!-- the grain surface being worked -->
+  <rect y="182" width="320" height="58" fill="#e0b73a" fill-opacity=".35"/>
+  <!-- loose grain not yet gathered -->
+  <g fill="#e0b73a" stroke="#c9a227" stroke-width="2">
+    <ellipse cx="40" cy="146" rx="14" ry="9" transform="rotate(-18 40 146)"/>
+    <ellipse cx="68" cy="122" rx="14" ry="9" transform="rotate(14 68 122)"/>
+    <ellipse cx="36" cy="106" rx="14" ry="9" transform="rotate(-32 36 106)"/>
+  </g>
+  <g stroke="#c9a227" stroke-width="2" stroke-linecap="round">
+    <path d="M28 143 L52 150"/><path d="M57 119 L79 125"/><path d="M26 111 L45 100"/>
+  </g>
+  <!-- the lines the teeth have combed into it -->
+  <g fill="#c9a227">
+    <rect x="100" y="196" width="8" height="40" rx="4"/>
+    <rect x="122" y="196" width="8" height="40" rx="4"/>
+    <rect x="144" y="196" width="8" height="40" rx="4"/>
+    <rect x="166" y="196" width="8" height="40" rx="4"/>
+    <rect x="188" y="196" width="8" height="40" rx="4"/>
+    <rect x="210" y="196" width="8" height="40" rx="4"/>
+    <rect x="232" y="196" width="8" height="40" rx="4"/>
+  </g>
+  <!-- the handle -->
+  <path d="M170 156 L276 30" stroke="#4f46e5" stroke-width="11" stroke-linecap="round"/>
+  <!-- the head and its row of teeth, the part that makes it a rake -->
+  <rect x="96" y="148" width="148" height="16" rx="6" fill="#4f46e5"/>
+  <g fill="none" stroke="#4f46e5" stroke-width="7" stroke-linecap="round">
+    <path d="M104 164 V190"/> <path d="M126 164 V190"/> <path d="M148 164 V190"/> <path d="M170 164 V190"/> <path d="M192 164 V190"/> <path d="M214 164 V190"/> <path d="M236 164 V190"/>
+  </g>
+</svg>

@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="One broken node at the centre of three rings, the parts nearest it fully coloured and the ones furthest out barely touched">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <!-- how far the damage reaches: dark close in, almost nothing at the edge -->
+  <g fill="#c0392f">
+    <circle cx="152" cy="120" r="102" opacity=".08"/>
+    <circle cx="152" cy="120" r="68" opacity=".16"/>
+    <circle cx="152" cy="120" r="36" opacity=".32"/>
+  </g>
+  <!-- the wiring that carries the failure outwards -->
+  <g stroke="#7b8399" stroke-width="3">
+    <path d="M152 120 L118 146"/><path d="M152 120 L186 96"/>
+    <path d="M152 120 L96 76"/><path d="M152 120 L212 166"/>
+    <path d="M152 120 L64 190"/><path d="M152 120 L240 52"/>
+  </g>
+  <!-- the node that failed, bursting -->
+  <g stroke="#c0392f" stroke-width="5" stroke-linecap="round">
+    <path d="M152 92 L152 78"/><path d="M152 148 L152 162"/>
+    <path d="M124 120 L110 120"/><path d="M180 120 L194 120"/>
+    <path d="M132 100 L122 90"/><path d="M172 140 L182 150"/>
+    <path d="M172 100 L182 90"/><path d="M132 140 L122 150"/>
+  </g>
+  <circle cx="152" cy="120" r="15" fill="#c0392f"/>
+  <!-- neighbours inside the first ring: taken down with it -->
+  <g fill="#c0392f">
+    <rect x="106" y="134" width="24" height="24" rx="4"/>
+    <rect x="174" y="84" width="24" height="24" rx="4"/>
+  </g>
+  <!-- the middle ring: hurt but still standing -->
+  <g fill="#c0392f" opacity=".5">
+    <rect x="84" y="64" width="24" height="24" rx="4"/>
+    <rect x="200" y="154" width="24" height="24" rx="4"/>
+  </g>
+  <!-- the outer ring: untouched -->
+  <g fill="#9aa2b4">
+    <rect x="52" y="178" width="24" height="24" rx="4"/>
+    <rect x="228" y="40" width="24" height="24" rx="4"/>
+  </g>
+</svg>

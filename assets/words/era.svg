@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="A timeline running off in both directions with one stretch of it walled off between two red bars and shaded as a single period">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <!-- time, running on before and after -->
+  <path d="M34 140 H286" stroke="#7b8399" stroke-width="5"/>
+  <g fill="#7b8399">
+    <path d="M22 140 L40 130 L40 150 Z"/>
+    <path d="M298 140 L280 130 L280 150 Z"/>
+  </g>
+  <!-- the one stretch being singled out -->
+  <rect x="112" y="92" width="96" height="96" fill="#4f46e5" opacity=".3"/>
+  <rect x="112" y="92" width="96" height="22" fill="#4f46e5"/>
+  <!-- where it starts and where it ends -->
+  <g stroke="#c0392f" stroke-width="7">
+    <path d="M112 84 L112 196"/><path d="M208 84 L208 196"/>
+  </g>
+  <!-- the events that fall inside it, and the ones that do not -->
+  <g fill="#9aa2b4"><circle cx="48" cy="140" r="6"/><circle cx="74" cy="140" r="6"/><circle cx="240" cy="140" r="6"/><circle cx="266" cy="140" r="6"/></g>
+  <g fill="#4f46e5"><circle cx="126" cy="140" r="8"/><circle cx="150" cy="140" r="8"/><circle cx="174" cy="140" r="8"/><circle cx="194" cy="140" r="8"/></g>
+</svg>

@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="A closed circular track with one line that touches it at a single point and then flies off dead straight">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <!-- the topic: a closed loop you are meant to stay on -->
+  <circle cx="110" cy="142" r="62" fill="none" stroke="#4f46e5" stroke-width="10"/>
+  <g fill="none" stroke="#4f46e5" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M48 130 L58 142 L48 154"/>
+  </g>
+  <!-- the line that grazes it once and keeps going -->
+  <path d="M112 220 L280 52" stroke="#c0392f" stroke-width="7" stroke-linecap="round"/>
+  <path d="M294 38 L266 44 L288 66 Z" fill="#c0392f"/>
+  <!-- the one point of contact -->
+  <circle cx="154" cy="178" r="8" fill="#c0392f" stroke="#eef0f5" stroke-width="3"/>
+</svg>

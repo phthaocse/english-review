@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="Two jars: a full jar of pale liquid steaming, and beside it half as much liquid in a far deeper colour">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <!-- steam carrying the water off the first jar -->
+  <g stroke="#9aa2b4" stroke-width="5" fill="none" stroke-linecap="round">
+    <path d="M70 72 Q60 56 70 42 Q80 28 70 16"/>
+    <path d="M100 76 Q90 60 100 46 Q110 32 100 22"/>
+  </g>
+  <!-- jar one: full to the top, but weak -->
+  <path d="M40 88 L40 192 Q40 204 52 204 L118 204 Q130 204 130 192 L130 88 Z"
+        fill="#e0b73a" fill-opacity=".22"/>
+  <path d="M40 84 L40 192 Q40 204 52 204 L118 204 Q130 204 130 192 L130 84"
+        fill="none" stroke="#7b8399" stroke-width="6" stroke-linejoin="round"/>
+  <!-- jar two: the same stuff with the water taken out - less of it, far stronger -->
+  <path d="M190 148 L190 192 Q190 204 202 204 L268 204 Q280 204 280 192 L280 148 Z"
+        fill="#c9a227"/>
+  <path d="M190 84 L190 192 Q190 204 202 204 L268 204 Q280 204 280 192 L280 84"
+        fill="none" stroke="#7b8399" stroke-width="6" stroke-linejoin="round"/>
+  <!-- where the level used to be, and how far it dropped -->
+  <path d="M190 88 H280" stroke="#c0392f" stroke-width="3" stroke-dasharray="7 5"/>
+  <g stroke="#c0392f" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M235 94 V140"/><path d="M227 132 L235 142 L243 132"/>
+  </g>
+  <!-- same stuff, moved across -->
+  <g stroke="#4f46e5" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M142 150 H176"/><path d="M168 142 L178 150 L168 158"/>
+  </g>
+</svg>

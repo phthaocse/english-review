@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="A wide river flowing one way, with one narrow stream inside it deliberately pushing back the other way">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <!-- the same wide channel everyone else is in -->
+  <path d="M0 58 C 80 42, 210 78, 320 54 L320 148 C 210 172, 80 136, 0 152 Z" fill="#4f46e5" fill-opacity=".22"/>
+  <path d="M0 58 C 80 42, 210 78, 320 54" fill="none" stroke="#7b8399" stroke-width="5"/>
+  <path d="M0 152 C 80 136, 210 172, 320 148" fill="none" stroke="#7b8399" stroke-width="5"/>
+  <!-- the prevailing flow, going right -->
+  <g fill="none" stroke="#4f46e5" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" opacity=".7">
+    <path d="M51 74 L68 82 L51 90"/> <path d="M117 80 L134 88 L117 96"/> <path d="M183 86 L200 94 L183 102"/> <path d="M249 82 L266 90 L249 98"/>
+  </g>
+  <!-- the lane that sets itself against it -->
+  <path d="M0 122 C 80 108, 210 142, 320 120 L320 148 C 210 172, 80 136, 0 152 Z" fill="#c0392f" fill-opacity=".30"/>
+  <g fill="none" stroke="#c0392f" stroke-width="8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M80 131 L62 140 L80 149"/> <path d="M170 141 L152 150 L170 159"/> <path d="M260 133 L242 142 L260 151"/>
+  </g>
+</svg>

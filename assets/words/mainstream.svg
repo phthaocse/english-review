@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="A wide river channel carrying almost all the flow, next to the one thin side channel that takes the little which leaves it">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <!-- the side channel, drawn first so the main one sits over it -->
+  <path d="M180 154 C 214 180, 232 210, 236 240 L266 240 C 262 210, 246 176, 212 146 Z"
+        fill="#4f46e5" fill-opacity=".26"/>
+  <g fill="none" stroke="#7b8399" stroke-width="4">
+    <path d="M180 154 C 214 180, 232 210, 236 240"/>
+    <path d="M212 146 C 246 176, 262 210, 266 240"/>
+  </g>
+  <g fill="none" stroke="#4f46e5" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" opacity=".75">
+    <path d="M226 196 L240 210 L252 196"/>
+  </g>
+  <!-- the main channel: much wider, and it is where the water is -->
+  <path d="M0 58 C 80 42, 210 78, 320 54 L320 148 C 210 172, 80 136, 0 152 Z" fill="#4f46e5" fill-opacity=".32"/>
+  <path d="M0 58 C 80 42, 210 78, 320 54" fill="none" stroke="#7b8399" stroke-width="5"/>
+  <path d="M0 152 C 80 136, 210 172, 320 148" fill="none" stroke="#7b8399" stroke-width="5"/>
+  <!-- the flow: heavy, evenly spread, and all of it going the same way -->
+  <g fill="none" stroke="#4f46e5" stroke-width="10" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M29 84 L49 94 L29 104"/> <path d="M87 88 L107 98 L87 108"/> <path d="M145 94 L165 104 L145 114"/> <path d="M203 98 L223 108 L203 118"/> <path d="M261 92 L281 102 L261 112"/>
+  </g>
+</svg>

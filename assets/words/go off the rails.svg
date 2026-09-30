@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="A train that has left the track, its front end down among the broken sleepers and the rail torn out of line behind it">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <!-- sleepers still in place on the right, where the track is sound -->
+  <g fill="#c9a227" stroke="#a8841c" stroke-width="2">
+    <rect x="206" y="192" width="18" height="28"/><rect x="240" y="192" width="18" height="28"/>
+    <rect x="274" y="192" width="18" height="28"/><rect x="306" y="192" width="18" height="28"/>
+  </g>
+  <!-- sleepers the train has smashed through, thrown out of line -->
+  <g fill="#c9a227" stroke="#a8841c" stroke-width="2">
+    <path d="M54 206 L78 200 L86 224 L60 230 Z"/>
+    <path d="M96 200 L120 194 L126 222 L102 226 Z"/>
+    <path d="M140 208 L164 200 L172 224 L148 230 Z"/>
+    <path d="M180 202 L198 196 L204 220 L186 224 Z"/>
+  </g>
+  <!-- the splintering, which is the damage worth pointing at -->
+  <g stroke="#c0392f" stroke-width="4" stroke-linecap="round">
+    <path d="M60 214 L84 208"/><path d="M104 208 L124 204"/>
+    <path d="M150 216 L170 210"/><path d="M22 226 L44 214"/>
+  </g>
+  <!-- the rail: straight where the train never got to it, kinked where it did -->
+  <path d="M320 188 L212 188 L176 206 L134 198 L88 216" fill="none"
+        stroke="#5c6270" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- the train, pivoted on its back wheel so the front has dropped off the track -->
+  <g transform="rotate(-14 256 188)">
+    <rect x="110" y="96" width="180" height="64" rx="9" fill="#4f46e5" stroke="#3730a3" stroke-width="4"/>
+    <rect x="126" y="108" width="40" height="28" rx="3" fill="#eef0f5"/>
+    <rect x="180" y="108" width="32" height="28" rx="3" fill="#eef0f5"/>
+    <g fill="#7b8399" stroke="#5c6270" stroke-width="4">
+      <circle cx="148" cy="172" r="17"/><circle cx="202" cy="172" r="17"/><circle cx="256" cy="172" r="17"/>
+    </g>
+  </g>
+</svg>

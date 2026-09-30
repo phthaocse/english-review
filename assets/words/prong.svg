@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="A table fork lying at an angle with three long separate points, the middle one filled in red and an arrow picking it out">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <g transform="translate(0 26) rotate(-9 160 120) translate(160 120) scale(1.05) translate(-160 -120)">
+    <!-- the handle, running off the bottom of the frame -->
+    <rect x="139" y="176" width="42" height="90" rx="11" fill="#7b8399"/>
+    <!-- the head: one piece of metal with three long points cut into it -->
+    <path d="M132 192 L117 152 L118 26 A7.5 7.5 0 0 1 133 26 L133 124
+             L153 124 L153 26 A7.5 7.5 0 0 1 168 26 L168 124
+             L188 124 L188 26 A7.5 7.5 0 0 1 203 26 L202 152 L189 192 Z"
+          fill="#9aa2b4" stroke="#7b8399" stroke-width="3" stroke-linejoin="round"/>
+    <!-- one point on its own, which is what the word names -->
+    <path d="M153 136 L153 26 A7.5 7.5 0 0 1 168 26 L168 136 Z" fill="#c0392f"/>
+  </g>
+  <!-- pointing at the one being counted -->
+  <g fill="#c0392f" stroke="#c0392f">
+    <path d="M262 119 L199 96" stroke-width="7" stroke-linecap="round"/>
+    <path d="M202 84 L193 107 L175 87 Z" stroke="none"/>
+  </g>
+</svg>

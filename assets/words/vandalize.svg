@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="The glass panel of a bus shelter smashed through, cracks running out from the hole to the frame, with the brick that did it lying below">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <!-- the shelter this pane belongs to -->
+  <rect x="18" y="14" width="284" height="18" rx="3" fill="#7b8399"/>
+  <rect x="30" y="32" width="14" height="178" fill="#7b8399"/>
+  <rect x="276" y="32" width="14" height="178" fill="#7b8399"/>
+  <path d="M8 210 L312 210" stroke="#9aa2b4" stroke-width="6" stroke-linecap="round"/>
+  <!-- the pane -->
+  <rect x="44" y="32" width="232" height="178" fill="#4f46e5" opacity=".16"/>
+  <rect x="44" y="32" width="232" height="178" fill="none" stroke="#9aa2b4" stroke-width="4"/>
+  <!-- cracks thrown straight out from the point of impact to the frame -->
+  <g stroke="#3f4450" stroke-width="4" fill="none" stroke-linecap="round">
+    <path d="M150 104 L44 44"/><path d="M150 104 L152 32"/><path d="M150 104 L252 32"/>
+    <path d="M150 104 L276 92"/><path d="M150 104 L276 164"/><path d="M150 104 L202 210"/>
+    <path d="M150 104 L118 210"/><path d="M150 104 L44 148"/>
+  </g>
+  <!-- and the two rings of cracks that always run round it -->
+  <g stroke="#3f4450" stroke-width="4" fill="none" stroke-linejoin="round">
+    <polygon points="188,98 178,132 148,148 118,132 110,100 124,74 152,64 180,76"/>
+    <polygon points="222,92 204,156 152,184 100,158 76,102 104,50 154,38 206,56"/>
+  </g>
+  <!-- the hole itself -->
+  <path d="M132 88 L162 84 L172 108 L150 126 L128 114 Z" fill="#eef0f5" stroke="#3f4450" stroke-width="4"/>
+  <!-- what came through it, and the glass it brought down -->
+  <g fill="#9aa2b4" stroke="#7b8399" stroke-width="2">
+    <path d="M196 200 L212 186 L220 200 Z"/><path d="M240 202 L252 190 L258 202 Z"/>
+    <path d="M166 202 L176 192 L184 202 Z"/>
+  </g>
+  <rect x="204" y="174" width="60" height="30" rx="3" fill="#c0392f" stroke="#8e2a22"
+        stroke-width="3" transform="rotate(-9 234 189)"/>
+</svg>

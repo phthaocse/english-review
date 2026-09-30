@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="Whole kernels tipping from a hopper into the centre of a turning millstone and coarse ground meal spraying out at the rim into heaps">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <!-- the hopper the whole grain is tipped into -->
+  <path d="M112 6 L208 6 L182 40 L138 40 Z" fill="#9aa2b4"/>
+  <g fill="#e0b73a" stroke="#a8841c" stroke-width="2">
+    <ellipse cx="134" cy="16" rx="13" ry="9"/>
+    <ellipse cx="162" cy="14" rx="13" ry="9"/>
+    <ellipse cx="190" cy="17" rx="13" ry="9"/>
+    <ellipse cx="150" cy="30" rx="13" ry="9"/>
+    <ellipse cx="176" cy="31" rx="13" ry="9"/>
+  </g>
+  <g stroke="#8a6a12" stroke-width="2" stroke-linecap="round">
+    <path d="M124 16 L144 16"/><path d="M152 14 L172 14"/><path d="M180 17 L200 17"/>
+    <path d="M140 30 L160 30"/><path d="M166 31 L186 31"/>
+  </g>
+  <!-- the stone: round, with a hole in the middle and furrows cut across its face -->
+  <circle cx="160" cy="128" r="62" fill="#7b8399"/>
+  <circle cx="160" cy="128" r="62" fill="none" stroke="#9aa2b4" stroke-width="9"/>
+  <g stroke="#9aa2b4" stroke-width="4" stroke-linecap="round">
+    <path d="M160 92 L160 70"/><path d="M160 164 L160 186"/>
+    <path d="M124 128 L102 128"/><path d="M196 128 L218 128"/>
+    <path d="M135 103 L119 87"/><path d="M185 153 L201 169"/>
+    <path d="M185 103 L201 87"/><path d="M135 153 L119 169"/>
+  </g>
+  <circle cx="160" cy="128" r="19" fill="#eef0f5"/>
+  <!-- which way it turns -->
+  <g fill="none" stroke="#9aa2b4" stroke-width="4">
+    <path d="M232 104 A78 78 0 0 1 248 148"/>
+  </g>
+  <path d="M240 96 L244 116 L226 110 Z" fill="#9aa2b4"/>
+  <!-- whole kernels on their way down into the hole -->
+  <g fill="#e0b73a" stroke="#a8841c" stroke-width="2">
+    <ellipse cx="158" cy="56" rx="12" ry="8" transform="rotate(16 158 56)"/>
+    <ellipse cx="164" cy="82" rx="12" ry="8" transform="rotate(-10 164 82)"/>
+    <ellipse cx="156" cy="106" rx="11" ry="8" transform="rotate(24 156 106)"/>
+  </g>
+  <!-- what leaves at the rim: broken, coarse, no longer whole -->
+  <g fill="#c9a227">
+    <path d="M12 212 Q54 178 96 212 Z"/>
+    <path d="M222 212 Q266 176 308 212 Z"/>
+    <circle cx="104" cy="176" r="4"/><circle cx="88" cy="186" r="3.5"/>
+    <circle cx="70" cy="180" r="3"/><circle cx="52" cy="192" r="3.5"/>
+    <circle cx="34" cy="200" r="3"/><circle cx="88" cy="204" r="3"/>
+    <circle cx="214" cy="176" r="4"/><circle cx="232" cy="186" r="3.5"/>
+    <circle cx="250" cy="180" r="3"/><circle cx="268" cy="192" r="3.5"/>
+    <circle cx="288" cy="200" r="3"/><circle cx="236" cy="204" r="3"/>
+  </g>
+  <!-- the floor of the mill -->
+  <path d="M8 214 L312 214" stroke="#7b8399" stroke-width="4" stroke-linecap="round"/>
+</svg>

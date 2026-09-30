@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="Three runners on a track with one of them far out in front and the gap back to the other two marked across the top">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <defs>
+    <!-- one running figure, reused for all three -->
+    <g id="runner">
+      <circle cx="26" cy="9" r="9"/>
+      <g fill="none" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M24 18 L18 36"/>
+        <path d="M23 24 L37 17"/>
+        <path d="M23 24 L9 30"/>
+        <path d="M18 36 L30 45 L27 56"/>
+        <path d="M18 36 L7 44 L12 56"/>
+      </g>
+    </g>
+  </defs>
+  <!-- the lanes -->
+  <g stroke="#9aa2b4" stroke-width="3" stroke-dasharray="14 12">
+    <path d="M0 104 L320 104"/><path d="M0 152 L320 152"/><path d="M0 200 L320 200"/>
+  </g>
+  <!-- how far clear the leader is -->
+  <g stroke="#c0392f" stroke-width="4" stroke-linecap="round">
+    <path d="M100 26 L100 46"/><path d="M220 26 L220 46"/>
+    <path d="M100 36 L220 36" stroke-dasharray="9 8"/>
+  </g>
+  <!-- the two being left behind -->
+  <g fill="#9aa2b4" stroke="#9aa2b4">
+    <use href="#runner" x="56" y="48"/>
+    <use href="#runner" x="34" y="144"/>
+  </g>
+  <!-- the one in front -->
+  <g fill="#4f46e5" stroke="#4f46e5">
+    <use href="#runner" x="214" y="96"/>
+  </g>
+</svg>
