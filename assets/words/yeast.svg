@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="Round yeast cells budding off smaller cells, with gas bubbles rising past them">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <!-- the liquid they are working in -->
+  <rect y="30" width="320" height="210" fill="#c9a227" opacity=".18"/>
+  <!-- cells, each with a bud: budding is what makes it yeast and not a plain circle -->
+  <g fill="#e8c76a" stroke="#a8841c" stroke-width="3">
+    <g><circle cx="106" cy="104" r="32"/><circle cx="138" cy="78" r="15"/></g>
+    <g><circle cx="196" cy="150" r="36"/><circle cx="231" cy="124" r="17"/></g>
+    <g><circle cx="118" cy="188" r="24"/><circle cx="141" cy="170" r="11"/></g>
+  </g>
+  <!-- nuclei -->
+  <g fill="#a8841c" opacity=".55">
+    <circle cx="100" cy="100" r="8"/><circle cx="190" cy="146" r="9"/><circle cx="113" cy="185" r="6"/>
+  </g>
+  <!-- the carbon dioxide they give off -->
+  <g fill="none" stroke="#4f46e5" stroke-width="3" opacity=".8">
+    <circle cx="252" cy="70" r="9"/><circle cx="270" cy="38" r="6"/>
+    <circle cx="58" cy="56" r="7"/><circle cx="72" cy="28" r="5"/>
+    <circle cx="160" cy="46" r="6"/>
+  </g>
+</svg>

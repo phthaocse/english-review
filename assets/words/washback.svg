@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="A tall wooden vessel of fermenting liquid, froth rising to the brim">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <!-- staves and hoops: a washback is a wooden tub, not a steel tank -->
+  <path d="M84 30 L96 210 Q97 220 108 220 L212 220 Q223 220 224 210 L236 30 Z"
+        fill="#c8a06a" stroke="#9c7642" stroke-width="5" stroke-linejoin="round"/>
+  <g stroke="#9c7642" stroke-width="2" opacity=".65">
+    <path d="M118 32 L124 218"/><path d="M152 32 L154 218"/>
+    <path d="M186 32 L184 218"/><path d="M216 32 L210 218"/>
+  </g>
+  <g stroke="#7b8399" stroke-width="6" fill="none">
+    <path d="M90 104 L230 104"/><path d="M95 168 L225 168"/>
+  </g>
+  <!-- the wash, working -->
+  <path d="M92 84 L100 204 Q101 212 110 212 L210 212 Q219 212 220 204 L228 84 Z" fill="#c9a227" opacity=".55"/>
+  <!-- froth at the top, the sign it is fermenting -->
+  <g fill="#f2ead8" stroke="#d8cbb0" stroke-width="2">
+    <circle cx="112" cy="82" r="14"/><circle cx="140" cy="72" r="18"/><circle cx="172" cy="74" r="16"/>
+    <circle cx="202" cy="82" r="14"/><circle cx="156" cy="92" r="13"/><circle cx="186" cy="94" r="11"/>
+  </g>
+  <!-- gas coming off -->
+  <g fill="none" stroke="#7b8399" stroke-width="2.5" opacity=".7">
+    <circle cx="132" cy="44" r="5"/><circle cx="166" cy="32" r="6"/><circle cx="196" cy="48" r="4"/>
+  </g>
+</svg>

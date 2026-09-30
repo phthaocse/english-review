@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="A seed under the soil sending a root down and a green shoot up into the air">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <!-- soil, so that under and above the line both read -->
+  <rect y="132" width="320" height="108" fill="#b08968" opacity=".55"/>
+  <path d="M0 132 H320" stroke="#8a6a4a" stroke-width="3"/>
+  <!-- the seed, split open -->
+  <g>
+    <ellipse cx="160" cy="158" rx="24" ry="17" fill="#e0b73a" stroke="#a8841c" stroke-width="3"/>
+    <path d="M142 150 Q160 160 178 150" stroke="#a8841c" stroke-width="2.5" fill="none"/>
+  </g>
+  <!-- root going down -->
+  <g stroke="#c8a06a" stroke-width="5" stroke-linecap="round" fill="none">
+    <path d="M160 175 L160 212"/><path d="M160 196 L140 216"/><path d="M160 200 L180 218"/>
+  </g>
+  <!-- shoot breaking the surface -->
+  <path d="M160 141 L160 62" stroke="#5f9e4a" stroke-width="7" stroke-linecap="round"/>
+  <path d="M160 92 Q124 84 116 52 Q152 52 160 92 Z" fill="#7fc25e"/>
+  <path d="M160 108 Q196 100 204 68 Q168 68 160 108 Z" fill="#5f9e4a"/>
+</svg>

@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="A heap of small hard cereal kernels, each with a centre crease">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <!-- the heap the kernels have been poured into -->
+  <path d="M40 196 Q160 132 280 196 Z" fill="#c9a227"/>
+  <!-- loose kernels, drawn large enough to read at card size -->
+  <g fill="#e0b73a" stroke="#a8841c" stroke-width="2">
+    <g><ellipse cx="120" cy="170" rx="17" ry="11" transform="rotate(-18 120 170)"/></g>
+    <g><ellipse cx="163" cy="156" rx="17" ry="11" transform="rotate(8 163 156)"/></g>
+    <g><ellipse cx="205" cy="172" rx="17" ry="11" transform="rotate(22 205 172)"/></g>
+    <g><ellipse cx="141" cy="190" rx="17" ry="11" transform="rotate(-6 141 190)"/></g>
+    <g><ellipse cx="186" cy="191" rx="17" ry="11" transform="rotate(14 186 191)"/></g>
+    <g><ellipse cx="150" cy="118" rx="17" ry="11" transform="rotate(-34 150 118)"/></g>
+    <g><ellipse cx="196" cy="126" rx="17" ry="11" transform="rotate(40 196 126)"/></g>
+  </g>
+  <!-- the crease down each kernel, the detail that says grain and not bean -->
+  <g stroke="#8a6a12" stroke-width="2" stroke-linecap="round">
+    <path d="M106 166 L134 174"/><path d="M148 154 L178 158"/><path d="M191 166 L219 178"/>
+    <path d="M126 189 L156 191"/><path d="M172 188 L200 194"/>
+    <path d="M139 126 L161 110"/><path d="M185 117 L207 135"/>
+  </g>
+</svg>

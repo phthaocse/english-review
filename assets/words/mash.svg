@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="Ground malt stirred into hot water in a tun, with steam rising and a paddle turning">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <!-- steam, which is what says hot -->
+  <g stroke="#9aa2b4" stroke-width="5" stroke-linecap="round" fill="none" opacity=".75">
+    <path d="M116 58 Q106 44 116 30 Q126 16 116 6"/>
+    <path d="M160 50 Q150 36 160 22 Q170 8 160 0"/>
+    <path d="M204 58 Q194 44 204 30 Q214 16 204 6"/>
+  </g>
+  <!-- the tun -->
+  <path d="M58 82 L72 206 Q73 218 86 218 L234 218 Q247 218 248 206 L262 82 Z"
+        fill="#c8a06a" stroke="#9c7642" stroke-width="5" stroke-linejoin="round"/>
+  <!-- the mash itself: cloudy, grain suspended in water -->
+  <path d="M66 100 L78 200 Q79 208 88 208 L232 208 Q241 208 242 200 L254 100 Z" fill="#b8862f" opacity=".85"/>
+  <g fill="#e0b73a" opacity=".9">
+    <ellipse cx="112" cy="140" rx="11" ry="7"/><ellipse cx="160" cy="128" rx="11" ry="7"/>
+    <ellipse cx="204" cy="144" rx="11" ry="7"/><ellipse cx="136" cy="170" rx="11" ry="7"/>
+    <ellipse cx="184" cy="174" rx="11" ry="7"/>
+  </g>
+  <!-- the rake turning it -->
+  <g stroke="#4f46e5" stroke-width="7" stroke-linecap="round" fill="none">
+    <path d="M160 96 L160 182"/><path d="M122 182 L198 182"/>
+  </g>
+</svg>

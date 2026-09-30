@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="A cork stopper lifted just above the neck of a bottle">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <!-- bottle: shoulders and neck, cut off by the frame so the neck fills it -->
+  <path d="M96 240 L96 150 Q96 128 124 116 L124 74 L196 74 L196 116 Q224 128 224 150 L224 240 Z"
+        fill="#2f6b4f" opacity=".85"/>
+  <!-- the bore the cork goes into -->
+  <rect x="132" y="74" width="56" height="26" fill="#1d4633"/>
+  <!-- the cork itself, lifted clear -->
+  <g>
+    <rect x="130" y="16" width="60" height="52" rx="7" fill="#c8a06a" stroke="#9c7642" stroke-width="3"/>
+    <!-- the speckle that makes it cork and not wood -->
+    <g fill="#9c7642" opacity=".55">
+      <circle cx="145" cy="30" r="3"/><circle cx="168" cy="26" r="2.5"/><circle cx="178" cy="41" r="3"/>
+      <circle cx="141" cy="52" r="2.5"/><circle cx="160" cy="45" r="2"/><circle cx="171" cy="57" r="2.5"/>
+    </g>
+  </g>
+  <!-- pressed home -->
+  <g stroke="#4f46e5" stroke-width="6" stroke-linecap="round" fill="none">
+    <path d="M160 96 L160 108"/><path d="M150 100 L160 110 L170 100"/>
+  </g>
+</svg>

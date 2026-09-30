@@ -371,6 +371,30 @@ ok('the front does not give the pronunciation away', !s.front.ipa);
 eq('  the back carries it', s.ipa, s.expected);
 ok('  above the meaning, where you read it first', s.order[0] === 'flash-ipa', s.order.join(','));
 
+console.log('== a word with a drawing shows it, on the answer side ==');
+s = await B.evaluate(`
+  const m = await import('./app.js');
+  const drawn = Object.keys(m.state.drawings || {}).find((id) => m.state.byId.has(id));
+  m.state.deckSet = 'all';
+  m.state.deck = { scope: 'all', ids: [drawn], index: 0, shown: false, passes: 0 };
+  location.hash = '#/cards'; window.dispatchEvent(new HashChangeEvent('hashchange'));
+  await new Promise(r => setTimeout(r, 80));
+  m.state.deck.index = 0; m.state.deck.shown = false;
+  const hiddenUpFront = !document.querySelector('.flash-image');
+  document.querySelector('#flashcard').click();
+  await new Promise(r => setTimeout(r, 80));
+  const img = document.querySelector('.flash-image');
+  let loaded = false;
+  if (img) { try { await img.decode(); loaded = img.naturalWidth > 0; } catch {} }
+  return { drawn, hiddenUpFront, src: img?.getAttribute('src'), alt: img?.getAttribute('alt'), loaded,
+           count: Object.keys(m.state.drawings || {}).length };
+`);
+ok('the drawings index reached the page', s.count > 0, `${s.count} drawings`);
+ok('the front does not show the picture', s.hiddenUpFront);
+eq('  the back shows the one filed under the word id', s.src, 'assets/words/' + s.drawn + '.svg');
+ok('  the file actually loads', s.loaded, s.src);
+ok('  and it carries a description, not the bare term', (s.alt || '').length > (s.drawn || '').length, s.alt);
+
 const appErrors = B.consoleErrors.filter((e) => !/GSI_LOGGER|FedCM|client ID/.test(e));
 ok('no application errors', appErrors.length === 0, appErrors.slice(0, 3).join(' | '));
 

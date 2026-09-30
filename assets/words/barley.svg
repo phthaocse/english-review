@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="An ear of barley on its stalk, with long bristles rising from the grains">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <!-- stalk -->
+  <path d="M160 240 L160 150" stroke="#7fa05a" stroke-width="7" stroke-linecap="round"/>
+  <path d="M160 196 Q128 186 116 164" stroke="#7fa05a" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <!-- awns: the long bristles that identify barley at a glance -->
+  <g stroke="#c9a227" stroke-width="2.5" stroke-linecap="round" opacity=".9">
+    <path d="M150 150 L128 34"/><path d="M156 146 L146 26"/><path d="M164 146 L176 26"/>
+    <path d="M170 150 L192 34"/><path d="M146 156 L112 58"/><path d="M174 156 L208 58"/>
+  </g>
+  <!-- the grains, paired up the head -->
+  <g fill="#e0b73a" stroke="#a8841c" stroke-width="2">
+    <ellipse cx="148" cy="150" rx="10" ry="15"/><ellipse cx="172" cy="150" rx="10" ry="15"/>
+    <ellipse cx="146" cy="124" rx="10" ry="15"/><ellipse cx="174" cy="124" rx="10" ry="15"/>
+    <ellipse cx="149" cy="98"  rx="9"  ry="14"/><ellipse cx="171" cy="98"  rx="9"  ry="14"/>
+    <ellipse cx="160" cy="76"  rx="9"  ry="13"/>
+  </g>
+</svg>

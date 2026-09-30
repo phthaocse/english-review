@@ -18,6 +18,7 @@ const state = {
   pickingSet: false,
   cardsView: 'card',
   fromCard: false,
+  drawings: {},
   query: '',
   filter: 'all',
 };
@@ -53,6 +54,10 @@ async function boot() {
   state.byId = new Map(data.items.map((i) => [i.id, i]));
   document.getElementById('foot-meta').textContent =
     `${data.items.length} items · built from the Obsidian vault on ${data.generated}`;
+  // Drawings are filed by item id, so a new one needs no vault rebuild.
+  state.drawings = await fetch('assets/words/index.json', { cache: 'no-cache' })
+    .then((r) => (r.ok ? r.json() : {})).catch(() => ({}));
+
   window.addEventListener('hashchange', route);
   onAuthChange(() => route());
   initAuth().catch(() => { /* offline, or Google unreachable: the rest still works */ });
@@ -641,6 +646,24 @@ function resultRow(item, q) {
     </a>`;
 }
 
+/**
+ * The picture for a word, or nothing. The vault may name one in frontmatter;
+ * failing that, a drawing filed under the item's own id belongs to it, and the
+ * drawing's aria-label is already a description written for the thing it shows.
+ */
+function imageFor(item) {
+  if (item.image) return { src: item.image, alt: item.imageAlt || item.meaning || item.term };
+  const alt = state.drawings[item.id];
+  if (alt === undefined) return null;
+  return { src: `${item.id}.svg`, alt: alt || item.meaning || item.term };
+}
+
+const imageTag = (item, cls) => {
+  const art = imageFor(item);
+  return art ? `<img class="${cls}" src="assets/words/${encodeURIComponent(art.src)}"
+           alt="${esc(art.alt)}" loading="lazy">` : '';
+};
+
 // -------------------------------------------------------------- item view --
 
 function renderItem(id) {
@@ -664,8 +687,7 @@ function renderItem(id) {
       ${item.meaning ? `<p class="item-meaning">${esc(item.meaning)}</p>` : ''}
       ${item.ruleHtml && !item.meaning ? `<div class="item-meaning">${item.ruleHtml}</div>` : ''}
       ${item.vi ? `<p class="item-vi">${esc(item.vi)}</p>` : ''}
-      ${item.image ? `<img class="item-image" src="assets/words/${encodeURIComponent(item.image)}"
-             alt="${esc(item.imageAlt || item.meaning || item.term)}" loading="lazy">` : ''}
+      ${imageTag(item, 'item-image')}
       ${item.pattern ? `<p class="item-pattern"><span>pattern</span> ${esc(item.pattern)}</p>` : ''}
       <div class="item-meta">
         <span class="pill accent">${TYPE_LABEL[item.type] || item.type}</span>
@@ -908,8 +930,7 @@ function cardBack(item) {
     ${item.ruleHtml && !item.meaning ? `<div class="flash-meaning">${item.ruleHtml}</div>` : ''}
     ${item.vi ? `<p class="flash-vi">${esc(item.vi)}</p>` : ''}
     ${item.pattern ? `<p class="item-pattern"><span>pattern</span> ${esc(item.pattern)}</p>` : ''}
-    ${item.image ? `<img class="flash-image" src="assets/words/${encodeURIComponent(item.image)}"
-           alt="${esc(item.imageAlt || item.meaning || item.term)}" loading="lazy">` : ''}
+    ${imageTag(item, 'flash-image')}
     ${examples.length ? `<ul class="flash-examples">${examples.map(
       (e) => `<li>${e.html.replace(/^<p>|<\/p>$/g, '')}</li>`).join('')}</ul>` : ''}
     ${(item.wrongHtml || []).length ? `
