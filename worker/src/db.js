@@ -31,6 +31,56 @@ export async function createItem(db, item, userId) {
   return id;
 }
 
+/**
+ * Meeting a word again is not a mistake to reject - it is usually a second
+ * sentence, or the preposition you did not have last time. So a repeat adds to
+ * what is there instead of bouncing off it.
+ *
+ * Blank fields get filled; fields that already hold something do not, because
+ * what is there was either checked against a dictionary or typed by hand, and a
+ * fresh reading of a photograph is not grounds to overwrite either.
+ */
+export async function mergeIntoItem(db, existing, item) {
+  const added = { fields: [], examples: 0 };
+
+  const fillable = ['meaning', 'vi', 'ipa', 'cefr', 'pattern', 'rule', 'notes', 'source_note'];
+  const sets = [], values = [];
+  for (const field of fillable) {
+    if (!existing[field] && item[field]) {
+      sets.push(`${field} = ?`);
+      values.push(item[field]);
+      added.fields.push(field);
+    }
+  }
+
+  // Examples accumulate. The same sentence twice is noise, so compare on text.
+  const rows = await db.prepare('SELECT text FROM example WHERE item_id = ? ORDER BY position')
+    .bind(existing.id).all();
+  const have = (rows?.results || []).map((r) => r.text);
+  const seen = new Set(have.map((s) => s.trim().toLowerCase()));
+  let position = have.length;
+  for (const raw of (item.examples || [])) {
+    const text = (raw || '').trim();
+    if (!text || seen.has(text.toLowerCase())) continue;
+    seen.add(text.toLowerCase());
+    await db.prepare('INSERT INTO example (item_id, text, position) VALUES (?, ?, ?)')
+      .bind(existing.id, text, position++).run();
+    added.examples += 1;
+  }
+
+  for (const tag of item.tags || []) {
+    await db.prepare('INSERT OR IGNORE INTO tag (item_id, tag) VALUES (?, ?)').bind(existing.id, tag).run();
+  }
+
+  // A row that gained something is a row the next sync has to carry over.
+  if (sets.length || added.examples) {
+    sets.push("updated_at = datetime('now')");
+    await db.prepare(`UPDATE item SET ${sets.join(', ')} WHERE id = ?`)
+      .bind(...values, existing.id).run();
+  }
+  return added;
+}
+
 export async function findItemByTerm(db, term, kind) {
   return db.prepare('SELECT * FROM item WHERE term = ? AND kind = ?').bind(term, kind).first();
 }

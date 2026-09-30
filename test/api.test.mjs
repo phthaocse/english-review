@@ -98,8 +98,28 @@ console.log('== capture ==');
   ok('attributed to the signed-in user', r.body.item.captured_by === 1, JSON.stringify(r.body.item.captured_by));
 
   r = await call(env, 'POST', '/api/items', { body: { term: 'brittle', kind: 'word' } });
-  eq('duplicate → 409', r.status, 409);
-  ok('duplicate returns the existing row', r.body.item?.term === 'brittle', JSON.stringify(r.body));
+  eq('a repeat is accepted, not rejected', r.status, 200);
+  ok('  and answers with the row it merged into', r.body.item?.term === 'brittle', JSON.stringify(r.body));
+  eq('  with nothing new in it, nothing was added', r.body.merged.examples, 0);
+  eq('    and no field filled', r.body.merged.fields.length, 0);
+
+  // The point of the merge: meeting a word again brings something with it.
+  r = await call(env, 'POST', '/api/items', { body: {
+    term: 'brittle', kind: 'word', source_note: 'OpenAI storage blog',
+    examples: ['The service was **brittle** under load.', 'Old glass goes **brittle**.'] } });
+  eq('a second sentence is kept', r.body.merged.examples, 1);
+  ok('  the one already there is not duplicated',
+     r.body.item.examples.length === 2, JSON.stringify(r.body.item.examples));
+  ok('  a field that was blank gets filled',
+     r.body.merged.fields.includes('source_note'), JSON.stringify(r.body.merged));
+  ok('  a field that already held something is left alone',
+     !r.body.merged.fields.includes('vi'), JSON.stringify(r.body.merged));
+
+  // What is already there was checked or typed by hand; a repeat does not win.
+  r = await call(env, 'POST', '/api/items', { body: {
+    term: 'brittle', kind: 'word', meaning: 'something else entirely' } });
+  eq('an existing meaning survives a repeat', r.body.item.meaning, 'hard but easily broken');
+  eq('  and nothing is reported as added', r.body.merged.fields.length, 0);
 
   r = await call(env, 'GET', '/api/items');
   eq('list returns it', r.body.items.length, 1);

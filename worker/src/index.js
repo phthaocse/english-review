@@ -7,8 +7,8 @@
 import { authenticate, AuthError } from './auth.js';
 import { readPhoto, GeminiError, MAX_IMAGE_BYTES, KINDS } from './gemini.js';
 import { verifyAll, lookup } from './oxford.js';
-import { createItem, findItemByTerm, getItem, listItems, countItems, consumeQuota,
-         logVision, listVisionLogs } from './db.js';
+import { createItem, mergeIntoItem, findItemByTerm, getItem, listItems, countItems,
+         consumeQuota, logVision, listVisionLogs } from './db.js';
 
 const VISION_CALLS_PER_DAY = 50;
 
@@ -131,8 +131,10 @@ const ROUTES = {
 
     const id = await createItem(env.DB, item, user.id);
     if (id === null) {
+      // Not a rejection: a word met twice usually brings a second sentence.
       const existing = await findItemByTerm(env.DB, item.term, item.kind);
-      return json({ error: 'already captured', item: existing }, 409);
+      const merged = await mergeIntoItem(env.DB, existing, item);
+      return json({ item: await getItem(env.DB, existing.id), merged }, 200);
     }
     return json({ item: await getItem(env.DB, id) }, 201);
   },

@@ -87,18 +87,17 @@ function renderTypeForm(view) {
     button.disabled = true;
     status.textContent = 'Saving…';
     try {
-      await api('/api/items', { method: 'POST', body: {
+      const { merged } = await api('/api/items', { method: 'POST', body: {
         term: data.term, kind: data.kind, meaning: data.meaning, vi: data.vi,
         pattern: data.pattern, source: 'typed', source_note: data.source_note,
         examples: data.example ? [data.example] : [],
       }});
       form.reset();
       form.querySelector('[name=term]').focus();
-      status.textContent = 'Saved.';
+      status.textContent = merged ? mergeReport(data.term, merged) : 'Saved.';
       loadRecent(view);
     } catch (error) {
-      status.textContent = error instanceof ApiError && error.status === 409
-        ? 'You already have that one.' : error.message;
+      status.textContent = error.message;
     } finally {
       button.disabled = false;
       setTimeout(() => { if (status.textContent === 'Saved.') status.textContent = ''; }, 2500);
@@ -167,6 +166,19 @@ function showPreview(view, image) {
       <summary>Photo</summary>
       <img src="${image.preview}" alt="The page you photographed">
     </details>`;
+}
+
+/**
+ * What a repeat did, in words. "Already saved" was the old answer, and it threw
+ * away the reason you photographed the word a second time.
+ */
+function mergeReport(term, merged) {
+  const parts = [];
+  if (merged.examples) parts.push(`${merged.examples} new example${merged.examples > 1 ? 's' : ''}`);
+  if (merged.fields.length) parts.push(merged.fields.join(', '));
+  return parts.length
+    ? `Added to ${term}: ${parts.join(' and ')}.`
+    : `You already have ${term}, and nothing here was new.`;
 }
 
 /** Send the photo already in hand. Separate so a retry costs no second photo. */
@@ -349,19 +361,21 @@ async function saveDraft(view) {
 
   const keeping = draft.filter((d) => d.keep && d.term.trim());
   let saved = 0;
+  const merges = [];
   const problems = [];
 
   for (const item of keeping) {
     status.textContent = `Saving ${saved + 1} of ${keeping.length}…`;
     try {
-      await api('/api/items', { method: 'POST', body: {
+      const { merged } = await api('/api/items', { method: 'POST', body: {
         term: item.term, kind: item.kind, meaning: item.meaning, vi: item.vi,
         pattern: item.pattern, source: 'photo', source_note: item.source_note,
         examples: item.example ? [item.example] : [],
       }});
       saved += 1;
+      if (merged) merges.push(mergeReport(item.term, merged));
     } catch (error) {
-      problems.push(`${item.term}: ${error.status === 409 ? 'already saved' : error.message}`);
+      problems.push(`${item.term}: ${error.message}`);
     }
   }
 
@@ -370,8 +384,11 @@ async function saveDraft(view) {
   const area = view.querySelector('#draft-status');
   if (area) area.textContent = problems.length ? problems.join('; ') : '';
   if (!problems.length) {
+    // A word you already had is not a failure worth hiding: say what it gained.
+    const note = `Saved ${saved} item${saved === 1 ? '' : 's'}.`
+      + (merges.length ? ` ${merges.join(' ')}` : '');
     view.querySelector('#capture-body')?.insertAdjacentHTML('afterbegin',
-      `<p class="muted" style="margin:0 0 10px">Saved ${saved} item${saved === 1 ? '' : 's'}.</p>`);
+      `<p class="muted" style="margin:0 0 10px">${esc(note)}</p>`);
   }
   loadRecent(view);
 }

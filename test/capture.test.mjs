@@ -34,7 +34,9 @@ await B.addInitScript(`
       return reply({ items: window.__recent || [] });
     }
     if (href.includes('/api/items')) {
-      if (body.term === 'duplicate') return reply({ error: 'already captured' }, 409);
+      if (body.term === 'duplicate') {
+        return reply({ item: { id: 9, ...body }, merged: { fields: ['vi'], examples: 1 } }, 200);
+      }
       window.__recent = [{ id: 1, term: body.term, kind: body.kind, meaning: body.meaning }, ...(window.__recent || [])];
       return reply({ item: { id: 1, ...body } }, 201);
     }
@@ -88,7 +90,8 @@ s = await B.evaluate(`
   await new Promise(r => setTimeout(r, 400));
   return document.querySelector('#type-status')?.textContent;
 `);
-ok('duplicate reported in plain words', /already have/i.test(s), s);
+ok('a repeat says what it added, not that it was refused',
+   /added to duplicate/i.test(s) && /new example/i.test(s), s);
 
 console.log('== photo draft and the review screen ==');
 await B.evaluate(`
