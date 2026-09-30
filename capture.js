@@ -303,13 +303,22 @@ function renderDraft(view) {
               </label>
               <span class="pill ${item.confidence === 'high' ? 'good' : item.confidence === 'low' ? 'bad' : 'warn'}">
                 read ${esc(item.confidence)}</span>
+              <!-- Whose definition you are looking at. Without this the model's
+                   wording and Oxford's are indistinguishable on the screen. -->
+              <span class="pill ${item.verified ? 'good' : ''}" title="${item.verified
+                  ? 'meaning, pronunciation and level taken from Oxford'
+                  : 'Oxford has no entry for this one - the meaning below is a draft'}">${
+                item.verified ? 'Oxford' : 'unverified'}</span>
               <span class="spacer"></span>
               <select class="draft-kind" data-field="kind" data-i="${i}">
                 ${KINDS.map(([v, l]) => `<option value="${v}" ${v === item.kind ? 'selected' : ''}>${l}</option>`).join('')}
               </select>
             </div>
             <input class="answer" data-field="term" data-i="${i}" value="${esc(item.term)}" placeholder="term">
-            <input class="answer" data-field="meaning" data-i="${i}" value="${esc(item.meaning || '')}" placeholder="meaning (optional)">
+            <input class="answer" data-field="meaning" data-i="${i}" value="${esc(item.meaning || '')}"
+                   placeholder="${item.verified ? 'meaning' : 'meaning — no Oxford entry, so check this one'}">
+            ${item.ipa || item.cefr ? `<p class="draft-dict">${item.ipa ? esc(item.ipa) : ''}${
+              item.ipa && item.cefr ? ' · ' : ''}${item.cefr ? esc(item.cefr.toUpperCase()) : ''}</p>` : ''}
             <input class="answer" data-field="vi" data-i="${i}" value="${esc(item.vi || '')}" placeholder="Vietnamese (optional)">
             <input class="answer" data-field="pattern" data-i="${i}" value="${esc(item.pattern || '')}" placeholder="pattern, e.g. spend + on / + -ing (optional)">
             <input class="answer" data-field="example" data-i="${i}" value="${esc(item.example || '')}" placeholder="example (optional)">

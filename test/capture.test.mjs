@@ -275,6 +275,45 @@ ok('  each row carries its log id', /#9/.test(s.text || '') && /#8/.test(s.text 
 ok('  and the whole lot can be copied', s.canCopy);
 
 
+console.log('== the review screen says whose definition it is ==');
+await B.evaluate(`
+  document.querySelector('#discard-draft')?.click();
+  await new Promise(r => setTimeout(r, 300));
+  window.__draftReply = [
+    { term: 'vandal', kind: 'word', meaning: 'a person who deliberately damages property',
+      vi: 'ke pha hoai', ipa: '/\u02c8v\u00e6ndl/', cefr: 'b2', verified: true,
+      example: 'The **vandal** was caught.', confidence: 'high' },
+    { term: 'negatively affect', kind: 'collocation', meaning: 'to have a bad influence on something',
+      vi: 'anh huong tieu cuc', verified: false,
+      example: 'Traffic will **negatively affect** the area.', confidence: 'high' },
+  ];
+  document.querySelector('[data-mode="photo"]').click();
+  await new Promise(r => setTimeout(r, 200));
+  const c = document.createElement('canvas'); c.width = 40; c.height = 40;
+  const blob = await new Promise(r => c.toBlob(r, 'image/jpeg'));
+  const dt = new DataTransfer();
+  dt.items.add(new File([blob], 'p.jpg', { type: 'image/jpeg' }));
+  const input = document.querySelector('#photo');
+  input.files = dt.files;
+  input.dispatchEvent(new Event('change'));
+  await new Promise(r => setTimeout(r, 900));
+`);
+s = await B.evaluate(`
+  return [...document.querySelectorAll('.draft')].map((c) => ({
+    pills: [...c.querySelectorAll('.pill')].map((p) => p.textContent.trim()),
+    meaning: c.querySelector('[data-field=meaning]')?.value,
+    placeholder: c.querySelector('[data-field=meaning]')?.placeholder,
+    dict: c.querySelector('.draft-dict')?.textContent.trim() || null,
+  }));
+`);
+ok('a word Oxford knows is labelled Oxford', (s[0]?.pills || []).includes('Oxford'), JSON.stringify(s[0]));
+eq('  and shows what the dictionary gave', s[0]?.dict, '/\u02c8v\u00e6ndl/ \u00b7 B2');
+ok('a collocation Oxford does not know is labelled unverified',
+   (s[1]?.pills || []).includes('unverified'), JSON.stringify(s[1]?.pills));
+ok('  but still arrives with a meaning to review', (s[1]?.meaning || '').length > 0, s[1]?.meaning);
+ok('  and its placeholder says to check it', /check this one/.test(s[1]?.placeholder || ''), s[1]?.placeholder);
+ok('  with no dictionary line, because there is none', s[1]?.dict === null, s[1]?.dict);
+
 console.log('== signing out ==');
 // Sign-out moved into the header bar, which every screen now shows.
 s = await B.evaluate(`

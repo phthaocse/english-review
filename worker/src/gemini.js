@@ -68,10 +68,11 @@ in, because a word with no meaning is no use to revise from.
 Extract every English word or phrase the writer was learning. For each one give:
 - term: the headword, lower-cased unless it is a proper noun, with no leading article
 - kind: one of ${KINDS.join(', ')}
-- meaning: ONLY what the page itself gives. If the writer wrote a definition
-  beside the word, transcribe theirs. If the page gives none, use null — do not
-  write one. The definition is looked up in Oxford afterwards, and a fluent
-  invention here would quietly replace a real one.
+- meaning: the writer's own definition if the page gives one. If it gives none,
+  supply a short plain one — a draft with an empty meaning is not reviewable,
+  and Oxford has no entry at all for most collocations and phrases, so leaving
+  it blank leaves it blank for good. Whatever you write here is provisional: an
+  Oxford definition replaces it wherever one exists.
 - vi: a short Vietnamese gloss with full diacritics. Transcribe the writer's if
   the page has one; otherwise supply one, because no dictionary here gives
   Vietnamese and a gloss is what makes the draft usable.
@@ -90,9 +91,10 @@ Rules:
   restatements or commentary. Work it out before you answer, not in the field.
 - Transcribe the TERM, do not invent it. If the handwriting is unclear, use low
   confidence and put your best reading in term.
-- The Vietnamese gloss and the example may be yours. The meaning and the
-  pattern may not: both are checked against a dictionary afterwards, and a
-  plausible guess there is worse than a blank.
+- The meaning, the Vietnamese gloss and the example may be yours; the review
+  screen marks which of them a dictionary confirmed. The pattern may not: it is
+  checked against a dictionary afterwards and a plausible guess there is worse
+  than a blank.
 - Do not supply pronunciation or CEFR level; those come from the dictionary.
 - Return an empty list if the image contains no English study notes.`;
 
