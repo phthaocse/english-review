@@ -1,5 +1,5 @@
 {
- "generated": "2026-09-30 12:51",
+ "generated": "2026-09-30 12:55",
  "items": [
   {
    "id": "I'm not following",
@@ -64,7 +64,7 @@
     "law-abiding",
     "regulator"
    ],
-   "ipa": "\"\"   # Oxford has no separate entry for this form",
+   "ipa": "",
    "pos": [
     "phrasal verb"
    ],
@@ -287,7 +287,7 @@
    "kind": "vocab",
    "type": "word",
    "vi": "tiện ích, tiện nghi",
-   "cefr": "# not in the Oxford 3000/5000",
+   "cefr": "",
    "added": "2026-09-30",
    "session": "2026-09-30 City life: traffic, amenities and law",
    "priority": "normal",
@@ -941,7 +941,7 @@
     "congested",
     "congestion"
    ],
-   "ipa": "\"\"   # Oxford has no separate entry for this form",
+   "ipa": "",
    "pos": [
     "adjective"
    ],
@@ -1413,7 +1413,7 @@
    "kind": "vocab",
    "type": "word",
    "vi": "bị tắc nghẽn giao thông",
-   "cefr": "# not in the Oxford 3000/5000",
+   "cefr": "",
    "added": "2026-09-30",
    "session": "2026-09-30 City life: traffic, amenities and law",
    "priority": "normal",
@@ -1454,7 +1454,7 @@
    "kind": "vocab",
    "type": "word",
    "vi": "sự tắc nghẽn giao thông",
-   "cefr": "# not in the Oxford 3000/5000",
+   "cefr": "",
    "added": "2026-09-30",
    "session": "2026-09-30 City life: traffic, amenities and law",
    "priority": "normal",
@@ -3487,7 +3487,7 @@
    "kind": "vocab",
    "type": "collocation",
    "vi": "đi lại khắp nơi một cách dễ dàng",
-   "cefr": "# not in the Oxford 3000/5000",
+   "cefr": "",
    "added": "2026-09-30",
    "session": "2026-09-30 City life: traffic, amenities and law",
    "priority": "normal",
@@ -3500,7 +3500,7 @@
    "seeAlso": [
     "with ease"
    ],
-   "ipa": "\"\"   # Oxford has no separate entry for this form",
+   "ipa": "",
    "pos": [
     "collocation"
    ],
@@ -4480,7 +4480,7 @@
    "kind": "vocab",
    "type": "word",
    "vi": "tuân thủ pháp luật",
-   "cefr": "# not in the Oxford 3000/5000",
+   "cefr": "",
    "added": "2026-09-30",
    "session": "2026-09-30 City life: traffic, amenities and law",
    "priority": "normal",
@@ -4618,7 +4618,7 @@
    "kind": "vocab",
    "type": "word",
    "vi": "gánh nặng, khoản nợ, nghĩa vụ pháp lý",
-   "cefr": "# not in the Oxford 3000/5000",
+   "cefr": "",
    "added": "2026-09-30",
    "session": "2026-09-30 City life: traffic, amenities and law",
    "priority": "normal",
@@ -5359,7 +5359,7 @@
    "kind": "vocab",
    "type": "collocation",
    "vi": "ảnh hưởng tiêu cực",
-   "cefr": "# not in the Oxford 3000/5000",
+   "cefr": "",
    "added": "2026-09-30",
    "session": "2026-09-30 City life: traffic, amenities and law",
    "priority": "normal",
@@ -5370,7 +5370,7 @@
    ],
    "notesHtml": "<p>⚠️ Understandable and used, but the standard collocation in this register is **adversely affect** - Oxford's own example is <em>Her health was adversely affected by the climate.</em> Also common: <em>have an adverse effect on</em>. Keep <em>negatively affect</em> for speech, use <em>adversely affect</em> in writing.</p>",
    "seeAlso": [],
-   "ipa": "\"\"   # Oxford has no separate entry for this form",
+   "ipa": "",
    "pos": [
     "collocation"
    ],
@@ -6102,7 +6102,7 @@
    "kind": "vocab",
    "type": "collocation",
    "vi": "hoạt động giải trí, vui chơi",
-   "cefr": "# not in the Oxford 3000/5000",
+   "cefr": "",
    "added": "2026-09-30",
    "session": "2026-09-30 City life: traffic, amenities and law",
    "priority": "normal",
@@ -7814,7 +7814,7 @@
    "kind": "vocab",
    "type": "word",
    "vi": "mũi khâu, vết khâu",
-   "cefr": "# not in the Oxford 3000/5000",
+   "cefr": "",
    "added": "2026-09-30",
    "session": "2026-09-30 City life: traffic, amenities and law",
    "priority": "normal",
