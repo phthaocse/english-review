@@ -1,0 +1,159 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 800" role="img"
+     aria-label="Container diagram: one person reaches a public static site and a private Worker; the Worker alone calls Google, Gemini, Oxford and the D1 database, and the Mac builds the data file the static site serves">
+  <style>
+    .t   { font-family: -apple-system, "Helvetica Neue", Arial, sans-serif; }
+    .h1  { font-size: 20px; font-weight: 700; fill: #1b1f2a; }
+    .sub { font-size: 13px; fill: #5b6275; }
+    .hd  { font-size: 12px; font-weight: 700; fill: #ffffff; letter-spacing: .05em; }
+    .nm  { font-size: 14px; font-weight: 700; fill: #1b1f2a; }
+    .bd  { font-size: 12px; fill: #3b4251; }
+    .nt  { font-size: 11px; fill: #6b7183; }
+    .zn  { font-size: 11px; font-weight: 700; fill: #4f46e5; letter-spacing: .04em; }
+    .ex  { font-size: 11px; font-weight: 700; fill: #6b7183; letter-spacing: .04em; }
+    .n   { font-size: 11px; font-weight: 700; fill: #ffffff; }
+    .lg  { font-size: 12px; fill: #3b4251; }
+    .rd  { font-size: 11px; font-weight: 700; fill: #c0392f; }
+  </style>
+  <defs>
+    <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#4f46e5"/></marker>
+    <marker id="gr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#8a8f9e"/></marker>
+    <marker id="rd" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#c0392f"/></marker>
+    <marker id="rs" viewBox="0 0 10 10" refX="1" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M10 0 L0 5 L10 10 z" fill="#c0392f"/></marker>
+  </defs>
+  <rect width="1000" height="800" fill="#ffffff"/>
+
+  <text class="t h1"  x="40" y="36">Containers</text>
+  <text class="t sub" x="40" y="57">What runs where. Solid outline is ours, dashed grey is somebody else's.</text>
+
+  <!-- actor -->
+  <circle cx="500" cy="96" r="15" fill="#4f46e5"/>
+  <path d="M476 140 a24 27 0 0 1 48 0 z" fill="#4f46e5"/>
+  <text class="t nm" x="500" y="162" text-anchor="middle">Thao</text>
+  <text class="t nt" x="500" y="178" text-anchor="middle">phone or laptop</text>
+
+  <!-- trust boundary -->
+  <rect x="382" y="196" width="320" height="306" rx="14" fill="#f6f5ff" stroke="#8b83f0"
+        stroke-width="2" stroke-dasharray="7 6"/>
+  <text class="t zn" x="542" y="490" text-anchor="middle">BEHIND GOOGLE SIGN-IN + THE ALLOWLIST</text>
+
+  <!-- github pages -->
+  <g>
+    <rect x="40" y="216" width="300" height="104" rx="10" fill="#ffffff" stroke="#2f6b4f" stroke-width="2"/>
+    <path d="M40 226 a10 10 0 0 1 10 -10 h280 a10 10 0 0 1 10 10 v20 H40 z" fill="#2f6b4f"/>
+    <text class="t hd" x="56" y="240">STATIC SITE</text>
+    <text class="t nm" x="56" y="272">GitHub Pages</text>
+    <text class="t bd" x="56" y="292">the whole app, plus 204 drawings</text>
+    <text class="t nt" x="56" y="310">no server, no sign-in, works offline</text>
+  </g>
+
+  <!-- worker -->
+  <g>
+    <rect x="402" y="216" width="280" height="104" rx="10" fill="#ffffff" stroke="#4f46e5" stroke-width="2"/>
+    <path d="M402 226 a10 10 0 0 1 10 -10 h260 a10 10 0 0 1 10 10 v20 H402 z" fill="#4f46e5"/>
+    <text class="t hd" x="418" y="240">API</text>
+    <text class="t nm" x="418" y="272">Cloudflare Worker</text>
+    <text class="t bd" x="418" y="292">verify, read a photo, look up, store</text>
+    <text class="t nt" x="418" y="310">the only place a key exists</text>
+  </g>
+
+  <!-- vocab.json cylinder -->
+  <g>
+    <path d="M70 368 V404 a120 11 0 0 0 240 0 V368" fill="#e9f1ec" stroke="#2f6b4f" stroke-width="2"/>
+    <ellipse cx="190" cy="368" rx="120" ry="11" fill="#ffffff" stroke="#2f6b4f" stroke-width="2"/>
+    <text class="t nm" x="190" y="392" text-anchor="middle">data/vocab.json</text>
+    <text class="t nt" x="190" y="410" text-anchor="middle">204 items, committed</text>
+  </g>
+
+  <!-- d1 cylinder -->
+  <g>
+    <path d="M432 372 V412 a110 11 0 0 0 220 0 V372" fill="#eceafe" stroke="#4f46e5" stroke-width="2"/>
+    <ellipse cx="542" cy="372" rx="110" ry="11" fill="#ffffff" stroke="#4f46e5" stroke-width="2"/>
+    <text class="t nm" x="542" y="396" text-anchor="middle">D1 &#8212; knowledge</text>
+    <text class="t nt" x="542" y="414" text-anchor="middle">items, allowlist, quota, logs</text>
+  </g>
+
+  <!-- third parties -->
+  <text class="t ex" x="726" y="210">THIRD PARTIES</text>
+  <g stroke="#a8adbb" stroke-width="2" stroke-dasharray="6 5" fill="#f7f8fb">
+    <rect x="726" y="220" width="234" height="58" rx="10"/>
+    <rect x="726" y="294" width="234" height="58" rx="10"/>
+    <rect x="726" y="368" width="234" height="58" rx="10"/>
+  </g>
+  <text class="t nm" x="744" y="244">Google Identity</text>
+  <text class="t nt" x="744" y="264">signs Thao in, publishes the keys</text>
+  <text class="t nm" x="744" y="318">Gemini 3.5 Flash</text>
+  <text class="t nt" x="744" y="338">reads handwriting, 20 a day</text>
+  <text class="t nm" x="744" y="392">Oxford dictionary</text>
+  <text class="t nt" x="744" y="412">plain web page, no key needed</text>
+
+  <!-- the mac -->
+  <g>
+    <rect x="40" y="470" width="300" height="212" rx="12" fill="#fbf5e9" stroke="#c9a227" stroke-width="2"/>
+    <text class="t hd" x="56" y="494" style="fill:#8a6d1f">THE MAC</text>
+    <rect x="56" y="504" width="268" height="50" rx="8" fill="#ffffff" stroke="#e3d6b8"/>
+    <text class="t nm" x="70" y="524">Obsidian vault</text>
+    <text class="t nt" x="70" y="542">the notes. the actual truth.</text>
+    <rect x="56" y="562" width="268" height="50" rx="8" fill="#ffffff" stroke="#e3d6b8"/>
+    <text class="t nm" x="70" y="582">english-vocab agent</text>
+    <text class="t nt" x="70" y="600">writes notes, draws pictures</text>
+    <rect x="56" y="620" width="268" height="50" rx="8" fill="#ffffff" stroke="#e3d6b8"/>
+    <text class="t nm" x="70" y="640">build + publish scripts</text>
+    <text class="t nt" x="70" y="658">make the data file, push it</text>
+  </g>
+
+  <!-- flows -->
+  <g fill="none" stroke="#4f46e5" stroke-width="2.5" marker-end="url(#ar)">
+    <path d="M462 156 C 380 176, 250 180, 205 210"/>
+    <path d="M556 152 C 580 172, 574 190, 560 210"/>
+    <path d="M190 322 V 352"/>
+    <path d="M542 322 V 356"/>
+    <path d="M190 466 V 428"/>
+  </g>
+  <g fill="none" stroke="#8a8f9e" stroke-width="2" marker-end="url(#gr)">
+    <path d="M684 250 H 720"/>
+    <path d="M684 270 C 706 274, 706 310, 720 318"/>
+    <path d="M684 290 C 710 300, 706 380, 720 392"/>
+  </g>
+
+  <!-- flow badges -->
+  <g>
+    <circle cx="330" cy="177" r="11" fill="#4f46e5"/><text class="t n" x="330" y="181" text-anchor="middle">1</text>
+    <circle cx="590" cy="178" r="11" fill="#4f46e5"/><text class="t n" x="590" y="182" text-anchor="middle">2</text>
+    <circle cx="706" cy="250" r="11" fill="#8a8f9e"/><text class="t n" x="706" y="254" text-anchor="middle">3</text>
+    <circle cx="700" cy="296" r="11" fill="#8a8f9e"/><text class="t n" x="700" y="300" text-anchor="middle">4</text>
+    <circle cx="698" cy="344" r="11" fill="#8a8f9e"/><text class="t n" x="698" y="348" text-anchor="middle">5</text>
+    <circle cx="566" cy="340" r="11" fill="#4f46e5"/><text class="t n" x="566" y="344" text-anchor="middle">6</text>
+    <circle cx="214" cy="446" r="11" fill="#4f46e5"/><text class="t n" x="214" y="450" text-anchor="middle">7</text>
+  </g>
+
+  <!-- the missing link -->
+  <g fill="none" stroke="#c0392f" stroke-width="2.5" stroke-dasharray="7 6"
+     marker-end="url(#rd)" marker-start="url(#rs)">
+    <path d="M424 410 C 390 470, 372 520, 348 560"/>
+  </g>
+  <text class="t rd" x="374" y="476" text-anchor="middle" transform="rotate(-62 374 476)">no sync</text>
+
+  <!-- legend -->
+  <line x1="382" y1="524" x2="960" y2="524" stroke="#e3e6ee" stroke-width="1"/>
+  <g>
+    <circle cx="394" cy="552" r="10" fill="#4f46e5"/><text class="t n" x="394" y="556" text-anchor="middle">1</text>
+    <text class="t lg" x="414" y="556">Look up and practise. Plain file requests, nothing else.</text>
+    <circle cx="394" cy="582" r="10" fill="#4f46e5"/><text class="t n" x="394" y="586" text-anchor="middle">2</text>
+    <text class="t lg" x="414" y="586">Capture a word. Carries a Google token on every call.</text>
+    <circle cx="394" cy="612" r="10" fill="#8a8f9e"/><text class="t n" x="394" y="616" text-anchor="middle">3</text>
+    <text class="t lg" x="414" y="616">Is this token real, and is this person allowed in?</text>
+    <circle cx="394" cy="642" r="10" fill="#8a8f9e"/><text class="t n" x="394" y="646" text-anchor="middle">4</text>
+    <text class="t lg" x="414" y="646">What words are on this photograph?</text>
+    <circle cx="394" cy="672" r="10" fill="#8a8f9e"/><text class="t n" x="394" y="676" text-anchor="middle">5</text>
+    <text class="t lg" x="414" y="676">What does this word actually mean?</text>
+    <circle cx="394" cy="702" r="10" fill="#4f46e5"/><text class="t n" x="394" y="706" text-anchor="middle">6</text>
+    <text class="t lg" x="414" y="706">Keep it, and remember the quota it cost.</text>
+    <circle cx="394" cy="732" r="10" fill="#4f46e5"/><text class="t n" x="394" y="736" text-anchor="middle">7</text>
+    <text class="t lg" x="414" y="736">Rebuild the data file from the vault and push it.</text>
+  </g>
+  <text class="t rd" x="394" y="768">The red line is the gap: a word captured on the phone never reaches the vault on its own.</text>
+</svg>

@@ -1,0 +1,115 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 810" role="img"
+     aria-label="Sequence of one photo read: the phone posts a photo, the Worker verifies the token, charges the quota before any work, asks Gemini to transcribe and Oxford for meanings, returns a draft, waits for Thao to confirm, and only then writes to the database">
+  <style>
+    .t   { font-family: -apple-system, "Helvetica Neue", Arial, sans-serif; }
+    .h1  { font-size: 20px; font-weight: 700; fill: #1b1f2a; }
+    .sub { font-size: 13px; fill: #5b6275; }
+    .hd  { font-size: 12.5px; font-weight: 700; fill: #ffffff; }
+    .hs  { font-size: 10px; fill: #ffffff; opacity: .85; }
+    .msg { font-size: 12.5px; fill: #1b1f2a; }
+    .ret { font-size: 12px; fill: #5b6275; }
+    .ann { font-size: 11px; fill: #8a6d1f; }
+    .gate{ font-size: 13px; font-weight: 700; fill: #8a6d1f; }
+    .gsub{ font-size: 11.5px; fill: #8a6d1f; }
+    .lg  { font-size: 11.5px; fill: #5b6275; }
+  </style>
+  <defs>
+    <marker id="s" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#4f46e5"/></marker>
+    <marker id="d" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#8a8f9e"/></marker>
+  </defs>
+  <rect width="1000" height="810" fill="#ffffff"/>
+
+  <text class="t h1"  x="28" y="34">One photo, read</text>
+  <text class="t sub" x="28" y="55">The only flow with real depth. Everything else in the system is a form post.</text>
+
+  <!-- lifeline heads -->
+  <g>
+    <rect x="20"  y="74" width="120" height="36" rx="8" fill="#4f46e5"/>
+    <text class="t hd" x="80"  y="90"  text-anchor="middle">Phone</text>
+    <text class="t hs" x="80"  y="104" text-anchor="middle">capture.js</text>
+
+    <rect x="215" y="74" width="150" height="36" rx="8" fill="#3730a3"/>
+    <text class="t hd" x="290" y="90"  text-anchor="middle">Worker</text>
+    <text class="t hs" x="290" y="104" text-anchor="middle">knowledge-api</text>
+
+    <rect x="410" y="74" width="120" height="36" rx="8" fill="#7b8399"/>
+    <text class="t hd" x="470" y="90"  text-anchor="middle">Google</text>
+    <text class="t hs" x="470" y="104" text-anchor="middle">signing keys</text>
+
+    <rect x="560" y="74" width="120" height="36" rx="8" fill="#7b8399"/>
+    <text class="t hd" x="620" y="90"  text-anchor="middle">Gemini</text>
+    <text class="t hs" x="620" y="104" text-anchor="middle">3.5 Flash</text>
+
+    <rect x="710" y="74" width="120" height="36" rx="8" fill="#7b8399"/>
+    <text class="t hd" x="770" y="90"  text-anchor="middle">Oxford</text>
+    <text class="t hs" x="770" y="104" text-anchor="middle">a web page</text>
+
+    <rect x="860" y="74" width="120" height="36" rx="8" fill="#2f6b4f"/>
+    <text class="t hd" x="920" y="90"  text-anchor="middle">D1</text>
+    <text class="t hs" x="920" y="104" text-anchor="middle">the database</text>
+  </g>
+
+  <!-- lifelines -->
+  <g stroke="#c9cedb" stroke-width="1.5" stroke-dasharray="4 5">
+    <path d="M80 112 V740"/><path d="M290 112 V740"/><path d="M470 112 V740"/>
+    <path d="M620 112 V740"/><path d="M770 112 V740"/><path d="M920 112 V740"/>
+  </g>
+
+  <!-- activation while the model thinks -->
+  <rect x="614" y="282" width="12" height="44" rx="3" fill="#4f46e5" opacity=".65"/>
+  <rect x="284" y="140" width="12" height="350" rx="3" fill="#3730a3" opacity=".18"/>
+  <rect x="284" y="596" width="12" height="118" rx="3" fill="#3730a3" opacity=".18"/>
+
+  <!-- messages -->
+  <g fill="none" stroke="#4f46e5" stroke-width="2" marker-end="url(#s)">
+    <path d="M80 140 H282"/>
+    <path d="M296 186 H466"/>
+    <path d="M296 232 H916"/>
+    <path d="M296 282 H610"/>
+    <path d="M290 482 H84"/>
+    <path d="M80 596 H282"/>
+    <path d="M296 672 H916"/>
+    <path d="M290 714 H84"/>
+  </g>
+  <g fill="none" stroke="#8a8f9e" stroke-width="2" stroke-dasharray="6 5" marker-end="url(#d)">
+    <path d="M620 326 H296"/>
+    <path d="M296 366 H766"/>
+    <path d="M770 406 H296"/>
+    <path d="M296 444 H916"/>
+    <path d="M296 634 H766"/>
+  </g>
+
+  <text class="t msg" x="86"  y="134">POST /api/vision, one downscaled photo</text>
+  <text class="t msg" x="300" y="180">is this token genuinely Google's?</text>
+  <text class="t msg" x="300" y="226">charge one of today's fifty reads</text>
+  <text class="t ann" x="300" y="248">before any work, so a failure still costs one</text>
+  <text class="t msg" x="300" y="276">read the handwriting on this page</text>
+  <text class="t ann" x="300" y="300">one request, one model, ninety seconds</text>
+  <text class="t ret" x="420" y="320">the words, as text</text>
+  <text class="t msg" x="300" y="360">what does each of these actually mean?</text>
+  <text class="t ret" x="420" y="400">Oxford's own wording, where it has an entry</text>
+  <text class="t ret" x="300" y="438">record what happened, win or lose</text>
+  <text class="t msg" x="94"  y="476">a DRAFT comes back. nothing is stored.</text>
+
+  <!-- the human gate -->
+  <rect x="20" y="506" width="960" height="60" rx="10" fill="#fdf6e6" stroke="#c9a227"
+        stroke-width="2" stroke-dasharray="7 5"/>
+  <text class="t gate" x="500" y="532" text-anchor="middle">THAO READS THE DRAFT AND DECIDES</text>
+  <text class="t gsub" x="500" y="552" text-anchor="middle">Corrects a meaning, unticks a word the camera invented. The request above is already finished; this one is new.</text>
+
+  <text class="t msg" x="86"  y="590">POST /api/items, only what survived</text>
+  <text class="t ret" x="300" y="628">fill any field the draft left blank</text>
+  <text class="t msg" x="300" y="666">insert it, or merge into the word already there</text>
+  <text class="t msg" x="94"  y="708">saved, and what was added to an existing word</text>
+
+  <!-- legend -->
+  <line x1="28" y1="752" x2="972" y2="752" stroke="#e3e6ee"/>
+  <g>
+    <path d="M40 774 H84" stroke="#4f46e5" stroke-width="2" marker-end="url(#s)" fill="none"/>
+    <text class="t lg" x="96" y="778">must succeed, or the request fails</text>
+    <path d="M370 774 H414" stroke="#8a8f9e" stroke-width="2" stroke-dasharray="6 5" marker-end="url(#d)" fill="none"/>
+    <text class="t lg" x="426" y="778">best effort: a failure here is swallowed, never losing a read already paid for</text>
+  </g>
+</svg>
