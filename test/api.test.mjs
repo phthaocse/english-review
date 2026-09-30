@@ -15,10 +15,20 @@ const signer = await makeSigner();
 // The Worker calls the real Google JWKS URL; point fetch at our test keys.
 const realFetch = globalThis.fetch;
 let geminiHandler = async () => { throw new Error('gemini not stubbed'); };
+// The dictionary is stubbed by default: no test may depend on Oxford being up,
+// and the lookup decides whether a new item lands 'captured' or 'enriched'.
+let oxfordHandler = async () => ({ ok: false, status: 404, text: async () => '' });
+export const oxfordPage = (ipa, cefr, def) => async () => ({
+  ok: true, status: 200,
+  text: async () => `<span class="phon">${ipa}</span>`
+    + (cefr ? `<a href="/wordlist/?level=${cefr}">x</a>` : '')
+    + `<span class="pos">noun</span><span class="def">${def}</span>`,
+});
 const patchedFetch = async (url, init) => {
   const href = String(url);
   if (href.includes('googleapis.com/oauth2')) return signer.jwksFetch()();
   if (href.includes('generativelanguage')) return geminiHandler(href, init);
+  if (href.includes('oxfordlearnersdictionaries')) return oxfordHandler(href, init);
   return realFetch(url, init);
 };
 globalThis.fetch = patchedFetch;
@@ -81,7 +91,7 @@ console.log('== capture ==');
   }});
   eq('created → 201', r.status, 201);
   eq('term stored', r.body.item.term, 'brittle');
-  eq('status defaults to captured', r.body.item.status, 'captured');
+  eq('a word Oxford does not know stays captured', r.body.item.status, 'captured');
   eq('example stored with its bold target', r.body.item.examples[0], 'The service was **brittle** under load.');
   eq('tag stored', r.body.item.tags[0], 'theme/engineering');
   eq('pattern stored', r.body.item.pattern, 'spend + on / + -ing (not for)');
@@ -97,6 +107,33 @@ console.log('== capture ==');
   r = await call(env, 'GET', '/api/me');
   eq('stats count it', r.body.stats.total, 1);
   eq('and mark it as captured', r.body.stats.captured, 1);
+}
+
+console.log('== a typed word is filled in from the dictionary ==');
+{
+  const env = makeEnv();
+  oxfordHandler = oxfordPage('/ˈvændl/', 'b2', 'a person who deliberately destroys or damages public property');
+
+  let r = await call(env, 'POST', '/api/items', { body: { term: 'vandal', kind: 'word' } });
+  eq('a bare term is accepted', r.status, 201);
+  eq('  the meaning is Oxford\'s, not invented', r.body.item.meaning,
+     'a person who deliberately destroys or damages public property');
+  eq('  with the British IPA', r.body.item.ipa, '/ˈvændl/');
+  eq('  and the CEFR level', r.body.item.cefr, 'b2');
+  eq('  marked enriched, so the vault can trust it', r.body.item.status, 'enriched');
+
+  // What the person wrote is the sense they met; the dictionary does not win.
+  r = await call(env, 'POST', '/api/items', { body: {
+    term: 'vandal', kind: 'idiom', meaning: 'my own wording', vi: 'kẻ phá hoại' } });
+  eq('a meaning typed by hand survives', r.body.item.meaning, 'my own wording');
+  eq('  but the IPA is still filled in', r.body.item.ipa, '/ˈvændl/');
+
+  // Oxford being down must not stop a word being saved.
+  oxfordHandler = async () => { throw new Error('network'); };
+  r = await call(env, 'POST', '/api/items', { body: { term: 'suture', kind: 'word' } });
+  eq('a dictionary outage does not block the save', r.status, 201);
+  eq('  it just stays captured', r.body.item.status, 'captured');
+  oxfordHandler = async () => ({ ok: false, status: 404, text: async () => '' });
 }
 
 console.log('== capture validation ==');

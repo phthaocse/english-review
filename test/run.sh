@@ -8,6 +8,7 @@ PORT="${PORT:-8731}"
 
 echo "── review engine ──";      node test/engine.test.mjs
 echo "── token verification ──"; node test/auth.test.mjs
+echo "── oxford lookup ──";      node test/oxford.test.mjs
 echo "── worker api ──";         node test/api.test.mjs
 
 python3 -m http.server "$PORT" >/dev/null 2>&1 &

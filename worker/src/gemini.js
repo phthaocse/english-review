@@ -53,10 +53,12 @@ export const MAX_IMAGE_BYTES = 4 * 1024 * 1024;
 export const KINDS = ['word', 'phrasal-verb', 'idiom', 'collocation',
                       'conversational', 'grammar-pattern'];
 
-// Deliberately does NOT ask for IPA, CEFR or a grammar pattern. Those are
-// checked against Oxford later, and a plausible guess is the failure this whole
-// system exists to avoid. A meaning and a gloss are different: the review screen
-// is right there, and a draft of bare words is not worth reviewing.
+// The model's one job here is to READ THE PAGE. It used to be asked for a
+// definition as well, and it obliged - fluently, differently every run, and
+// close enough to Oxford to look right while saying "other people's property"
+// where Oxford says "public property". The definition now comes from Oxford
+// itself (oxford.js), so anything the model supplies here is a transcription,
+// not an answer.
 const PROMPT = `You are reading a photograph of handwritten English study notes.
 
 The writer is Vietnamese, learning English at about B2. A page is often a bare
@@ -66,10 +68,13 @@ in, because a word with no meaning is no use to revise from.
 Extract every English word or phrase the writer was learning. For each one give:
 - term: the headword, lower-cased unless it is a proper noun, with no leading article
 - kind: one of ${KINDS.join(', ')}
-- meaning: ALWAYS — a short English definition, in the sense the page is using
-  it. If the page gives one, use theirs. If not, supply it yourself.
-- vi: ALWAYS — a short Vietnamese gloss with full diacritics, the one a learner
-  would want beside the word. Theirs if the page has one, otherwise yours.
+- meaning: ONLY what the page itself gives. If the writer wrote a definition
+  beside the word, transcribe theirs. If the page gives none, use null — do not
+  write one. The definition is looked up in Oxford afterwards, and a fluent
+  invention here would quietly replace a real one.
+- vi: a short Vietnamese gloss with full diacritics. Transcribe the writer's if
+  the page has one; otherwise supply one, because no dictionary here gives
+  Vietnamese and a gloss is what makes the draft usable.
 - example: one natural sentence showing the word in use, with the target wrapped
   in **double asterisks**. Take the writer's own sentence when the page has one;
   otherwise write a plain, everyday sentence of your own.
@@ -85,10 +90,10 @@ Rules:
   restatements or commentary. Work it out before you answer, not in the field.
 - Transcribe the TERM, do not invent it. If the handwriting is unclear, use low
   confidence and put your best reading in term.
-- Meaning, Vietnamese and the example may be yours. The pattern may not: a
-  grammar pattern is checked against a dictionary later, and a plausible guess
-  there is worse than a blank.
-- Do not supply pronunciation or CEFR level; those are verified elsewhere.
+- The Vietnamese gloss and the example may be yours. The meaning and the
+  pattern may not: both are checked against a dictionary afterwards, and a
+  plausible guess there is worse than a blank.
+- Do not supply pronunciation or CEFR level; those come from the dictionary.
 - Return an empty list if the image contains no English study notes.`;
 
 const RESPONSE_SCHEMA = {

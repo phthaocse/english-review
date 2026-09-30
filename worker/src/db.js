@@ -6,14 +6,15 @@
 /** Insert a reviewed draft. Returns the new id, or null if the term already exists. */
 export async function createItem(db, item, userId) {
   const row = await db.prepare(`
-    INSERT INTO item (term, kind, meaning, vi, pattern, rule, notes, status, source, source_note, captured_by)
-    VALUES (?, ?, ?, ?, ?, ?, ?, 'captured', ?, ?, ?)
+    INSERT INTO item (term, kind, meaning, vi, ipa, cefr, pattern, rule, notes, status, source, source_note, captured_by)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ON CONFLICT (term, kind) DO NOTHING
     RETURNING id
   `).bind(
     item.term, item.kind, item.meaning ?? null, item.vi ?? null,
-    item.pattern ?? null, item.rule ?? null, item.notes ?? null, item.source ?? 'typed',
-    item.source_note ?? null, userId,
+    item.ipa ?? null, item.cefr ?? null,
+    item.pattern ?? null, item.rule ?? null, item.notes ?? null,
+    item.status ?? 'captured', item.source ?? 'typed', item.source_note ?? null, userId,
   ).first();
 
   if (!row) return null;          // already captured; caller decides what to say

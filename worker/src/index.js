@@ -6,6 +6,7 @@
 
 import { authenticate, AuthError } from './auth.js';
 import { readPhoto, GeminiError, MAX_IMAGE_BYTES, KINDS } from './gemini.js';
+import { verifyAll, lookup } from './oxford.js';
 import { createItem, findItemByTerm, getItem, listItems, countItems, consumeQuota,
          logVision, listVisionLogs } from './db.js';
 
@@ -81,6 +82,8 @@ function validateItem(body) {
     term, kind,
     meaning: body.meaning?.trim?.() || null,
     vi: body.vi?.trim?.() || null,
+    ipa: body.ipa?.trim?.() || null,
+    cefr: body.cefr?.trim?.()?.toLowerCase() || null,
     pattern: body.pattern?.trim?.()?.slice(0, 300) || null,
     rule: body.rule?.trim?.() || null,
     notes: body.notes?.trim?.() || null,
@@ -110,6 +113,22 @@ const ROUTES = {
 
   'POST /api/items': async (request, env, user) => {
     const item = validateItem(await readJson(request));
+
+    // A typed entry is usually a bare word. Oxford fills in what was left
+    // blank - and only what was left blank, because a meaning the person wrote
+    // themselves is the sense they met, which may not be Oxford's first one.
+    try {
+      const entry = await lookup(item.term);
+      if (entry) {
+        item.meaning ??= entry.meaning;
+        item.ipa ??= entry.ipa;
+        item.cefr ??= entry.cefr;
+        item.status = 'enriched';       // the dictionary has spoken; the vault can trust it
+      }
+    } catch (error) {
+      console.error('oxford lookup failed', error?.message);
+    }
+
     const id = await createItem(env.DB, item, user.id);
     if (id === null) {
       const existing = await findItemByTerm(env.DB, item.term, item.kind);
@@ -141,10 +160,19 @@ const ROUTES = {
     // something to look up afterwards.
     try {
       const draft = await readPhoto({ base64, mimeType }, env);
+      // The model read the handwriting; Oxford says what the words mean. A
+      // lookup failure must not lose a read that already cost a request.
+      let items = draft.items;
+      try {
+        items = await verifyAll(draft.items);
+      } catch (error) {
+        console.error('oxford lookup failed', error?.message);
+      }
       const trace = await recordVision(env, user, {
         ok: true, durationMs: Date.now() - startedAt, imageKb,
-        model: draft.model, items: draft.items.length, attempts: draft.attempts });
-      return json({ items: draft.items, model: draft.model, trace,
+        model: draft.model, items: items.length, attempts: draft.attempts,
+        verified: items.filter((i) => i.verified).length });
+      return json({ items, model: draft.model, trace,
                     quota: { remaining: quota.remaining } }, 200);
     } catch (error) {
       if (!(error instanceof GeminiError)) throw error;
