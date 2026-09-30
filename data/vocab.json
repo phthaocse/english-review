@@ -1,5 +1,5 @@
 {
- "generated": "2026-09-29 11:34",
+ "generated": "2026-09-30 12:51",
  "items": [
   {
    "id": "I'm not following",
@@ -38,6 +38,48 @@
      "html": "<p>Sorry, <strong>I'm not following</strong> — could you go back a step?</p>",
      "gaps": [
       "I'm not following"
+     ]
+    }
+   ],
+   "senses": []
+  },
+  {
+   "id": "abide by",
+   "term": "abide by",
+   "kind": "vocab",
+   "type": "phrasal-verb",
+   "vi": "tuân theo, chấp hành",
+   "cefr": "c2",
+   "added": "2026-09-30",
+   "session": "2026-09-30 City life: traffic, amenities and law",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/phrasal-verb",
+    "cefr/c2",
+    "theme/law"
+   ],
+   "notesHtml": "<p>Formal, and it always takes an object: you abide <strong>by</strong> a rule. <em>Abide</em> alone means to tolerate (<em>I can't abide him</em>) and is a different word in practice.</p>",
+   "seeAlso": [
+    "law-abiding",
+    "regulator"
+   ],
+   "ipa": "\"\"   # Oxford has no separate entry for this form",
+   "pos": [
+    "phrasal verb"
+   ],
+   "meaning": "to accept or act in accordance with a rule, decision, or recommendation",
+   "register": "neutral",
+   "pattern": "",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "Every driver must **abide by** the traffic rules to ensure safety.",
+     "text": "Every driver must abide by the traffic rules to ensure safety.",
+     "html": "<p>Every driver must <strong>abide by</strong> the traffic rules to ensure safety.</p>",
+     "gaps": [
+      "abide by"
      ]
     }
    ],
@@ -234,6 +276,44 @@
      "html": "<p>In <strong>aggregate</strong>, the change saved nothing.</p>",
      "gaps": [
       "aggregate"
+     ]
+    }
+   ],
+   "senses": []
+  },
+  {
+   "id": "amenity",
+   "term": "amenity",
+   "kind": "vocab",
+   "type": "word",
+   "vi": "tiện ích, tiện nghi",
+   "cefr": "# not in the Oxford 3000/5000",
+   "added": "2026-09-30",
+   "session": "2026-09-30 City life: traffic, amenities and law",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/word",
+    "theme/city"
+   ],
+   "notesHtml": "<p>Almost always plural in practice: <em>local amenities</em>, <em>basic amenities</em>. The singular reads oddly outside a list.</p>",
+   "seeAlso": [],
+   "ipa": "/əˈmiːnəti/",
+   "pos": [
+    "noun"
+   ],
+   "meaning": "a desirable or useful feature or facility of a building or place",
+   "register": "neutral",
+   "pattern": "",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "The modern apartment building offers every **amenity** you could want, including a pool and a gym.",
+     "text": "The modern apartment building offers every amenity you could want, including a pool and a gym.",
+     "html": "<p>The modern apartment building offers every <strong>amenity</strong> you could want, including a pool and a gym.</p>",
+     "gaps": [
+      "amenity"
      ]
     }
    ],
@@ -518,6 +598,88 @@
    "senses": []
   },
   {
+   "id": "asset",
+   "term": "asset",
+   "kind": "vocab",
+   "type": "word",
+   "vi": "tài sản, thế mạnh",
+   "cefr": "b2",
+   "added": "2026-09-30",
+   "session": "2026-09-30 City life: traffic, amenities and law",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/word",
+    "cefr/b2",
+    "theme/city"
+   ],
+   "notesHtml": "<p>Oxford itself contrasts the pair: *I'm not sure if his forcefulness is an asset or a liability.* Worth learning together - see <a class=\"xref\" data-term=\"liability\">liability</a>.</p>",
+   "seeAlso": [
+    "liability"
+   ],
+   "ipa": "/ˈæset/",
+   "pos": [
+    "noun"
+   ],
+   "meaning": "a useful or valuable quality, person, or thing",
+   "register": "neutral",
+   "pattern": "",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "A good public transport network is a major **asset** to any modern city.",
+     "text": "A good public transport network is a major asset to any modern city.",
+     "html": "<p>A good public transport network is a major <strong>asset</strong> to any modern city.</p>",
+     "gaps": [
+      "asset"
+     ]
+    }
+   ],
+   "senses": []
+  },
+  {
+   "id": "awareness of",
+   "term": "awareness of",
+   "kind": "vocab",
+   "type": "collocation",
+   "vi": "nhận thức về",
+   "cefr": "b2",
+   "added": "2026-09-30",
+   "session": "2026-09-30 City life: traffic, amenities and law",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/collocation",
+    "cefr/b2",
+    "theme/city"
+   ],
+   "notesHtml": "<p>Uncountable. <em>Raise awareness of</em>, <em>an awareness of</em> - but never <em>awarenesses</em>. The preposition is fixed: awareness <strong>of</strong>, not about.</p>",
+   "seeAlso": [
+    "negatively affect"
+   ],
+   "ipa": "/əˈweənəs/",
+   "pos": [
+    "collocation"
+   ],
+   "meaning": "knowledge or perception of a situation or fact",
+   "register": "neutral",
+   "pattern": "",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "We need to raise public **awareness of** environmental issues.",
+     "text": "We need to raise public awareness of environmental issues.",
+     "html": "<p>We need to raise public <strong>awareness of</strong> environmental issues.</p>",
+     "gaps": [
+      "awareness of"
+     ]
+    }
+   ],
+   "senses": []
+  },
+  {
    "id": "awe",
    "term": "awe",
    "kind": "vocab",
@@ -753,6 +915,48 @@
      "html": "<p>Sharding by customer keeps the <strong>blast radius</strong> small.</p>",
      "gaps": [
       "blast radius"
+     ]
+    }
+   ],
+   "senses": []
+  },
+  {
+   "id": "blocked",
+   "term": "blocked",
+   "kind": "vocab",
+   "type": "word",
+   "vi": "bị tắc nghẽn, bị chặn",
+   "cefr": "b1",
+   "added": "2026-09-30",
+   "session": "2026-09-30 City life: traffic, amenities and law",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/word",
+    "cefr/b1",
+    "theme/city"
+   ],
+   "notesHtml": "<p>Oxford has no headword <em>blocked</em> - it is the participle of <em>block</em>, so the IPA field is left empty rather than guessed. The level shown is the base verb's.</p><p>Vietnamese collapses a distinction English keeps: <em>tắc nghẽn</em> covers both. <strong>Blocked</strong> means something is in the way (an accident, a fallen tree); <strong>congested</strong> means there is simply too much of it. A road can be congested with nothing blocking it at all.</p>",
+   "seeAlso": [
+    "congested",
+    "congestion"
+   ],
+   "ipa": "\"\"   # Oxford has no separate entry for this form",
+   "pos": [
+    "adjective"
+   ],
+   "meaning": "obstructed so as to prevent flow or passage",
+   "register": "neutral",
+   "pattern": "",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "The roads are **blocked** due to a major traffic accident.",
+     "text": "The roads are blocked due to a major traffic accident.",
+     "html": "<p>The roads are <strong>blocked</strong> due to a major traffic accident.</p>",
+     "gaps": [
+      "blocked"
      ]
     }
    ],
@@ -1198,6 +1402,88 @@
      "html": "<p><strong>concentrated</strong> orange juice</p>",
      "gaps": [
       "concentrated"
+     ]
+    }
+   ],
+   "senses": []
+  },
+  {
+   "id": "congested",
+   "term": "congested",
+   "kind": "vocab",
+   "type": "word",
+   "vi": "bị tắc nghẽn giao thông",
+   "cefr": "# not in the Oxford 3000/5000",
+   "added": "2026-09-30",
+   "session": "2026-09-30 City life: traffic, amenities and law",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/word",
+    "theme/city"
+   ],
+   "notesHtml": "<p>Pairs with <em>heavily</em>, not <em>very</em>: <strong>heavily congested</strong>. See <a class=\"xref\" data-term=\"blocked\">blocked</a> for the <em>tắc nghẽn</em> trap - too much traffic is congested, an obstruction is blocked.</p>",
+   "seeAlso": [
+    "blocked",
+    "congestion"
+   ],
+   "ipa": "/kənˈdʒestɪd/",
+   "pos": [
+    "adjective"
+   ],
+   "meaning": "extremely crowded and blocked with traffic or people",
+   "register": "neutral",
+   "pattern": "",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "The highway becomes heavily **congested** during the morning rush hour.",
+     "text": "The highway becomes heavily congested during the morning rush hour.",
+     "html": "<p>The highway becomes heavily <strong>congested</strong> during the morning rush hour.</p>",
+     "gaps": [
+      "congested"
+     ]
+    }
+   ],
+   "senses": []
+  },
+  {
+   "id": "congestion",
+   "term": "congestion",
+   "kind": "vocab",
+   "type": "word",
+   "vi": "sự tắc nghẽn giao thông",
+   "cefr": "# not in the Oxford 3000/5000",
+   "added": "2026-09-30",
+   "session": "2026-09-30 City life: traffic, amenities and law",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/word",
+    "theme/city"
+   ],
+   "notesHtml": "<p>Uncountable. <em>Traffic congestion</em>, never <em>a congestion</em>. The medical sense (*nasal congestion*) is the same word and unrelated to traffic.</p>",
+   "seeAlso": [
+    "congested",
+    "blocked"
+   ],
+   "ipa": "/kənˈdʒestʃən/",
+   "pos": [
+    "noun"
+   ],
+   "meaning": "the state of being extremely crowded or blocked (especially traffic)",
+   "register": "neutral",
+   "pattern": "",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "What solutions does the regulator propose to resolve the **congestion** in HCMC?",
+     "text": "What solutions does the regulator propose to resolve the congestion in HCMC?",
+     "html": "<p>What solutions does the regulator propose to resolve the <strong>congestion</strong> in HCMC?</p>",
+     "gaps": [
+      "congestion"
      ]
     }
    ],
@@ -2772,6 +3058,49 @@
    "senses": []
   },
   {
+   "id": "fine",
+   "term": "fine",
+   "kind": "vocab",
+   "type": "word",
+   "vi": "tiền phạt / phạt tiền",
+   "cefr": "c1",
+   "added": "2026-09-30",
+   "session": "2026-09-30 City life: traffic, amenities and law",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/word",
+    "cefr/c1",
+    "theme/law"
+   ],
+   "notesHtml": "<p>One English word, two Vietnamese ones: the noun is <strong>tiền phạt</strong>, the verb is <strong>phạt tiền</strong>. <em>They fined me 500k</em> / <em>I got a 500k fine</em>. Unrelated to <em>fine</em> meaning good or acceptable, which is a separate Oxford entry.</p>",
+   "seeAlso": [
+    "vandalize",
+    "regulator"
+   ],
+   "ipa": "/faɪn/",
+   "pos": [
+    "noun",
+    "verb"
+   ],
+   "meaning": "a sum of money exacted as a penalty for an offense, or to punish someone by making them pay this",
+   "register": "neutral",
+   "pattern": "",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "If you park illegally, they will **fine** you.",
+     "text": "If you park illegally, they will fine you.",
+     "html": "<p>If you park illegally, they will <strong>fine</strong> you.</p>",
+     "gaps": [
+      "fine"
+     ]
+    }
+   ],
+   "senses": []
+  },
+  {
    "id": "first-order concern",
    "term": "a first-order concern / a second-order concern",
    "kind": "vocab",
@@ -3151,6 +3480,46 @@
      }
     }
    ]
+  },
+  {
+   "id": "go everywhere easily",
+   "term": "go everywhere easily",
+   "kind": "vocab",
+   "type": "collocation",
+   "vi": "đi lại khắp nơi một cách dễ dàng",
+   "cefr": "# not in the Oxford 3000/5000",
+   "added": "2026-09-30",
+   "session": "2026-09-30 City life: traffic, amenities and law",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/collocation",
+    "theme/city"
+   ],
+   "notesHtml": "<p>⚠️ This is your own phrasing, not an attested collocation - it parses, but it is not what a native speaker reaches for. The idiomatic verb is <strong>get around</strong>: *With good public transport you can get around easily.<em> Oxford has it at C1: </em>to move from place to place*.</p>",
+   "seeAlso": [
+    "with ease"
+   ],
+   "ipa": "\"\"   # Oxford has no separate entry for this form",
+   "pos": [
+    "collocation"
+   ],
+   "meaning": "to travel or move around to all places without difficulty",
+   "register": "neutral",
+   "pattern": "",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "With a good public transit system, you can **go everywhere easily**.",
+     "text": "With a good public transit system, you can go everywhere easily.",
+     "html": "<p>With a good public transit system, you can <strong>go everywhere easily</strong>.</p>",
+     "gaps": [
+      "go everywhere easily"
+     ]
+    }
+   ],
+   "senses": []
   },
   {
    "id": "go off on a tangent",
@@ -4106,6 +4475,46 @@
    "senses": []
   },
   {
+   "id": "law-abiding",
+   "term": "law-abiding",
+   "kind": "vocab",
+   "type": "word",
+   "vi": "tuân thủ pháp luật",
+   "cefr": "# not in the Oxford 3000/5000",
+   "added": "2026-09-30",
+   "session": "2026-09-30 City life: traffic, amenities and law",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/word",
+    "theme/law"
+   ],
+   "notesHtml": "<p>Hyphenated, and it sits before the noun: <em>law-abiding citizens</em>. Rarely used after <em>be</em>.</p>",
+   "seeAlso": [
+    "abide by"
+   ],
+   "ipa": "/ˈlɔː əbaɪdɪŋ/",
+   "pos": [
+    "adjective"
+   ],
+   "meaning": "obedient to the laws of society",
+   "register": "neutral",
+   "pattern": "",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "Most people are **law-abiding** citizens who respect the rules of the community.",
+     "text": "Most people are law-abiding citizens who respect the rules of the community.",
+     "html": "<p>Most people are <strong>law-abiding</strong> citizens who respect the rules of the community.</p>",
+     "gaps": [
+      "law-abiding"
+     ]
+    }
+   ],
+   "senses": []
+  },
+  {
    "id": "leapfrog",
    "term": "leapfrog",
    "kind": "vocab",
@@ -4198,6 +4607,46 @@
      "html": "<p>The government put a <strong>levy</strong> on oil imports.</p>",
      "gaps": [
       "levy"
+     ]
+    }
+   ],
+   "senses": []
+  },
+  {
+   "id": "liability",
+   "term": "liability",
+   "kind": "vocab",
+   "type": "word",
+   "vi": "gánh nặng, khoản nợ, nghĩa vụ pháp lý",
+   "cefr": "# not in the Oxford 3000/5000",
+   "added": "2026-09-30",
+   "session": "2026-09-30 City life: traffic, amenities and law",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/word",
+    "theme/city"
+   ],
+   "notesHtml": "<p>Two senses that share nothing in Vietnamese: the legal one is <strong>nghĩa vụ pháp lý</strong> (uncountable - <em>liability for damage</em>), the informal one is <strong>gánh nặng</strong> (countable - <em>he is a liability</em>). The example here is the second.</p>",
+   "seeAlso": [
+    "asset"
+   ],
+   "ipa": "/ˌlaɪəˈbɪləti/",
+   "pos": [
+    "noun"
+   ],
+   "meaning": "a person or thing whose presence or behavior is likely to cause embarrassment or disadvantage",
+   "register": "neutral",
+   "pattern": "",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "Without proper maintenance, these old facilities will become a **liability** for the city.",
+     "text": "Without proper maintenance, these old facilities will become a liability for the city.",
+     "html": "<p>Without proper maintenance, these old facilities will become a <strong>liability</strong> for the city.</p>",
+     "gaps": [
+      "liability"
      ]
     }
    ],
@@ -4905,6 +5354,44 @@
    "senses": []
   },
   {
+   "id": "negatively affect",
+   "term": "negatively affect",
+   "kind": "vocab",
+   "type": "collocation",
+   "vi": "ảnh hưởng tiêu cực",
+   "cefr": "# not in the Oxford 3000/5000",
+   "added": "2026-09-30",
+   "session": "2026-09-30 City life: traffic, amenities and law",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/collocation",
+    "theme/city"
+   ],
+   "notesHtml": "<p>⚠️ Understandable and used, but the standard collocation in this register is **adversely affect** - Oxford's own example is <em>Her health was adversely affected by the climate.</em> Also common: <em>have an adverse effect on</em>. Keep <em>negatively affect</em> for speech, use <em>adversely affect</em> in writing.</p>",
+   "seeAlso": [],
+   "ipa": "\"\"   # Oxford has no separate entry for this form",
+   "pos": [
+    "collocation"
+   ],
+   "meaning": "to have a bad or harmful influence on something",
+   "register": "neutral",
+   "pattern": "",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "Heavy traffic will **negatively affect** the environment in the city.",
+     "text": "Heavy traffic will negatively affect the environment in the city.",
+     "html": "<p>Heavy traffic will <strong>negatively affect</strong> the environment in the city.</p>",
+     "gaps": [
+      "negatively affect"
+     ]
+    }
+   ],
+   "senses": []
+  },
+  {
    "id": "odds-on favourite",
    "term": "the odds-on favourite",
    "kind": "vocab",
@@ -5604,6 +6091,86 @@
      "html": "<p>Usage <strong>rebounded</strong> within a month of the price cut.</p>",
      "gaps": [
       "rebounded"
+     ]
+    }
+   ],
+   "senses": []
+  },
+  {
+   "id": "recreational activity",
+   "term": "recreational activity",
+   "kind": "vocab",
+   "type": "collocation",
+   "vi": "hoạt động giải trí, vui chơi",
+   "cefr": "# not in the Oxford 3000/5000",
+   "added": "2026-09-30",
+   "session": "2026-09-30 City life: traffic, amenities and law",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/collocation",
+    "theme/city"
+   ],
+   "notesHtml": "<p><em>Recreational</em> is the adjective you want; <em>recreation</em> on its own more often means re-creation (making something again), a different word entirely.</p>",
+   "seeAlso": [],
+   "ipa": "/ˌrekriˈeɪʃənl/",
+   "pos": [
+    "collocation"
+   ],
+   "meaning": "an activity done for enjoyment or leisure when one is not working",
+   "register": "neutral",
+   "pattern": "",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "What **recreational activities** should be encouraged for teenagers in the city?",
+     "text": "What recreational activities should be encouraged for teenagers in the city?",
+     "html": "<p>What <strong>recreational activities</strong> should be encouraged for teenagers in the city?</p>",
+     "gaps": [
+      "recreational activities"
+     ]
+    }
+   ],
+   "senses": []
+  },
+  {
+   "id": "regulator",
+   "term": "regulator",
+   "kind": "vocab",
+   "type": "word",
+   "vi": "nhà quản lý, cơ quan quản lý",
+   "cefr": "c1",
+   "added": "2026-09-30",
+   "session": "2026-09-30 City life: traffic, amenities and law",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/word",
+    "cefr/c1",
+    "theme/city"
+   ],
+   "notesHtml": "<p>Two senses: the body that polices an industry (this one), and a device controlling pressure or temperature. Context separates them cleanly.</p>",
+   "seeAlso": [
+    "fine",
+    "abide by"
+   ],
+   "ipa": "/ˈreɡjuleɪtə(r)/",
+   "pos": [
+    "noun"
+   ],
+   "meaning": "a person or official body that supervises a particular industry or public activity",
+   "register": "neutral",
+   "pattern": "",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "What solutions does the **regulator** propose to resolve the traffic issues?",
+     "text": "What solutions does the regulator propose to resolve the traffic issues?",
+     "html": "<p>What solutions does the <strong>regulator</strong> propose to resolve the traffic issues?</p>",
+     "gaps": [
+      "regulator"
      ]
     }
    ],
@@ -7154,6 +7721,45 @@
    "senses": []
   },
   {
+   "id": "surveillance",
+   "term": "surveillance",
+   "kind": "vocab",
+   "type": "word",
+   "vi": "sự giám sát, sự theo dõi",
+   "cefr": "c1",
+   "added": "2026-09-30",
+   "session": "2026-09-30 City life: traffic, amenities and law",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/word",
+    "cefr/c1",
+    "theme/law"
+   ],
+   "notesHtml": "<p>Uncountable. The set phrase is <strong>under surveillance</strong>: *the street is under constant surveillance*.</p>",
+   "seeAlso": [],
+   "ipa": "/sɜːˈveɪləns/",
+   "pos": [
+    "noun"
+   ],
+   "meaning": "close observation or monitoring, especially via security cameras",
+   "register": "neutral",
+   "pattern": "",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "Many public streets in big cities are under constant camera **surveillance**.",
+     "text": "Many public streets in big cities are under constant camera surveillance.",
+     "html": "<p>Many public streets in big cities are under constant camera <strong>surveillance</strong>.</p>",
+     "gaps": [
+      "surveillance"
+     ]
+    }
+   ],
+   "senses": []
+  },
+  {
    "id": "susceptible",
    "term": "susceptible",
    "kind": "vocab",
@@ -7197,6 +7803,44 @@
      "html": "<p>Some of these plants are more <strong>susceptible</strong> to frost damage than others.</p>",
      "gaps": [
       "susceptible"
+     ]
+    }
+   ],
+   "senses": []
+  },
+  {
+   "id": "suture",
+   "term": "suture",
+   "kind": "vocab",
+   "type": "word",
+   "vi": "mũi khâu, vết khâu",
+   "cefr": "# not in the Oxford 3000/5000",
+   "added": "2026-09-30",
+   "session": "2026-09-30 City life: traffic, amenities and law",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/word",
+    "theme/medical"
+   ],
+   "notesHtml": "<p>Medical register. In everyday speech the word is <strong>stitches</strong>: <em>I had three stitches</em>, not <em>three sutures</em>.</p>",
+   "seeAlso": [],
+   "ipa": "/ˈsuːtʃə(r)/",
+   "pos": [
+    "noun"
+   ],
+   "meaning": "a stitch or row of stitches holding together the edges of a wound or surgical incision",
+   "register": "neutral",
+   "pattern": "",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "The doctor had to put a **suture** in my finger to close the deep cut.",
+     "text": "The doctor had to put a suture in my finger to close the deep cut.",
+     "html": "<p>The doctor had to put a <strong>suture</strong> in my finger to close the deep cut.</p>",
+     "gaps": [
+      "suture"
      ]
     }
    ],
@@ -7827,6 +8471,89 @@
    "senses": []
   },
   {
+   "id": "vandal",
+   "term": "vandal",
+   "kind": "vocab",
+   "type": "word",
+   "vi": "kẻ phá hoại của công",
+   "cefr": "b2",
+   "added": "2026-09-30",
+   "session": "2026-09-30 City life: traffic, amenities and law",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/word",
+    "cefr/b2",
+    "theme/law"
+   ],
+   "notesHtml": "<p>Countable. The act is <em>vandalism</em> (uncountable), the person is a <em>vandal</em>, the verb is <a class=\"xref\" data-term=\"vandalize\">vandalize</a>.</p>",
+   "seeAlso": [
+    "vandalize"
+   ],
+   "ipa": "/ˈvændl/",
+   "pos": [
+    "noun"
+   ],
+   "meaning": "a person who deliberately destroys or damages property",
+   "register": "neutral",
+   "pattern": "",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "The police are looking for the **vandal** who smashed the bus stop window.",
+     "text": "The police are looking for the vandal who smashed the bus stop window.",
+     "html": "<p>The police are looking for the <strong>vandal</strong> who smashed the bus stop window.</p>",
+     "gaps": [
+      "vandal"
+     ]
+    }
+   ],
+   "senses": []
+  },
+  {
+   "id": "vandalize",
+   "term": "vandalize",
+   "kind": "vocab",
+   "type": "word",
+   "vi": "phá hoại của công",
+   "cefr": "c1",
+   "added": "2026-09-30",
+   "session": "2026-09-30 City life: traffic, amenities and law",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/word",
+    "cefr/c1",
+    "theme/law"
+   ],
+   "notesHtml": "<p>British spelling <em>vandalise</em> is equally correct; Oxford lists both. Keep one and be consistent.</p>",
+   "seeAlso": [
+    "vandal",
+    "fine"
+   ],
+   "ipa": "/ˈvændəlaɪz/",
+   "pos": [
+    "verb"
+   ],
+   "meaning": "deliberately destroy or damage public or private property",
+   "register": "neutral",
+   "pattern": "",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "It is illegal to **vandalize** public property with graffiti.",
+     "text": "It is illegal to vandalize public property with graffiti.",
+     "html": "<p>It is illegal to <strong>vandalize</strong> public property with graffiti.</p>",
+     "gaps": [
+      "vandalize"
+     ]
+    }
+   ],
+   "senses": []
+  },
+  {
    "id": "wager",
    "term": "wager",
    "kind": "vocab",
@@ -8104,6 +8831,47 @@
      "html": "<p>That's not quite <strong>what I was after</strong> — I meant the p99, not the average.</p>",
      "gaps": [
       "what I was after"
+     ]
+    }
+   ],
+   "senses": []
+  },
+  {
+   "id": "with ease",
+   "term": "with ease",
+   "kind": "vocab",
+   "type": "idiom",
+   "vi": "một cách dễ dàng",
+   "cefr": "c1",
+   "added": "2026-09-30",
+   "session": "2026-09-30 City life: traffic, amenities and law",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/idiom",
+    "cefr/c1",
+    "theme/city"
+   ],
+   "notesHtml": "<p>Oxford lists it as a phrase under <em>ease</em>: <em>He passed the exam with ease.</em> More formal than <em>easily</em>, and it goes at the end of the clause.</p>",
+   "seeAlso": [
+    "go everywhere easily"
+   ],
+   "ipa": "/iːz/",
+   "pos": [
+    "idiom"
+   ],
+   "meaning": "without difficulty or effort",
+   "register": "neutral",
+   "pattern": "",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "He passed the driving test **with ease**.",
+     "text": "He passed the driving test with ease.",
+     "html": "<p>He passed the driving test <strong>with ease</strong>.</p>",
+     "gaps": [
+      "with ease"
      ]
     }
    ],
@@ -9402,6 +10170,12 @@
    "date": "2026-09-29",
    "theme": "How single malt whisky is made",
    "itemCount": "24"
+  },
+  {
+   "id": "2026-09-30 City life: traffic, amenities and law",
+   "date": "2026-09-30",
+   "theme": "City life — traffic, amenities, and law and order",
+   "itemCount": "19"
   }
  ]
 }
