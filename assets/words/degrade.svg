@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="The same bar drawn three times down the frame, crisp and solid at the top, then chipped and paler, then ragged and holed at the bottom, with a grey arrow running down the side">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <!-- the arrow that says these are one thing over time, not three things -->
+  <path d="M22 50 V194" stroke="#7b8399" stroke-width="6" stroke-linecap="round"/>
+  <polygon points="22,210 13,192 31,192" fill="#7b8399"/>
+  <!-- as it started: clean edges, full colour -->
+  <rect x="44" y="46" width="244" height="34" rx="3" fill="#4f46e5"/>
+  <!-- after a while: edges gone rough, colour washed out -->
+  <path d="M44 112 L74 109 L104 113 L134 108 L164 114 L194 109 L224 113 L254 110 L288 113 L287 142 L254 145 L224 141 L194 146 L164 141 L134 145 L104 142 L74 146 L45 142 Z" fill="#8b85ee"/>
+  <!-- later still: badly eaten away and paler again -->
+  <path d="M44 178 L62 170 L80 180 L100 168 L120 182 L140 172 L160 184 L180 170 L200 182 L220 172 L242 184 L262 172 L288 180 L284 206 L262 212 L240 202 L218 214 L196 202 L174 212 L152 200 L130 212 L108 202 L86 212 L64 202 L46 210 Z" fill="#c4c1f5"/>
+  <!-- holes right through it -->
+  <g fill="#eef0f5">
+    <circle cx="122" cy="192" r="8"/>
+    <circle cx="204" cy="190" r="6"/>
+    <circle cx="252" cy="196" r="5"/>
+  </g>
+</svg>

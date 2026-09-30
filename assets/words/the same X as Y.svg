@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="Two identical shapes with an equals sign between them, each one sitting above its own small label box">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <!-- the first thing -->
+  <polygon points="72,36 108,62 94,106 50,106 36,62" fill="#4f46e5" stroke="#2e2896" stroke-width="5" stroke-linejoin="round"/>
+  <!-- the second thing, drawn exactly the same -->
+  <polygon points="248,36 284,62 270,106 226,106 212,62" fill="#4f46e5" stroke="#2e2896" stroke-width="5" stroke-linejoin="round"/>
+  <!-- what the frame asserts about them -->
+  <g fill="#7b8399">
+    <rect x="134" y="58" width="52" height="14" rx="7"/>
+    <rect x="134" y="84" width="52" height="14" rx="7"/>
+  </g>
+  <!-- each one carries its own name -->
+  <rect x="22" y="150" width="100" height="56" rx="10" fill="#ffffff" stroke="#9aa2b4" stroke-width="3"/>
+  <g fill="#9aa2b4">
+    <rect x="36" y="166" width="72" height="9" rx="4"/><rect x="36" y="184" width="48" height="9" rx="4"/>
+  </g>
+  <rect x="198" y="150" width="100" height="56" rx="10" fill="#ffffff" stroke="#9aa2b4" stroke-width="3"/>
+  <g fill="#9aa2b4">
+    <rect x="212" y="166" width="72" height="9" rx="4"/><rect x="212" y="184" width="48" height="9" rx="4"/>
+  </g>
+  <!-- and each name belongs to the shape above it -->
+  <g stroke="#9aa2b4" stroke-width="3" stroke-dasharray="6 6">
+    <path d="M72 108 V150"/><path d="M248 108 V150"/>
+  </g>
+</svg>

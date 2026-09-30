@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="An open book whose right-hand page pictures the runner who had been trailing well behind the field breasting the finish line first">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <defs>
+    <!-- one running figure, reused for all three -->
+    <g id="run">
+      <circle cx="7" cy="5" r="5"/>
+      <g fill="none" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M6 11 L3 22"/>
+        <path d="M5 14 L14 10"/>
+        <path d="M5 14 L-3 18"/>
+        <path d="M3 22 L11 28 L9 35"/>
+        <path d="M3 22 L-5 27 L-2 35"/>
+      </g>
+    </g>
+  </defs>
+  <!-- the book, open at the last page -->
+  <path d="M22 198 L22 110 Q70 96 120 120 L120 212 Q70 190 22 198 Z"
+        fill="#ffffff" stroke="#7b8399" stroke-width="3"/>
+  <path d="M300 196 L300 100 Q214 84 120 120 L120 212 Q214 180 300 196 Z"
+        fill="#ffffff" stroke="#7b8399" stroke-width="3"/>
+  <path d="M120 120 L120 212" stroke="#7b8399" stroke-width="4"/>
+  <!-- the story being told, on the left page -->
+  <g stroke="#9aa2b4" stroke-width="5" stroke-linecap="round">
+    <path d="M38 142 L106 136"/><path d="M38 158 L106 152"/>
+    <path d="M38 174 L106 168"/><path d="M38 190 L92 184"/>
+  </g>
+  <!-- the finish, pictured on the right page -->
+  <path d="M266 118 L266 194" stroke="#c0392f" stroke-width="5" stroke-linecap="round"/>
+  <g fill="#9aa2b4" stroke="#9aa2b4">
+    <use href="#run" transform="translate(148 128) scale(1.4)"/>
+    <use href="#run" transform="translate(182 140) scale(1.4)"/>
+  </g>
+  <!-- the one nobody backed, over the line ahead of them -->
+  <g fill="#4f46e5" stroke="#4f46e5">
+    <use href="#run" transform="translate(236 132) scale(1.4)"/>
+  </g>
+</svg>

@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="A fist gripping a whole handful of rods with the arm running down out of the frame, a dashed line drawn over and around the grip and not one rod outside it">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <!-- the line nothing has got past -->
+  <path d="M68 232 L68 96 Q68 28 160 28 Q252 28 252 96 L252 232"
+        fill="none" stroke="#9aa2b4" stroke-width="3" stroke-dasharray="9 8"/>
+  <!-- the handful being held, every one of it still there -->
+  <g stroke="#a8841c" stroke-width="20" stroke-linecap="round">
+    <path d="M116 120 L102 52"/><path d="M146 120 L140 44"/>
+    <path d="M176 120 L182 46"/><path d="M206 120 L218 56"/>
+  </g>
+  <g stroke="#e0b73a" stroke-width="13" stroke-linecap="round">
+    <path d="M116 120 L102 52"/><path d="M146 120 L140 44"/>
+    <path d="M176 120 L182 46"/><path d="M206 120 L218 56"/>
+  </g>
+  <!-- the arm, running down out of the picture -->
+  <rect x="134" y="186" width="52" height="54" fill="#3730a3"/>
+  <!-- the fist, shut round the lot of them -->
+  <rect x="88" y="112" width="144" height="84" rx="28" fill="#4f46e5"/>
+  <g stroke="#3730a3" stroke-width="5" stroke-linecap="round">
+    <path d="M104 138 L216 138"/><path d="M104 160 L216 160"/><path d="M104 182 L216 182"/>
+  </g>
+  <!-- the thumb across the front, closing the grip -->
+  <rect x="80" y="142" width="122" height="34" rx="17" fill="#3730a3"
+        transform="rotate(10 141 159)"/>
+  <rect x="84" y="146" width="114" height="26" rx="13" fill="#6f68ea"
+        transform="rotate(10 141 159)"/>
+  <!-- the cuff at the wrist -->
+  <rect x="126" y="196" width="68" height="14" rx="5" fill="#7b8399"/>
+</svg>

@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="A red line falling steeply until a large open hand takes it on its fingertips, after which it runs level in green instead of carrying on down the faint dashed path">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <!-- where it was heading before anyone stepped in -->
+  <path d="M150 150 L250 234" fill="none" stroke="#c0392f" stroke-width="6" stroke-dasharray="11 10" opacity=".45"/>
+  <!-- the fall -->
+  <path d="M16 38 L150 150" fill="none" stroke="#c0392f" stroke-width="11" stroke-linecap="round"/>
+  <!-- the hand that takes it, fingers spread under the line -->
+  <g fill="#4f46e5">
+    <rect x="100" y="168" width="18" height="42" rx="9"/>
+    <rect x="122" y="160" width="18" height="50" rx="9"/>
+    <rect x="144" y="156" width="18" height="54" rx="9"/>
+    <rect x="166" y="166" width="17" height="44" rx="9"/>
+    <rect x="70" y="180" width="40" height="20" rx="10" transform="rotate(-34 90 190)"/>
+    <rect x="92" y="188" width="100" height="52" rx="22"/>
+  </g>
+  <!-- and what happens to the line once it is held -->
+  <path d="M148 150 H302" fill="none" stroke="#2f6b4f" stroke-width="11" stroke-linecap="round"/>
+</svg>

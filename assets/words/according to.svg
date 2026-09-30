@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="A speech bubble whose long tail reaches away from the person speaking and points down into an open book instead">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <!-- what is being said, with its tail running left and down to the source -->
+  <path d="M112 22 h176 a16 16 0 0 1 16 16 v72 a16 16 0 0 1 -16 16 h-140 l-58 52 l28 -52 h-6
+           a16 16 0 0 1 -16 -16 v-72 a16 16 0 0 1 16 -16 z"
+        fill="#ffffff" stroke="#4f46e5" stroke-width="4" stroke-linejoin="round"/>
+  <g stroke="#9aa2b4" stroke-width="9" stroke-linecap="round">
+    <path d="M132 58 H278"/><path d="M132 84 H250"/>
+  </g>
+  <!-- the open book the claim is taken from: where the tail lands -->
+  <path d="M14 194 L76 180 L76 224 L14 232 Z" fill="#ffffff" stroke="#7b8399" stroke-width="3"/>
+  <path d="M138 194 L76 180 L76 224 L138 232 Z" fill="#ffffff" stroke="#7b8399" stroke-width="3"/>
+  <path d="M14 194 L76 180 L138 194 L76 208 Z" fill="#c9a227"/>
+  <!-- the speaker, who is only passing the claim on: no tail comes to them -->
+  <g fill="#9aa2b4">
+    <circle cx="258" cy="166" r="22"/>
+    <path d="M220 232 a38 38 0 0 1 76 0 z"/>
+  </g>
+</svg>

@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="A large block holding a noun with a small suffix tile clipped onto its right-hand end, the joined pair sitting at a casual tilt">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <!-- the whole joined word, tilted because the result is an informal one -->
+  <g transform="rotate(-8 160 122)">
+    <!-- the noun the suffix is being stuck onto -->
+    <rect x="34" y="92" width="150" height="60" rx="10" fill="#4f46e5"/>
+    <text x="109" y="134" text-anchor="middle" font-family="Helvetica, Arial, sans-serif"
+          font-size="32" font-weight="700" fill="#ffffff">cost</text>
+    <!-- the tab that lets the two clip together -->
+    <rect x="182" y="110" width="20" height="24" rx="4" fill="#4f46e5"/>
+    <!-- the suffix tile, snapping on at the end -->
+    <rect x="196" y="96" width="98" height="52" rx="9" fill="#e0b73a"
+          stroke="#a8841c" stroke-width="4"/>
+    <text x="245" y="132" text-anchor="middle" font-family="Helvetica, Arial, sans-serif"
+          font-size="27" font-weight="700" fill="#6b5410">-wise</text>
+  </g>
+</svg>

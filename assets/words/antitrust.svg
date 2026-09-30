@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="Three company buildings chained to one another, with a heavy red bar driven down through the chain on the right so that its links have sprung open into two loose ends">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <!-- the three companies, standing on one street -->
+  <g fill="#4f46e5">
+    <rect x="14" y="120" width="68" height="92" rx="4"/>
+    <rect x="126" y="100" width="68" height="112" rx="4"/>
+    <rect x="238" y="130" width="68" height="82" rx="4"/>
+  </g>
+  <!-- windows, so the blocks read as buildings -->
+  <g fill="#eef0f5">
+    <rect x="26" y="132" width="17" height="19"/><rect x="53" y="132" width="17" height="19"/>
+    <rect x="26" y="184" width="17" height="19"/><rect x="53" y="184" width="17" height="19"/>
+    <rect x="138" y="112" width="17" height="19"/><rect x="165" y="112" width="17" height="19"/>
+    <rect x="138" y="184" width="17" height="19"/><rect x="165" y="184" width="17" height="19"/>
+    <rect x="250" y="142" width="17" height="19"/><rect x="277" y="142" width="17" height="19"/>
+    <rect x="250" y="184" width="17" height="19"/><rect x="277" y="184" width="17" height="19"/>
+  </g>
+  <!-- the chain that ties them into one bloc, still interlocked on the left -->
+  <g fill="none" stroke="#7b8399" stroke-width="8">
+    <ellipse cx="88" cy="160" rx="14" ry="11"/>
+    <ellipse cx="104" cy="160" rx="14" ry="11"/>
+    <ellipse cx="120" cy="160" rx="14" ry="11"/>
+  </g>
+  <!-- the same chain on the right, snapped: two open ends sprung apart -->
+  <g fill="none" stroke-linecap="round">
+    <g stroke="#eef0f5" stroke-width="20">
+      <path d="M198 178 A15 12 0 1 0 198 202"/>
+      <path d="M240 122 A15 12 0 1 1 240 146"/>
+    </g>
+    <g stroke="#7b8399" stroke-width="8">
+      <path d="M198 178 A15 12 0 1 0 198 202"/>
+      <path d="M240 122 A15 12 0 1 1 240 146"/>
+    </g>
+  </g>
+  <!-- the law, driven straight down through the link -->
+  <path d="M252 76 L192 228" stroke="#c0392f" stroke-width="22" stroke-linecap="round"/>
+  <!-- the street they all stand on -->
+  <path d="M0 212 H320" stroke="#7b8399" stroke-width="7"/>
+</svg>

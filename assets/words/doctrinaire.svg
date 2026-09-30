@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="A blinkered figure marching along a perfectly straight rail while the facts, drawn as red dots, lie scattered off to either side of it">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <!-- the facts, lying wherever they happen to fall -->
+  <g fill="#c0392f">
+    <circle cx="28" cy="58" r="8"/><circle cx="64" cy="102" r="7"/><circle cx="102" cy="44" r="9"/>
+    <circle cx="124" cy="26" r="6"/><circle cx="200" cy="34" r="8"/><circle cx="228" cy="62" r="7"/>
+    <circle cx="266" cy="96" r="9"/><circle cx="300" cy="46" r="7"/>
+    <circle cx="34" cy="216" r="8"/><circle cx="88" cy="222" r="7"/><circle cx="236" cy="214" r="9"/>
+    <circle cx="288" cy="222" r="7"/><circle cx="148" cy="228" r="6"/>
+  </g>
+  <!-- the rail: dead straight, whatever is lying beside it -->
+  <rect x="0" y="172" width="320" height="11" fill="#7b8399"/>
+  <g fill="#9aa2b4">
+    <rect x="18" y="183" width="12" height="18"/><rect x="88" y="183" width="12" height="18"/>
+    <rect x="218" y="183" width="12" height="18"/><rect x="288" y="183" width="12" height="18"/>
+  </g>
+  <!-- the figure walking it, arms down, seeing none of them -->
+  <g stroke="#4f46e5" stroke-width="13" stroke-linecap="round" fill="none">
+    <path d="M160 104 L160 142"/>
+    <path d="M160 142 L149 172"/>
+    <path d="M160 142 L171 172"/>
+    <path d="M160 112 L146 142"/>
+    <path d="M160 112 L174 142"/>
+  </g>
+  <circle cx="160" cy="86" r="16" fill="#4f46e5"/>
+  <!-- the blinkers over its eyes -->
+  <rect x="143" y="82" width="34" height="9" rx="2" fill="#9aa2b4"/>
+</svg>

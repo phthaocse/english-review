@@ -391,7 +391,9 @@ s = await B.evaluate(`
 `);
 ok('the drawings index reached the page', s.count > 0, `${s.count} drawings`);
 ok('the front does not show the picture', s.hiddenUpFront);
-eq('  the back shows the one filed under the word id', s.src, 'assets/words/' + s.drawn + '.svg');
+// A filename with spaces has to be encoded in the attribute, so compare encoded.
+eq('  the back shows the one filed under the word id', s.src,
+   'assets/words/' + encodeURIComponent(s.drawn) + '.svg');
 ok('  the file actually loads', s.loaded, s.src);
 ok('  and it carries a description, not the bare term', (s.alt || '').length > (s.drawn || '').length, s.alt);
 

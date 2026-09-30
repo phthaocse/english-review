@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="Six small panels for six senses: an alarm clock ringing, milk turned sour, a bomb with a lit fuse, a bulb switched off at the wall, a person walking away, and a gun firing">
+  <rect width="320" height="240" fill="#eef0f5"/>
+
+  <!-- panel one: the alarm sounding -->
+  <g>
+    <circle cx="32" cy="30" r="11" fill="#7b8399"/><circle cx="74" cy="30" r="11" fill="#7b8399"/>
+    <circle cx="53" cy="64" r="30" fill="#ffffff" stroke="#4f46e5" stroke-width="5"/>
+    <g stroke="#4f46e5" stroke-width="4" stroke-linecap="round">
+      <path d="M53 64 L53 46"/><path d="M53 64 L68 70"/>
+      <path d="M36 98 L30 108"/><path d="M70 98 L76 108"/>
+    </g>
+    <g fill="none" stroke="#c0392f" stroke-width="4" stroke-linecap="round">
+      <path d="M14 48 q-8 17 0 34"/><path d="M4 40 q-11 25 0 50"/>
+      <path d="M92 48 q8 17 0 34"/><path d="M102 40 q11 25 0 50"/>
+    </g>
+  </g>
+
+  <!-- panel two: the milk turned -->
+  <g>
+    <path d="M142 46 L160 28 L178 46 L178 98 L142 98 Z" fill="#ffffff" stroke="#7b8399" stroke-width="4" stroke-linejoin="round"/>
+    <path d="M142 68 L178 68 L178 98 L142 98 Z" fill="#e0b73a"/>
+    <g fill="#a8841c">
+      <circle cx="152" cy="82" r="6"/><circle cx="167" cy="88" r="7"/><circle cx="172" cy="74" r="5"/>
+    </g>
+    <g fill="none" stroke="#7b8399" stroke-width="4" stroke-linecap="round">
+      <path d="M150 24 q-7 -8 0 -13 q7 -6 0 -13"/>
+      <path d="M172 24 q7 -8 0 -13 q-7 -6 0 -13"/>
+    </g>
+  </g>
+
+  <!-- panel three: the bomb about to blow -->
+  <g>
+    <circle cx="262" cy="78" r="28" fill="#4f46e5"/>
+    <rect x="253" y="42" width="18" height="14" rx="3" fill="#7b8399"/>
+    <path d="M262 42 q16 -14 28 -4" fill="none" stroke="#7b8399" stroke-width="5" stroke-linecap="round"/>
+    <polygon points="292,22 298,34 310,30 302,41 312,48 299,50 300,62 290,53 281,60 283,48 272,44 284,38" fill="#c0392f"/>
+  </g>
+
+  <!-- panel four: the light gone out, switched off at the wall -->
+  <g>
+    <circle cx="48" cy="166" r="26" fill="#9aa2b4" stroke="#7b8399" stroke-width="3"/>
+    <rect x="38" y="190" width="20" height="14" rx="3" fill="#7b8399"/>
+    <rect x="41" y="204" width="14" height="6" rx="3" fill="#7b8399"/>
+    <g stroke="#9aa2b4" stroke-width="4" stroke-linecap="round" opacity="0.6">
+      <path d="M48 128 L48 136"/><path d="M16 152 L24 155"/><path d="M14 186 L23 182"/>
+      <path d="M78 136 L72 142"/><path d="M20 134 L26 140"/>
+    </g>
+    <rect x="86" y="160" width="18" height="30" rx="4" fill="#ffffff" stroke="#7b8399" stroke-width="3"/>
+    <rect x="89" y="176" width="12" height="11" rx="3" fill="#7b8399"/>
+  </g>
+
+  <!-- panel five: walking off and away -->
+  <g>
+    <circle cx="166" cy="148" r="13" fill="#4f46e5"/>
+    <g stroke="#4f46e5" stroke-width="12" stroke-linecap="round" fill="none">
+      <path d="M166 164 L164 192"/>
+      <path d="M164 192 L152 216"/>
+      <path d="M164 192 L180 214"/>
+      <path d="M166 170 L178 186"/>
+    </g>
+    <g stroke="#9aa2b4" stroke-width="4" stroke-linecap="round">
+      <path d="M118 164 L138 164"/><path d="M114 180 L134 180"/><path d="M120 196 L138 196"/>
+    </g>
+    <path d="M116 222 L206 222" stroke="#7b8399" stroke-width="4"/>
+  </g>
+
+  <!-- panel six: the gun fired -->
+  <g>
+    <rect x="234" y="166" width="54" height="17" rx="3" fill="#7b8399"/>
+    <polygon points="270,182 288,182 298,214 280,214" fill="#7b8399"/>
+    <path d="M262 184 q8 12 20 10" fill="none" stroke="#7b8399" stroke-width="5"/>
+    <polygon points="230,158 236,170 224,166 230,176 216,174 224,184 212,186 224,192 214,200 228,198 226,210 236,198 240,208 242,190 232,174" fill="#c0392f"/>
+  </g>
+
+  <!-- the rules dividing the six -->
+  <g stroke="#9aa2b4" stroke-width="2">
+    <path d="M107 6 L107 234"/><path d="M213 6 L213 234"/><path d="M8 120 L312 120"/>
+  </g>
+</svg>

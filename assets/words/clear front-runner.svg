@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="Three runners on a track with the leader so far out in front that the empty stretch back to the chasing pair is measured off by a long dashed bar">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <!-- the track they are all on -->
+  <path d="M0 196 L320 196" stroke="#7b8399" stroke-width="5"/>
+  <!-- the chasing pair, greyed out because nobody is watching them -->
+  <g transform="translate(30,196) scale(0.9)">
+    <g stroke="#9aa2b4" stroke-width="11" stroke-linecap="round" stroke-linejoin="round" fill="none">
+      <path d="M4 -64 L-4 -32"/><path d="M2 -60 L22 -48"/><path d="M2 -60 L-18 -50"/>
+      <path d="M-4 -32 L16 -18 L22 0"/><path d="M-4 -32 L-22 -20 L-28 -2"/>
+    </g>
+    <circle cx="8" cy="-78" r="13" fill="#9aa2b4"/>
+  </g>
+  <g transform="translate(94,196) scale(0.9)">
+    <g stroke="#7b8399" stroke-width="11" stroke-linecap="round" stroke-linejoin="round" fill="none">
+      <path d="M4 -64 L-4 -32"/><path d="M2 -60 L22 -48"/><path d="M2 -60 L-18 -50"/>
+      <path d="M-4 -32 L16 -18 L22 0"/><path d="M-4 -32 L-22 -20 L-28 -2"/>
+    </g>
+    <circle cx="8" cy="-78" r="13" fill="#7b8399"/>
+  </g>
+  <!-- the one out in front, drawn as the subject -->
+  <g transform="translate(264,196)">
+    <g stroke="#4f46e5" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" fill="none">
+      <path d="M4 -68 L-4 -32"/><path d="M2 -64 L26 -50"/><path d="M2 -64 L-22 -54"/>
+      <path d="M-4 -32 L20 -18 L28 0"/><path d="M-4 -32 L-26 -20 L-34 -2"/>
+    </g>
+    <circle cx="8" cy="-82" r="15" fill="#4f46e5"/>
+  </g>
+  <!-- the gap itself, measured off: the whole point of the phrase -->
+  <g stroke="#c0392f" stroke-width="5" stroke-linecap="round">
+    <path d="M136 222 L212 222" stroke-dasharray="12 10"/>
+    <path d="M124 202 L124 240"/>
+    <path d="M224 202 L224 240"/>
+  </g>
+  <polygon points="142,210 124,222 142,234" fill="#c0392f"/>
+  <polygon points="206,210 224,222 206,234" fill="#c0392f"/>
+</svg>

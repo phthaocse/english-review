@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="A stack of prepositions joined by a plus sign to two verb slots, the -ing form ticked in green and the bare form crossed out in red">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <!-- the box of prepositions: whichever one comes first, the rule is the same -->
+  <rect x="12" y="62" width="104" height="116" rx="12" fill="#7b8399"/>
+  <g font-family="Helvetica, Arial, sans-serif" font-size="24" font-weight="700" text-anchor="middle">
+    <rect x="22" y="72" width="84" height="30" rx="6" fill="#ffffff"/>
+    <text x="64" y="95" fill="#4f46e5">in</text>
+    <rect x="22" y="106" width="84" height="30" rx="6" fill="#ffffff"/>
+    <text x="64" y="129" fill="#4f46e5">on</text>
+    <rect x="22" y="140" width="84" height="30" rx="6" fill="#ffffff"/>
+    <text x="64" y="163" fill="#4f46e5">after</text>
+  </g>
+  <!-- the plus that joins a preposition to whatever verb follows -->
+  <g fill="#7b8399">
+    <rect x="124" y="114" width="26" height="10" rx="5"/>
+    <rect x="132" y="106" width="10" height="26" rx="5"/>
+  </g>
+  <!-- the two branches the verb could take -->
+  <g stroke="#9aa2b4" stroke-width="5" fill="none" stroke-linecap="round">
+    <path d="M152 112 C172 112, 168 76, 186 76"/>
+    <path d="M152 126 C172 126, 168 164, 186 164"/>
+  </g>
+  <!-- the form English requires after a preposition -->
+  <rect x="160" y="46" width="112" height="58" rx="10" fill="#ffffff" stroke="#2f6b4f" stroke-width="4"/>
+  <text x="216" y="86" text-anchor="middle" font-family="Helvetica, Arial, sans-serif"
+        font-size="30" font-weight="700" fill="#2f6b4f">going</text>
+  <path d="M282 72 l10 12 l22 -28" fill="none" stroke="#2f6b4f" stroke-width="9"
+        stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- the bare form, which is the mistake being drilled out -->
+  <rect x="160" y="136" width="112" height="58" rx="10" fill="#ffffff" stroke="#c0392f" stroke-width="4"/>
+  <text x="216" y="176" text-anchor="middle" font-family="Helvetica, Arial, sans-serif"
+        font-size="30" font-weight="700" fill="#c0392f">go</text>
+  <g stroke="#c0392f" stroke-width="9" stroke-linecap="round">
+    <path d="M284 150 L312 180"/><path d="M312 150 L284 180"/>
+  </g>
+</svg>

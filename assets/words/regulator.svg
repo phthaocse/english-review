@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="An official sitting at a desk with a rule book in hand, keeping watch over two company buildings across from them">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <!-- the two companies being supervised -->
+  <g fill="#9aa2b4" stroke="#7b8399" stroke-width="3">
+    <rect x="186" y="112" width="54" height="106"/>
+    <rect x="252" y="88" width="58" height="130"/>
+  </g>
+  <g fill="#ffffff">
+    <rect x="196" y="124" width="13" height="16"/><rect x="217" y="124" width="13" height="16"/>
+    <rect x="196" y="150" width="13" height="16"/><rect x="217" y="150" width="13" height="16"/>
+    <rect x="196" y="176" width="13" height="16"/><rect x="217" y="176" width="13" height="16"/>
+    <rect x="262" y="102" width="14" height="16"/><rect x="286" y="102" width="14" height="16"/>
+    <rect x="262" y="128" width="14" height="16"/><rect x="286" y="128" width="14" height="16"/>
+    <rect x="262" y="154" width="14" height="16"/><rect x="286" y="154" width="14" height="16"/>
+    <rect x="262" y="180" width="14" height="16"/><rect x="286" y="180" width="14" height="16"/>
+  </g>
+  <!-- the line of sight: nothing either of them does goes unseen -->
+  <g stroke="#7b8399" stroke-width="3" stroke-dasharray="8 7">
+    <path d="M92 86 L178 118"/><path d="M92 86 L244 96"/>
+  </g>
+  <g fill="#7b8399">
+    <path d="M182 120 L166 118 L172 108 Z"/>
+    <path d="M248 96 L233 102 L234 91 Z"/>
+  </g>
+  <!-- the official -->
+  <circle cx="70" cy="96" r="21" fill="#4f46e5"/>
+  <path d="M42 152 L98 152 L88 116 L52 116 Z" fill="#4f46e5"/>
+  <path d="M90 130 L112 132" stroke="#4f46e5" stroke-width="12" stroke-linecap="round"/>
+  <!-- the rule book being held open -->
+  <rect x="100" y="120" width="48" height="34" rx="3" fill="#ffffff" stroke="#7b8399" stroke-width="3"/>
+  <rect x="100" y="120" width="9" height="34" fill="#c0392f"/>
+  <g stroke="#9aa2b4" stroke-width="3" stroke-linecap="round">
+    <path d="M116 130 L140 130"/><path d="M116 139 L140 139"/><path d="M116 148 L132 148"/>
+  </g>
+  <!-- the desk they sit behind -->
+  <rect x="16" y="152" width="128" height="13" rx="3" fill="#7b8399"/>
+  <rect x="26" y="165" width="108" height="53" fill="#9aa2b4"/>
+  <path d="M6 218 L314 218" stroke="#7b8399" stroke-width="4" stroke-linecap="round"/>
+</svg>

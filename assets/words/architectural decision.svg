@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="A heavy concrete foundation slab with a red padlock shut on it, and the whole building it will have to carry drawn above it in dashed outline">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <!-- everything that gets built on top of it, still only a drawing -->
+  <g fill="none" stroke="#4f46e5" stroke-width="5" stroke-dasharray="12 9" stroke-linejoin="round">
+    <path d="M84 134 L84 50 L160 18 L236 50 L236 134"/>
+    <path d="M84 96 L236 96"/>
+  </g>
+  <g fill="none" stroke="#4f46e5" stroke-width="3" stroke-dasharray="9 7">
+    <rect x="104" y="60" width="36" height="24"/>
+    <rect x="180" y="60" width="36" height="24"/>
+    <rect x="104" y="106" width="36" height="24"/>
+    <rect x="180" y="106" width="36" height="24"/>
+  </g>
+  <!-- the slab, poured and already set hard -->
+  <rect x="22" y="150" width="276" height="44" fill="#9aa2b4"/>
+  <rect x="22" y="150" width="276" height="10" fill="#7b8399"/>
+  <g stroke="#7b8399" stroke-width="3">
+    <path d="M58 164 L50 190"/><path d="M104 164 L96 190"/>
+    <path d="M216 164 L208 190"/><path d="M262 164 L254 190"/>
+  </g>
+  <!-- the ground it is bedded into -->
+  <rect x="0" y="194" width="320" height="14" fill="#a8841c"/>
+  <!-- the padlock: this one does not come undone cheaply -->
+  <path d="M148 152 L148 140 A12 12 0 0 1 172 140 L172 152" fill="none" stroke="#c0392f" stroke-width="8"/>
+  <rect x="134" y="150" width="52" height="40" rx="6" fill="#c0392f"/>
+  <circle cx="160" cy="166" r="6" fill="#eef0f5"/>
+  <rect x="157" y="166" width="6" height="14" fill="#eef0f5"/>
+</svg>

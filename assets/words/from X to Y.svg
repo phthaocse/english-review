@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="Two labelled boxes joined by one straight arrow, with an empty slot crossed out in red beneath the arrow and a struck-through article under each box">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <!-- the two ends of the pattern -->
+  <rect x="26" y="86" width="76" height="66" rx="10" fill="#4f46e5"/>
+  <rect x="218" y="86" width="76" height="66" rx="10" fill="#4f46e5"/>
+  <g font-family="Helvetica, Arial, sans-serif" font-weight="bold" text-anchor="middle">
+    <text x="64" y="132" font-size="34" fill="#ffffff">X</text>
+    <text x="256" y="132" font-size="34" fill="#ffffff">Y</text>
+    <text x="64" y="70" font-size="21" fill="#7b8399">from</text>
+    <text x="256" y="70" font-size="21" fill="#7b8399">to</text>
+  </g>
+  <!-- one arrow and nothing else between them -->
+  <path d="M110 119 H196" stroke="#7b8399" stroke-width="9" stroke-linecap="round"/>
+  <polygon points="212,119 194,108 194,130" fill="#7b8399"/>
+  <!-- the slot where a linking verb would go, and here does not -->
+  <rect x="130" y="152" width="60" height="36" rx="6" fill="#ffffff" stroke="#9aa2b4" stroke-width="4" stroke-dasharray="8 7"/>
+  <g stroke="#c0392f" stroke-width="6" stroke-linecap="round">
+    <path d="M142 160 L178 180"/>
+    <path d="M178 160 L142 180"/>
+  </g>
+  <!-- the articles the pair does without -->
+  <g font-family="Helvetica, Arial, sans-serif" font-size="20" font-weight="bold" fill="#c0392f" text-anchor="middle">
+    <text x="64" y="216">the</text>
+    <text x="256" y="216">the</text>
+  </g>
+  <g stroke="#c0392f" stroke-width="4" stroke-linecap="round">
+    <path d="M44 209 H84"/>
+    <path d="M236 209 H276"/>
+  </g>
+</svg>

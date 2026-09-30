@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="A person rocked backwards onto their heels with both arms flung up, in front of a bar chart whose last bar shoots straight off the top of the frame">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <!-- the chart, each bar bigger than the last -->
+  <path d="M108 220 H314" stroke="#7b8399" stroke-width="5" stroke-linecap="round"/>
+  <g fill="#9aa2b4">
+    <rect x="122" y="176" width="38" height="44"/>
+    <rect x="170" y="138" width="38" height="82"/>
+    <rect x="218" y="84" width="38" height="136"/>
+  </g>
+  <!-- and the last one, which does not fit on the page at all -->
+  <rect x="266" y="0" width="42" height="220" fill="#c0392f"/>
+  <!-- the person knocked back onto their heels by it -->
+  <circle cx="44" cy="94" r="21" fill="#4f46e5"/>
+  <g stroke="#4f46e5" stroke-width="15" stroke-linecap="round" fill="none">
+    <path d="M50 116 L72 170"/>
+    <path d="M56 132 L24 100"/><path d="M56 132 L88 98"/>
+    <path d="M72 170 L52 218"/><path d="M72 170 L104 210"/>
+  </g>
+  <!-- the ground, and the heels digging into it -->
+  <path d="M34 220 H108" stroke="#7b8399" stroke-width="5" stroke-linecap="round"/>
+  <!-- the recoil -->
+  <g stroke="#7b8399" stroke-width="4" fill="none" stroke-linecap="round">
+    <path d="M22 62 C10 74, 8 88, 14 100"/>
+    <path d="M8 58 C-6 76, -6 96, 4 112"/>
+  </g>
+</svg>

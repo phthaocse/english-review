@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="A hand pinching a red thread between finger and thumb and passing it clean through the eye of a needle, the arc of the movement trailing behind">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <!-- the sweep the hand has just made, fading out behind it -->
+  <g fill="none" stroke="#9aa2b4" stroke-width="6" stroke-linecap="round">
+    <path d="M6 226 Q52 216 92 204" opacity="0.5"/>
+    <path d="M22 236 Q74 230 116 220" opacity="0.28"/>
+  </g>
+  <!-- the needle, point down, with an eye you can see through -->
+  <polygon points="198,28 226,28 221,188 212,212 203,188" fill="#9aa2b4" stroke="#7b8399" stroke-width="3" stroke-linejoin="round"/>
+  <ellipse cx="212" cy="80" rx="8" ry="24" fill="#eef0f5" stroke="#7b8399" stroke-width="3"/>
+  <!-- the hand: forearm and palm -->
+  <rect x="0" y="156" width="42" height="38" rx="11" fill="#4f46e5"/>
+  <ellipse cx="66" cy="172" rx="46" ry="30" fill="#4f46e5" transform="rotate(-12 66 172)"/>
+  <!-- the folded fingers, grooved so the palm does not read as a mitten -->
+  <g fill="none" stroke="#eef0f5" stroke-width="3" stroke-linecap="round">
+    <path d="M56 194 q18 4 34 -4"/>
+    <path d="M44 186 q10 -12 4 -26"/>
+  </g>
+  <!-- finger and thumb, held apart in a pinch -->
+  <path d="M96 156 L152 120" stroke="#4f46e5" stroke-width="15" stroke-linecap="round"/>
+  <path d="M94 182 L146 166" stroke="#4f46e5" stroke-width="14" stroke-linecap="round"/>
+  <!-- the thread: tail below the pinch, then straight up through the eye and out -->
+  <path d="M154 148 Q164 170 158 192" fill="none" stroke="#c0392f" stroke-width="4" stroke-linecap="round"/>
+  <path d="M150 142 Q182 126 202 96" fill="none" stroke="#c0392f" stroke-width="5" stroke-linecap="round"/>
+  <path d="M202 96 L222 66" stroke="#c0392f" stroke-width="5" stroke-linecap="round"/>
+  <path d="M222 66 Q244 52 274 46" fill="none" stroke="#c0392f" stroke-width="5" stroke-linecap="round"/>
+</svg>

@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="A singular noun block with an empty red dashed slot in front of it marked with a cross, and below the same block with the slot filled in marked with a tick">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <!-- the mistake: nothing standing in front of the singular noun -->
+  <g>
+    <rect x="46" y="46" width="58" height="58" rx="8" fill="none" stroke="#c0392f"
+          stroke-width="4" stroke-dasharray="9 7"/>
+    <rect x="114" y="46" width="122" height="58" rx="8" fill="#4f46e5"/>
+    <text x="175" y="86" font-family="Helvetica, Arial, sans-serif" font-size="27" font-weight="bold"
+          fill="#ffffff" text-anchor="middle">book</text>
+    <g stroke="#c0392f" stroke-width="8" stroke-linecap="round">
+      <path d="M260 58 L294 92"/><path d="M294 58 L260 92"/>
+    </g>
+  </g>
+  <!-- the fix: the article fills the slot -->
+  <g>
+    <rect x="46" y="142" width="58" height="58" rx="8" fill="#4f46e5"/>
+    <text x="75" y="182" font-family="Helvetica, Arial, sans-serif" font-size="27" font-weight="bold"
+          fill="#ffffff" text-anchor="middle">a</text>
+    <rect x="114" y="142" width="122" height="58" rx="8" fill="#4f46e5"/>
+    <text x="175" y="182" font-family="Helvetica, Arial, sans-serif" font-size="27" font-weight="bold"
+          fill="#ffffff" text-anchor="middle">book</text>
+    <path d="M258 174 L274 190 L298 152" fill="none" stroke="#2f6b4f" stroke-width="8"
+          stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

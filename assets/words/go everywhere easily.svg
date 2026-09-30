@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="A city map with one small figure at its centre and open routes running out from that figure to every edge and corner of the map">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <!-- the map sheet -->
+  <rect x="16" y="18" width="288" height="204" rx="10" fill="#ffffff" stroke="#9aa2b4" stroke-width="3"/>
+  <!-- city blocks, so it reads as a place and not a diagram -->
+  <g fill="#e7e9ef">
+    <rect x="100" y="40" width="34" height="28"/><rect x="190" y="40" width="34" height="28"/>
+    <rect x="100" y="182" width="34" height="28"/><rect x="190" y="182" width="34" height="28"/>
+    <rect x="48" y="80" width="36" height="28"/><rect x="48" y="150" width="36" height="28"/>
+    <rect x="240" y="80" width="36" height="28"/><rect x="240" y="150" width="36" height="28"/>
+  </g>
+  <!-- routes leaving the centre in every direction, none of them blocked -->
+  <g stroke="#4f46e5" stroke-width="7" stroke-linecap="round">
+    <path d="M160 94 V42"/><path d="M160 162 V198"/>
+    <path d="M126 128 H50"/><path d="M194 128 H270"/>
+    <path d="M136 106 L78 62"/><path d="M184 106 L242 62"/>
+    <path d="M136 150 L78 194"/><path d="M184 150 L242 194"/>
+  </g>
+  <!-- arrowheads: every route arrives somewhere -->
+  <g fill="#4f46e5">
+    <path d="M160 28 L150 46 L170 46 Z"/><path d="M160 212 L150 194 L170 194 Z"/>
+    <path d="M34 128 L52 118 L52 138 Z"/><path d="M286 128 L268 118 L268 138 Z"/>
+    <path d="M62 50 L84 56 L70 72 Z"/><path d="M258 50 L236 56 L250 72 Z"/>
+    <path d="M62 206 L70 184 L84 200 Z"/><path d="M258 206 L250 184 L236 200 Z"/>
+  </g>
+  <!-- the one who moves along them, free to take any of them -->
+  <circle cx="160" cy="128" r="34" fill="#ffffff"/>
+  <circle cx="160" cy="112" r="14" fill="#c0392f"/>
+  <path d="M138 154 a22 22 0 0 1 44 0 z" fill="#c0392f"/>
+</svg>

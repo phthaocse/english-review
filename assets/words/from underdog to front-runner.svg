@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="The same runner shown twice on one track: at the left trailing behind two rivals, at the right well clear in front of them, with a long arrow curving from the first to the second">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <defs>
+    <!-- one running figure, reused for every runner here -->
+    <g id="runner">
+      <circle cx="26" cy="9" r="9"/>
+      <g fill="none" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M24 18 L18 36"/>
+        <path d="M23 24 L37 17"/>
+        <path d="M23 24 L9 30"/>
+        <path d="M18 36 L30 45 L27 56"/>
+        <path d="M18 36 L7 44 L12 56"/>
+      </g>
+    </g>
+  </defs>
+  <!-- one track, running the whole width -->
+  <g stroke="#9aa2b4" stroke-width="3" stroke-dasharray="14 12">
+    <path d="M0 124 L320 124"/><path d="M0 178 L320 178"/><path d="M0 232 L320 232"/>
+  </g>
+  <!-- how it began: two rivals up ahead, our runner last -->
+  <g fill="#9aa2b4" stroke="#9aa2b4">
+    <use href="#runner" x="58" y="118"/><use href="#runner" x="96" y="118"/>
+  </g>
+  <g fill="#4f46e5" stroke="#4f46e5"><use href="#runner" x="8" y="118"/></g>
+  <!-- how it ended: the same two, now well behind -->
+  <g fill="#9aa2b4" stroke="#9aa2b4">
+    <use href="#runner" x="166" y="172"/><use href="#runner" x="204" y="172"/>
+  </g>
+  <g fill="#4f46e5" stroke="#4f46e5"><use href="#runner" x="258" y="172"/></g>
+  <!-- the turnaround itself -->
+  <path d="M34 96 C 90 20, 220 20, 276 92" fill="none" stroke="#c0392f"
+        stroke-width="6" stroke-linecap="round"/>
+  <polygon points="282,102 265,94 280,82" fill="#c0392f"/>
+</svg>

@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="Several separate flows of traffic drawn together and held under one red pin, from which a single arrow leads into one box">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <!-- the flows, coming in from everywhere and pulled onto one line -->
+  <g fill="none" stroke="#7b8399" stroke-width="7" stroke-linecap="round">
+    <path d="M8 36 Q78 58 134 114"/>
+    <path d="M8 82 Q78 92 134 117"/>
+    <path d="M8 122 L134 120"/>
+    <path d="M8 162 Q78 152 134 123"/>
+    <path d="M8 206 Q78 182 134 126"/>
+  </g>
+  <!-- the pin driven through the bundle, holding it where it is -->
+  <polygon points="142,92 158,92 152,158 148,158" fill="#c0392f"/>
+  <circle cx="150" cy="78" r="19" fill="#c0392f"/>
+  <circle cx="144" cy="72" r="5" fill="#eef0f5" opacity="0.6"/>
+  <!-- the one route out, into the one target -->
+  <path d="M164 120 L224 120" stroke="#4f46e5" stroke-width="13" stroke-linecap="round"/>
+  <polygon points="222,102 246,120 222,138" fill="#4f46e5"/>
+  <rect x="248" y="84" width="62" height="72" rx="9" fill="#4f46e5"/>
+</svg>

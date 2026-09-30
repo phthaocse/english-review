@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="A figure walking away to the right along an arrow that lands on two tiles, the word to and a plain verb, with an ending struck out in red below them">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <!-- the one who goes off -->
+  <g stroke="#4f46e5" stroke-width="8" stroke-linecap="round" fill="none">
+    <path d="M56 120 L58 154"/>
+    <path d="M58 154 L44 182"/>
+    <path d="M58 154 L76 178"/>
+    <path d="M56 128 L40 140"/>
+    <path d="M56 128 L74 134"/>
+  </g>
+  <circle cx="55" cy="104" r="15" fill="#4f46e5"/>
+  <!-- where they are going -->
+  <path d="M96 140 H138" stroke="#7b8399" stroke-width="8" stroke-linecap="round"/>
+  <polygon points="154,140 136,130 136,150" fill="#7b8399"/>
+  <!-- the two tiles that follow: to, then the verb untouched -->
+  <rect x="166" y="112" width="52" height="56" rx="8" fill="#7b8399"/>
+  <rect x="226" y="112" width="84" height="56" rx="8" fill="#4f46e5"/>
+  <g font-family="Helvetica, Arial, sans-serif" font-size="25" font-weight="bold" fill="#ffffff" text-anchor="middle">
+    <text x="192" y="148">to</text>
+    <text x="268" y="148">find</text>
+  </g>
+  <!-- the ending that must not be added -->
+  <text x="268" y="204" font-family="Helvetica, Arial, sans-serif" font-size="22" font-weight="bold" fill="#c0392f" text-anchor="middle">-ing</text>
+  <path d="M238 197 H298" stroke="#c0392f" stroke-width="4" stroke-linecap="round"/>
+  <path d="M252 88 l9 11 l18 -24" fill="none" stroke="#2f6b4f" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

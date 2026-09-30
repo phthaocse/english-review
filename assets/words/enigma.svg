@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="The dark silhouette of a person from the shoulders up, except that where the head should be there is a large question mark">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <!-- the body, plainly there and plainly a person -->
+  <path d="M62 240 C 62 184, 108 170, 160 170 C 212 170, 258 184, 258 240 Z" fill="#4f46e5"/>
+  <!-- the head, which is the part nobody can read -->
+  <g fill="none" stroke="#4f46e5" stroke-width="19" stroke-linecap="round">
+    <path d="M130 76 A30 30 0 1 1 160 106 L160 122"/>
+  </g>
+  <circle cx="160" cy="150" r="10" fill="#4f46e5"/>
+</svg>

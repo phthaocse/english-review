@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="Two panels: on the left an open eye watches items moving along a belt, on the right the same eye is shut and one item has dropped off the end unnoticed">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <!-- the two opposite senses of the word, kept apart -->
+  <path d="M160 16 V224" stroke="#9aa2b4" stroke-width="2"/>
+  <!-- watching over: the eye is open and every item is seen -->
+  <path d="M26 74 Q80 26 134 74 Q80 122 26 74 Z" fill="#ffffff" stroke="#7b8399"
+        stroke-width="5" stroke-linejoin="round"/>
+  <circle cx="80" cy="74" r="23" fill="#4f46e5"/>
+  <circle cx="80" cy="74" r="10" fill="#3730a3"/>
+  <g stroke="#9aa2b4" stroke-width="3" stroke-dasharray="8 7">
+    <path d="M60 98 L40 142"/><path d="M80 100 L80 142"/><path d="M100 98 L120 142"/>
+  </g>
+  <rect x="14" y="176" width="132" height="14" rx="7" fill="#7b8399"/>
+  <g fill="#4f46e5">
+    <rect x="26" y="144" width="30" height="30" rx="4"/>
+    <rect x="66" y="144" width="30" height="30" rx="4"/>
+    <rect x="106" y="144" width="30" height="30" rx="4"/>
+  </g>
+  <!-- missing something: the same eye shut, and one item gone over the end -->
+  <path d="M188 78 Q238 116 288 78" fill="none" stroke="#7b8399" stroke-width="7"
+        stroke-linecap="round"/>
+  <g stroke="#7b8399" stroke-width="5" stroke-linecap="round">
+    <path d="M204 100 L198 114"/><path d="M238 110 L238 126"/><path d="M272 100 L278 114"/>
+  </g>
+  <rect x="174" y="176" width="108" height="14" rx="7" fill="#7b8399"/>
+  <g fill="#4f46e5">
+    <rect x="182" y="144" width="30" height="30" rx="4"/>
+    <rect x="222" y="144" width="30" height="30" rx="4"/>
+  </g>
+  <path d="M284 158 Q300 158 306 176" fill="none" stroke="#9aa2b4" stroke-width="3"
+        stroke-dasharray="7 6"/>
+  <rect x="284" y="180" width="28" height="28" rx="4" fill="#c0392f"
+        transform="rotate(24 298 194)"/>
+</svg>

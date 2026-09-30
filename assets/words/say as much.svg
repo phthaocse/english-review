@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="Two speech bubbles of the same size joined by an equals sign, the left one holding three solid lines of words and the right one the very same three lines drawn as empty outlines">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <!-- what was actually said, in so many words -->
+  <path d="M34 44 H118 Q138 44 138 64 V142 Q138 162 118 162 H72 L46 196 L52 162 H34 Q14 162 14 142 V64 Q14 44 34 44 Z"
+        fill="#ffffff" stroke="#4f46e5" stroke-width="6" stroke-linejoin="round"/>
+  <g fill="#4f46e5">
+    <rect x="30" y="66" width="88" height="13" rx="4"/>
+    <rect x="30" y="92" width="66" height="13" rx="4"/>
+    <rect x="30" y="118" width="78" height="13" rx="4"/>
+  </g>
+  <!-- the two amount to the same thing -->
+  <g fill="#7b8399">
+    <rect x="148" y="92" width="26" height="9" rx="3"/>
+    <rect x="148" y="112" width="26" height="9" rx="3"/>
+  </g>
+  <!-- the same thing said, but not in those words -->
+  <path d="M202 44 H286 Q306 44 306 64 V142 Q306 162 286 162 H240 L214 196 L220 162 H202 Q182 162 182 142 V64 Q182 44 202 44 Z"
+        fill="#ffffff" stroke="#4f46e5" stroke-width="6" stroke-linejoin="round"/>
+  <g fill="none" stroke="#4f46e5" stroke-width="3">
+    <rect x="198" y="66" width="88" height="13" rx="4"/>
+    <rect x="198" y="92" width="66" height="13" rx="4"/>
+    <rect x="198" y="118" width="78" height="13" rx="4"/>
+  </g>
+</svg>

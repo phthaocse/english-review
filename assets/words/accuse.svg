@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="One figure holding a straight arm out to point squarely at a second figure, who stands still inside a red spotlight">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <!-- the beam of light singling out the second figure -->
+  <polygon points="210,0 252,0 296,204 168,204" fill="#c0392f" opacity="0.16"/>
+  <ellipse cx="232" cy="204" rx="62" ry="13" fill="#c0392f" opacity="0.32"/>
+  <!-- the floor both figures stand on -->
+  <path d="M0 204 L320 204" stroke="#7b8399" stroke-width="4"/>
+  <!-- the accused: upright, arms down, not moving -->
+  <g stroke="#4f46e5" stroke-width="13" stroke-linecap="round" fill="none">
+    <path d="M232 116 L232 158"/>
+    <path d="M232 158 L221 204"/>
+    <path d="M232 158 L243 204"/>
+    <path d="M232 124 L218 158"/>
+    <path d="M232 124 L246 158"/>
+  </g>
+  <circle cx="232" cy="98" r="16" fill="#4f46e5"/>
+  <!-- the accuser, leaning in behind one rigid pointing arm -->
+  <g stroke="#4f46e5" stroke-width="13" stroke-linecap="round" fill="none">
+    <path d="M66 118 L64 158"/>
+    <path d="M64 158 L48 204"/>
+    <path d="M64 158 L80 204"/>
+    <path d="M66 126 L52 156"/>
+  </g>
+  <circle cx="68" cy="100" r="16" fill="#4f46e5"/>
+  <!-- the pointing arm and finger, level with the other figure's chest -->
+  <path d="M78 126 L150 130" stroke="#4f46e5" stroke-width="14" stroke-linecap="round"/>
+  <path d="M150 130 L182 131" stroke="#4f46e5" stroke-width="8" stroke-linecap="round"/>
+</svg>

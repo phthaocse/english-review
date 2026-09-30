@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="A red boundary line ruled across the ground with a capped, badged officer standing on it, palm held up flat, sending a second figure back the way they came">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <!-- the rule: a line on the ground that is not to be crossed -->
+  <path d="M14 190 H306" stroke="#c0392f" stroke-width="8" stroke-linecap="round"/>
+  <g stroke="#c0392f" stroke-width="5" stroke-linecap="round">
+    <path d="M40 194 V208"/><path d="M96 194 V208"/><path d="M152 194 V208"/>
+    <path d="M208 194 V208"/><path d="M264 194 V208"/>
+  </g>
+  <!-- the one who is sent back, already turning away -->
+  <g stroke="#9aa2b4" stroke-width="7" stroke-linecap="round" fill="none">
+    <path d="M264 134 L264 166"/>
+    <path d="M264 166 L253 188"/>
+    <path d="M264 166 L277 186"/>
+    <path d="M264 142 L251 152"/>
+    <path d="M264 142 L278 150"/>
+  </g>
+  <circle cx="264" cy="120" r="14" fill="#9aa2b4"/>
+  <!-- the turn itself, back the way they came -->
+  <path d="M238 88 Q272 54 296 94" fill="none" stroke="#c0392f" stroke-width="7" stroke-linecap="round"/>
+  <polygon points="0,0 -11,-17 11,-17" fill="#c0392f" transform="translate(298,102) rotate(-34)"/>
+  <!-- the officer, standing on the rule and holding it -->
+  <g stroke="#4f46e5" stroke-width="10" stroke-linecap="round">
+    <path d="M132 156 L132 188"/>
+    <path d="M152 156 L152 188"/>
+  </g>
+  <path d="M124 112 L160 112 L157 160 L127 160 Z" fill="#4f46e5"/>
+  <path d="M160 124 L192 118" stroke="#4f46e5" stroke-width="11" stroke-linecap="round"/>
+  <!-- the flat palm, which is what actually stops them -->
+  <g fill="#4f46e5">
+    <rect x="186" y="96" width="30" height="32" rx="9"/>
+    <rect x="189" y="80" width="8" height="20" rx="4"/>
+    <rect x="199" y="76" width="8" height="24" rx="4"/>
+    <rect x="209" y="80" width="8" height="20" rx="4"/>
+  </g>
+  <circle cx="142" cy="96" r="16" fill="#4f46e5"/>
+  <path d="M124 90 Q142 68 160 90 Z" fill="#4f46e5"/>
+  <rect x="119" y="86" width="47" height="8" rx="4" fill="#7b8399"/>
+  <rect x="130" y="120" width="13" height="13" rx="2" fill="#e0b73a"/>
+</svg>

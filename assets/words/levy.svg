@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="An official hand in a uniform sleeve lifting one gold coin off a stack and carrying it across to a plate stamped with a red seal">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <!-- the money it is taken from -->
+  <g fill="#e0b73a" stroke="#a8841c" stroke-width="2">
+    <ellipse cx="70" cy="214" rx="32" ry="9"/>
+    <ellipse cx="70" cy="200" rx="32" ry="9"/>
+    <ellipse cx="70" cy="186" rx="32" ry="9"/>
+    <ellipse cx="70" cy="172" rx="32" ry="9"/>
+  </g>
+  <!-- where it has to be handed over, stamped with the official seal -->
+  <ellipse cx="248" cy="206" rx="50" ry="15" fill="#9aa2b4" stroke="#7b8399" stroke-width="3"/>
+  <ellipse cx="248" cy="203" rx="36" ry="10" fill="#7b8399"/>
+  <circle cx="248" cy="203" r="11" fill="none" stroke="#c0392f" stroke-width="3"/>
+  <circle cx="248" cy="203" r="3" fill="#c0392f"/>
+  <!-- the path the coin is taken along -->
+  <path d="M78 160 Q160 112 226 178" fill="none" stroke="#7b8399"
+        stroke-width="3" stroke-dasharray="9 7"/>
+  <path d="M234 186 L216 180 L229 169 Z" fill="#7b8399"/>
+  <!-- the sleeve of office -->
+  <rect x="200" y="44" width="120" height="42" rx="6" fill="#9aa2b4"/>
+  <rect x="200" y="44" width="12" height="42" fill="#7b8399"/>
+  <!-- the coin that is being taken -->
+  <circle cx="126" cy="70" r="18" fill="#e0b73a" stroke="#a8841c" stroke-width="2"/>
+  <!-- the hand doing the taking -->
+  <rect x="140" y="48" width="66" height="42" rx="13" fill="#4f46e5"/>
+  <ellipse cx="146" cy="94" rx="15" ry="9" fill="#4f46e5" transform="rotate(-25 146 94)"/>
+  <rect x="116" y="53" width="30" height="11" rx="5" fill="#4f46e5"/>
+  <rect x="116" y="76" width="30" height="11" rx="5" fill="#4f46e5"/>
+</svg>

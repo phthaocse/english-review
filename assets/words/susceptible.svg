@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="A wind that a broad sturdy figure hardly notices is bending a thin figure right over, far off the upright line it started from">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <!-- the wind, blowing across both of them alike -->
+  <g fill="none" stroke="#9aa2b4" stroke-width="5" stroke-linecap="round">
+    <path d="M-6 36 C60 24 110 48 176 36 C232 26 274 44 326 34"/>
+    <path d="M-6 76 C60 64 110 88 176 76 C232 66 274 84 326 74"/>
+    <path d="M-6 116 C60 104 110 128 176 116 C232 106 274 124 326 114"/>
+  </g>
+  <!-- the sturdy one, standing where it always stood -->
+  <circle cx="252" cy="104" r="21" fill="#9aa2b4"/>
+  <path d="M228 128 L276 128 L286 214 L218 214 Z" fill="#9aa2b4"/>
+  <!-- where the thin one would stand if the wind did not reach it -->
+  <path d="M100 180 L100 62" stroke="#c0392f" stroke-width="3" stroke-dasharray="8 7"/>
+  <g stroke="#c0392f" stroke-width="4" stroke-linecap="round">
+    <path d="M100 56 L140 56"/><path d="M100 50 L100 62"/><path d="M140 50 L140 62"/>
+  </g>
+  <!-- the thin one, bent right over by the same wind -->
+  <path d="M100 180 Q104 142 136 100" fill="none" stroke="#4f46e5"
+        stroke-width="13" stroke-linecap="round"/>
+  <path d="M116 140 Q142 130 166 140" fill="none" stroke="#4f46e5"
+        stroke-width="9" stroke-linecap="round"/>
+  <circle cx="141" cy="89" r="15" fill="#4f46e5"/>
+  <g stroke="#4f46e5" stroke-width="11" stroke-linecap="round">
+    <path d="M100 180 L88 214"/><path d="M100 180 L114 214"/>
+  </g>
+  <path d="M6 216 L314 216" stroke="#7b8399" stroke-width="4" stroke-linecap="round"/>
+</svg>

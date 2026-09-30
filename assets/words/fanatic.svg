@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="A crowd holding small banners at head height while one person at the front holds a banner on a pole far higher than anyone else's and punches their other fist into the air">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <!-- the rest of the crowd, all holding their banners at much the same modest height -->
+  <g fill="#9aa2b4">
+    <rect x="36" y="100" width="7" height="60"/><rect x="43" y="100" width="42" height="24"/>
+    <rect x="92" y="94" width="7" height="60"/><rect x="99" y="94" width="42" height="24"/>
+    <rect x="224" y="98" width="7" height="60"/><rect x="231" y="98" width="42" height="24"/>
+    <rect x="286" y="92" width="7" height="60"/><rect x="293" y="92" width="27" height="24"/>
+  </g>
+  <g fill="#9aa2b4">
+    <circle cx="40" cy="160" r="18"/><path d="M14 224 Q14 176 40 172 Q66 176 66 224 Z"/>
+    <circle cx="96" cy="154" r="18"/><path d="M70 224 Q70 170 96 166 Q122 170 122 224 Z"/>
+    <circle cx="228" cy="158" r="18"/><path d="M202 224 Q202 174 228 170 Q254 174 254 224 Z"/>
+    <circle cx="290" cy="152" r="18"/><path d="M264 224 Q264 168 290 164 Q316 168 316 224 Z"/>
+  </g>
+  <!-- the one out in front, whose banner goes far higher than anyone else's -->
+  <rect x="166" y="14" width="10" height="168" fill="#7b8399"/>
+  <rect x="176" y="18" width="104" height="54" fill="#c0392f"/>
+  <path d="M126 232 Q126 176 160 172 Q194 176 194 232 Z" fill="#4f46e5"/>
+  <!-- both arms up: one gripping the pole, one fist thrown at the sky -->
+  <g fill="none" stroke="#eef0f5" stroke-width="28" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M186 198 L206 156 L178 120"/><path d="M134 198 L108 168 L102 126"/>
+  </g>
+  <g fill="none" stroke="#4f46e5" stroke-width="17" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M186 198 L206 156 L178 120"/><path d="M134 198 L108 168 L102 126"/>
+  </g>
+  <circle cx="100" cy="118" r="13" fill="#eef0f5"/>
+  <circle cx="100" cy="118" r="11" fill="#4f46e5"/>
+  <circle cx="160" cy="154" r="25" fill="#4f46e5"/>
+</svg>

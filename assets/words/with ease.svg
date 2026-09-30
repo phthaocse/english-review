@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="A runner going over an athletics hurdle with clear daylight beneath, the head holding the same level line right through and the hurdle left standing untouched">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <!-- the level the head holds: nothing about the stride changes -->
+  <path d="M26 46 L300 46" stroke="#9aa2b4" stroke-width="3" stroke-dasharray="9 8"/>
+  <!-- the hurdle, still standing exactly as it was set -->
+  <g fill="#7b8399">
+    <rect x="128" y="122" width="104" height="10" rx="3"/>
+    <rect x="136" y="131" width="7" height="83"/>
+    <rect x="217" y="131" width="7" height="83"/>
+    <rect x="118" y="206" width="40" height="9" rx="3"/>
+    <rect x="202" y="206" width="40" height="9" rx="3"/>
+  </g>
+  <rect x="140" y="168" width="80" height="6" rx="2" fill="#9aa2b4"/>
+  <!-- the daylight left between the runner and the bar -->
+  <g stroke="#7b8399" stroke-width="3" stroke-linecap="round">
+    <path d="M186 102 L186 120" stroke-dasharray="6 5"/>
+    <path d="M178 102 L194 102"/><path d="M178 120 L194 120"/>
+  </g>
+  <!-- the runner, over it without effort -->
+  <circle cx="172" cy="46" r="18" fill="#4f46e5"/>
+  <g fill="none" stroke="#4f46e5" stroke-width="13" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M172 64 L168 100"/>
+    <path d="M168 100 L212 86 L248 114"/>
+    <path d="M168 100 L130 112 L108 148"/>
+  </g>
+  <g fill="none" stroke="#4f46e5" stroke-width="11" stroke-linecap="round">
+    <path d="M171 78 L206 66"/>
+    <path d="M171 78 L140 90"/>
+  </g>
+  <g fill="#4f46e5">
+    <ellipse cx="252" cy="118" rx="12" ry="7"/>
+    <ellipse cx="104" cy="152" rx="12" ry="7"/>
+  </g>
+  <!-- the track -->
+  <path d="M6 214 L314 214" stroke="#7b8399" stroke-width="4" stroke-linecap="round"/>
+</svg>

@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="Two rows of word tiles making the same sentence, the lower row identical except for an extra red tile reading do pushed in before the verb">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <!-- the plain sentence, three tiles in a row -->
+  <g font-family="Helvetica, Arial, sans-serif" font-size="27" font-weight="700" text-anchor="middle">
+    <rect x="34" y="42" width="44" height="50" rx="9" fill="#ffffff" stroke="#9aa2b4" stroke-width="3"/>
+    <text x="56" y="76" fill="#4f46e5">I</text>
+    <rect x="86" y="42" width="88" height="50" rx="9" fill="#ffffff" stroke="#9aa2b4" stroke-width="3"/>
+    <text x="130" y="76" fill="#4f46e5">like</text>
+    <rect x="182" y="42" width="56" height="50" rx="9" fill="#ffffff" stroke="#9aa2b4" stroke-width="3"/>
+    <text x="210" y="76" fill="#4f46e5">it</text>
+  </g>
+  <!-- the arrow marking where the extra block gets pushed in -->
+  <g fill="none" stroke="#c0392f" stroke-width="6" stroke-linecap="round">
+    <path d="M110 102 L110 128"/>
+  </g>
+  <polygon points="98,126 122,126 110,144" fill="#c0392f"/>
+  <!-- the same sentence with do inserted, everything after it shunted right -->
+  <g font-family="Helvetica, Arial, sans-serif" font-size="27" font-weight="700" text-anchor="middle">
+    <rect x="34" y="154" width="44" height="50" rx="9" fill="#ffffff" stroke="#9aa2b4" stroke-width="3"/>
+    <text x="56" y="188" fill="#4f46e5">I</text>
+    <rect x="86" y="154" width="62" height="50" rx="9" fill="#c0392f"/>
+    <text x="117" y="188" fill="#ffffff">do</text>
+    <rect x="156" y="154" width="88" height="50" rx="9" fill="#ffffff" stroke="#9aa2b4" stroke-width="3"/>
+    <text x="200" y="188" fill="#4f46e5">like</text>
+    <rect x="252" y="154" width="56" height="50" rx="9" fill="#ffffff" stroke="#9aa2b4" stroke-width="3"/>
+    <text x="280" y="188" fill="#4f46e5">it</text>
+  </g>
+  <!-- short rays off the inserted block, the stress it adds -->
+  <g stroke="#c0392f" stroke-width="5" stroke-linecap="round">
+    <path d="M80 148 L72 138"/><path d="M117 146 L117 134"/><path d="M154 148 L162 138"/>
+  </g>
+</svg>

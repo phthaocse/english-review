@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="Two identical sound waves: the upper one leads to the word whose and an arrow of ownership pointing at a box a person is holding, the lower one leads to the word who apostrophe s and splits into the two words who and is">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <!-- the two spellings sound exactly the same, so both start from the same wave -->
+  <path d="M12 64 q7 -26 14 0 t14 0 t14 0 t14 0" fill="none" stroke="#7b8399"
+        stroke-width="5" stroke-linecap="round"/>
+  <path d="M12 176 q7 -26 14 0 t14 0 t14 0 t14 0" fill="none" stroke="#7b8399"
+        stroke-width="5" stroke-linecap="round"/>
+  <!-- but they do different jobs, so keep the two lines apart -->
+  <path d="M12 120 H308" stroke="#9aa2b4" stroke-width="2" stroke-dasharray="7 7"/>
+  <!-- the possessive one: it says the thing belongs to somebody -->
+  <g stroke="#7b8399" stroke-width="5" stroke-linecap="round">
+    <path d="M76 64 H90"/>
+  </g>
+  <polygon points="100 64 84 57 84 71" fill="#7b8399"/>
+  <rect x="108" y="40" width="76" height="48" rx="9" fill="#4f46e5"/>
+  <text x="146" y="72" text-anchor="middle" font-family="Helvetica, Arial, sans-serif"
+        font-size="21" font-weight="700" fill="#ffffff">whose</text>
+  <path d="M190 60 Q210 38 232 52" fill="none" stroke="#4f46e5" stroke-width="5"/>
+  <polygon points="238 58 226 42 222 58" fill="#4f46e5"/>
+  <rect x="226" y="56" width="32" height="32" rx="5" fill="#e0b73a" stroke="#a8841c" stroke-width="4"/>
+  <circle cx="288" cy="42" r="14" fill="#9aa2b4"/>
+  <path d="M268 96 Q268 60 288 56 Q308 60 308 96 Z" fill="#9aa2b4"/>
+  <path d="M262 76 H270" stroke="#9aa2b4" stroke-width="6" stroke-linecap="round"/>
+  <!-- the short form: it opens back out into two separate words -->
+  <g stroke="#7b8399" stroke-width="5" stroke-linecap="round">
+    <path d="M76 176 H90"/>
+  </g>
+  <polygon points="100 176 84 169 84 183" fill="#7b8399"/>
+  <rect x="108" y="152" width="76" height="48" rx="9" fill="#4f46e5"/>
+  <text x="146" y="184" text-anchor="middle" font-family="Helvetica, Arial, sans-serif"
+        font-size="21" font-weight="700" fill="#ffffff">who's</text>
+  <g stroke="#c0392f" stroke-width="5" stroke-linecap="round">
+    <path d="M190 176 H204"/>
+  </g>
+  <polygon points="214 176 198 169 198 183" fill="#c0392f"/>
+  <rect x="220" y="152" width="52" height="48" rx="9" fill="#4f46e5"/>
+  <text x="246" y="184" text-anchor="middle" font-family="Helvetica, Arial, sans-serif"
+        font-size="21" font-weight="700" fill="#ffffff">who</text>
+  <rect x="278" y="152" width="34" height="48" rx="9" fill="#4f46e5"/>
+  <text x="295" y="184" text-anchor="middle" font-family="Helvetica, Arial, sans-serif"
+        font-size="21" font-weight="700" fill="#ffffff">is</text>
+</svg>

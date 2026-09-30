@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="The world after its end: a dulled red sun over a plain torn wide open by a chasm, burnt-off towers on the far side and one small figure left standing at the near lip">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <!-- the sun with its light put out -->
+  <g stroke="#c0392f" stroke-width="6" stroke-linecap="round">
+    <path d="M78 10 L78 -4"/><path d="M130 36 L146 28"/><path d="M26 36 L10 28"/>
+    <path d="M118 16 L129 4"/><path d="M38 16 L27 4"/>
+  </g>
+  <circle cx="78" cy="58" r="38" fill="#c0392f"/>
+  <circle cx="78" cy="58" r="38" fill="#7b8399" opacity="0.5"/>
+  <!-- what the ground has been torn into -->
+  <path d="M138 158 L184 158 L214 240 L112 240 Z" fill="#4a5160"/>
+  <path d="M0 148 L96 152 L112 160 L128 152 L138 158 L112 240 L0 240 Z" fill="#9aa2b4"/>
+  <path d="M320 140 L246 150 L226 160 L206 150 L184 158 L214 240 L320 240 Z" fill="#9aa2b4"/>
+  <!-- towers burnt off short on the far side -->
+  <g fill="#7b8399">
+    <path d="M244 150 L250 78 L272 72 L276 96 L286 84 L282 148 Z"/>
+    <path d="M290 146 L294 100 L316 96 L312 118 L320 144 Z"/>
+  </g>
+  <!-- the one left standing, right at the lip of it -->
+  <circle cx="120" cy="120" r="9" fill="#3730a3"/>
+  <g fill="none" stroke="#3730a3" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M120 130 L120 144"/>
+    <path d="M120 133 L110 141"/><path d="M120 133 L130 141"/>
+    <path d="M120 144 L114 157"/><path d="M120 144 L126 157"/>
+  </g>
+</svg>

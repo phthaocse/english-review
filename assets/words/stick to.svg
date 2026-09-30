@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="A track that forks three ways, two of the branches drawn pale and left alone, while a walker carries on up the one branch that is still solid and marked"
+     >
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <!-- the branches not taken -->
+  <g fill="none" stroke="#c9cedb" stroke-width="26" stroke-linecap="round">
+    <path d="M150 166 Q112 120 58 92"/>
+    <path d="M150 166 Q198 122 266 96"/>
+  </g>
+  <!-- the way it came in, and the one branch kept to -->
+  <g fill="none" stroke="#9aa2b4" stroke-width="30" stroke-linecap="round">
+    <path d="M150 238 L150 168"/>
+    <path d="M150 166 Q158 108 176 50"/>
+  </g>
+  <g fill="none" stroke="#eef0f5" stroke-width="5" stroke-dasharray="13 13">
+    <path d="M150 238 L150 168"/>
+    <path d="M150 166 Q158 108 176 50"/>
+  </g>
+  <!-- the walker, still on it -->
+  <g stroke="#4f46e5" stroke-width="7" stroke-linecap="round" fill="none">
+    <path d="M160 88 L158 114"/>
+    <path d="M158 114 L149 134"/>
+    <path d="M158 114 L169 132"/>
+    <path d="M160 94 L147 103"/>
+    <path d="M160 94 L173 100"/>
+  </g>
+  <circle cx="161" cy="74" r="13" fill="#4f46e5"/>
+</svg>

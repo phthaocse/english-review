@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="A person sitting at a desk with a laptop, thinking of nothing but a line on a chart falling steeply away to the bottom right">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <!-- what is being thought, and it is only this -->
+  <g fill="#ffffff" stroke="#7b8399" stroke-width="3">
+    <circle cx="120" cy="156" r="6"/>
+    <circle cx="138" cy="142" r="9"/>
+    <rect x="150" y="22" width="152" height="114" rx="18"/>
+  </g>
+  <g stroke="#9aa2b4" stroke-width="3" stroke-linecap="round">
+    <path d="M170 44 L170 118"/><path d="M170 118 L286 118"/>
+  </g>
+  <path d="M176 54 L206 74 L232 68 L258 98 L280 112" fill="none" stroke="#c0392f"
+        stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <polygon points="290,120 268,116 274,104" fill="#c0392f"/>
+  <!-- the desk it is being thought at -->
+  <g fill="#7b8399">
+    <rect x="26" y="184" width="268" height="12"/>
+    <rect x="40" y="196" width="12" height="36"/>
+    <rect x="268" y="196" width="12" height="36"/>
+  </g>
+  <!-- the laptop, ignored -->
+  <path d="M130 184 L137 158 L177 158 L184 184 Z" fill="#9aa2b4"/>
+  <!-- the person -->
+  <path d="M50 184 C 54 152, 116 152, 120 184 Z" fill="#4f46e5"/>
+  <circle cx="85" cy="138" r="23" fill="#4f46e5"/>
+</svg>

@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="A rough stone lashed to a wooden stick with twine, ringed in red on one side of a dividing rule, and on the other the same tool in its later form, a small steel head on a slim handle, drawn pale">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <!-- the rule that sets the two forms side by side -->
+  <path d="M196 26 V214" stroke="#9aa2b4" stroke-width="3"/>
+  <!-- the ring that says this is the one being talked about -->
+  <ellipse cx="102" cy="132" rx="68" ry="90" fill="none" stroke="#c0392f" stroke-width="5"/>
+  <!-- the earliest form: a shaft cut from a branch -->
+  <rect x="97" y="106" width="20" height="108" rx="5" fill="#c9a227"/>
+  <!-- a stone knocked roughly into shape and sat on top of it -->
+  <path d="M58 72 L88 52 L128 56 L148 80 L140 106 L100 120 L64 104 Z" fill="#9aa2b4"/>
+  <g stroke="#7b8399" stroke-width="4" fill="none" stroke-linecap="round">
+    <path d="M76 70 L98 84 L124 66"/>
+    <path d="M70 96 L104 106 L138 90"/>
+  </g>
+  <!-- the twine holding the two together, which is all that holds them together -->
+  <g stroke="#a8841c" stroke-width="6" stroke-linecap="round">
+    <path d="M82 104 L132 96"/>
+    <path d="M84 118 L130 110"/>
+    <path d="M92 98 L122 120"/>
+    <path d="M122 96 L92 118"/>
+  </g>
+  <!-- the same job done by the later tool, kept pale because it is only the comparison -->
+  <rect x="254" y="70" width="13" height="142" rx="5" fill="#dbcb85"/>
+  <rect x="245" y="56" width="23" height="52" rx="3" fill="#a9b1c0"/>
+  <path d="M266 58 Q296 66 302 82 Q296 100 266 106 Z" fill="#bfc6d2" stroke="#a9b1c0" stroke-width="2"/>
+</svg>

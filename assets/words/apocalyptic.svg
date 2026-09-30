@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="A huge frame of flames and lightning bolts surrounding a tiny plain horizon with one knocked-over cup and a small spill on it">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <!-- flames licking off every side of the frame -->
+  <g fill="#c0392f">
+    <path d="M52 27 L69 3 L86 27 Z"/><path d="M104 27 L121 3 L138 27 Z"/>
+    <path d="M156 27 L173 3 L190 27 Z"/><path d="M208 27 L225 3 L242 27 Z"/>
+    <path d="M52 213 L69 237 L86 213 Z"/><path d="M104 213 L121 237 L138 213 Z"/>
+    <path d="M156 213 L173 237 L190 213 Z"/><path d="M208 213 L225 237 L242 213 Z"/>
+    <path d="M27 58 L3 75 L27 92 Z"/><path d="M27 103 L3 120 L27 137 Z"/><path d="M27 148 L3 165 L27 182 Z"/>
+    <path d="M293 58 L317 75 L293 92 Z"/><path d="M293 103 L317 120 L293 137 Z"/><path d="M293 148 L317 165 L293 182 Z"/>
+  </g>
+  <!-- the frame itself: far heavier than anything it holds -->
+  <rect x="42" y="42" width="236" height="156" fill="none" stroke="#c0392f" stroke-width="30"/>
+  <rect x="59" y="59" width="202" height="122" fill="none" stroke="#a02c23" stroke-width="4"/>
+  <!-- lightning thrown in for good measure -->
+  <g fill="#e0b73a">
+    <path d="M84 70 L64 118 L80 118 L62 176 L100 106 L78 106 Z"/>
+    <path d="M244 70 L224 118 L240 118 L222 176 L260 106 L238 106 Z"/>
+  </g>
+  <!-- and inside it all, the small ordinary thing that set this off -->
+  <rect x="102" y="88" width="116" height="64" fill="#ffffff" stroke="#7b8399" stroke-width="3"/>
+  <path d="M102 132 H218" stroke="#9aa2b4" stroke-width="3"/>
+  <path d="M118 104 h28 v18 a11 11 0 0 1 -28 0 z" transform="rotate(-26 132 113)" fill="#4f46e5"/>
+  <ellipse cx="172" cy="134" rx="26" ry="6" fill="#4f46e5"/>
+  <path d="M150 128 C160 132, 166 133, 176 134" fill="none" stroke="#4f46e5" stroke-width="5" stroke-linecap="round"/>
+</svg>

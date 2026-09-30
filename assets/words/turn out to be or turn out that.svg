@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="Two frames side by side each ticked in green, and below them the same verb put into the passive, struck through in red and marked with a red cross">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <!-- the two frames that work -->
+  <g fill="#ffffff" stroke="#2f6b4f" stroke-width="3">
+    <rect x="14" y="26" width="140" height="56" rx="10"/>
+    <rect x="166" y="26" width="140" height="56" rx="10"/>
+  </g>
+  <g font-family="Helvetica, Arial, sans-serif" font-size="18" font-weight="bold"
+     fill="#4f46e5" text-anchor="middle">
+    <text x="84" y="61">turn out to be</text>
+    <text x="236" y="61">turn out that</text>
+  </g>
+  <g fill="none" stroke="#2f6b4f" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M70 104 L82 116 L100 94"/>
+    <path d="M222 104 L234 116 L252 94"/>
+  </g>
+  <!-- and the passive, which never does -->
+  <rect x="90" y="146" width="140" height="56" rx="10" fill="#ffffff" stroke="#c0392f" stroke-width="3"/>
+  <text x="160" y="181" font-family="Helvetica, Arial, sans-serif" font-size="18" font-weight="bold"
+        fill="#7b8399" text-anchor="middle">is turned out</text>
+  <g stroke="#c0392f" stroke-width="7" stroke-linecap="round">
+    <path d="M148 212 L172 234"/><path d="M172 212 L148 234"/>
+  </g>
+</svg>

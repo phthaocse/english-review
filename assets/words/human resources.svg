@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="An organisation chart whose boxes have been replaced by people: one person at the top joined by lines down to a row of four below">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <defs>
+    <!-- head and shoulders, standing in for a box on the chart -->
+    <g id="person">
+      <circle cx="0" cy="-16" r="15"/>
+      <path d="M-26 27 C -26 3, -14 -3, 0 -3 C 14 -3, 26 3, 26 27 Z"/>
+    </g>
+  </defs>
+  <!-- the reporting lines, the only part left of the usual chart -->
+  <g stroke="#9aa2b4" stroke-width="4" fill="none" stroke-linecap="round">
+    <path d="M160 94 L160 126"/>
+    <path d="M48 126 L272 126"/>
+    <path d="M48 126 L48 148"/><path d="M122 126 L122 148"/>
+    <path d="M198 126 L198 148"/><path d="M272 126 L272 148"/>
+  </g>
+  <!-- the one at the top -->
+  <g fill="#4f46e5"><use href="#person" x="160" y="64"/></g>
+  <!-- and the people who make up the rest of it -->
+  <g fill="#4f46e5">
+    <use href="#person" x="48" y="180"/><use href="#person" x="122" y="180"/>
+    <use href="#person" x="198" y="180"/><use href="#person" x="272" y="180"/>
+  </g>
+</svg>

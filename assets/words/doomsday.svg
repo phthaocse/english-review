@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="A calendar whose very last page has been torn raggedly away, standing beside a clock whose hands have almost reached twelve">
+  <!-- the calendar, out of pages -->
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <g fill="#9aa2b4">
+    <rect x="42" y="42" width="10" height="26" rx="5"/>
+    <rect x="102" y="42" width="10" height="26" rx="5"/>
+  </g>
+  <path d="M18 64 q0 -8 8 -8 h112 q8 0 8 8 v106 l-18 -10 l-16 13 l-17 -11 l-16 13 l-17 -11 l-16 13 l-16 -12 l-12 9 z"
+        fill="#ffffff" stroke="#7b8399" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M18 64 q0 -8 8 -8 h112 q8 0 8 8 v22 h-128 z" fill="#c0392f"/>
+  <!-- the few days left on it, the rest torn off with the page -->
+  <g fill="#9aa2b4">
+    <rect x="30" y="98" width="18" height="16" rx="3"/><rect x="58" y="98" width="18" height="16" rx="3"/>
+    <rect x="86" y="98" width="18" height="16" rx="3"/><rect x="114" y="98" width="18" height="16" rx="3"/>
+    <rect x="30" y="124" width="18" height="16" rx="3"/><rect x="58" y="124" width="18" height="16" rx="3"/>
+    <rect x="86" y="124" width="18" height="16" rx="3"/>
+  </g>
+  <!-- the clock, a couple of minutes short of midnight -->
+  <circle cx="234" cy="134" r="68" fill="#ffffff" stroke="#7b8399" stroke-width="8"/>
+  <g stroke="#7b8399" stroke-width="7" stroke-linecap="round">
+    <path d="M234 78 V92"/><path d="M290 134 H276"/><path d="M234 190 V176"/><path d="M178 134 H192"/>
+  </g>
+  <path d="M234 134 L230 96" stroke="#4f46e5" stroke-width="11" stroke-linecap="round"/>
+  <path d="M234 134 L216 84" stroke="#c0392f" stroke-width="8" stroke-linecap="round"/>
+  <circle cx="234" cy="134" r="8" fill="#7b8399"/>
+</svg>

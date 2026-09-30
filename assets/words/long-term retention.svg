@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="A jar of marbles, a long strip of calendar days running away from it, and the same jar at the far end still holding every marble">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <!-- the jar at the start, full -->
+  <rect x="14" y="78" width="72" height="16" rx="5" fill="#7b8399"/>
+  <rect x="18" y="96" width="64" height="112" rx="12" fill="#ffffff" stroke="#7b8399" stroke-width="4"/>
+  <g fill="#4f46e5">
+    <circle cx="36" cy="186" r="12"/><circle cx="62" cy="186" r="12"/>
+    <circle cx="36" cy="160" r="12"/><circle cx="62" cy="160" r="12"/>
+    <circle cx="49" cy="136" r="12"/>
+  </g>
+  <!-- the long stretch of time in between -->
+  <g stroke="#9aa2b4" stroke-width="5" fill="none" stroke-linecap="round">
+    <path d="M100 70 L222 70"/>
+  </g>
+  <path d="M234 70 L216 60 L216 80 Z" fill="#9aa2b4"/>
+  <rect x="98" y="118" width="124" height="68" fill="#ffffff" stroke="#9aa2b4" stroke-width="3"/>
+  <g stroke="#9aa2b4" stroke-width="2">
+    <path d="M129 118 V186"/><path d="M160 118 V186"/><path d="M191 118 V186"/>
+    <path d="M98 140 H222"/>
+  </g>
+  <g fill="#9aa2b4">
+    <rect x="106" y="150" width="16" height="6" rx="3"/><rect x="106" y="164" width="16" height="6" rx="3"/>
+    <rect x="137" y="150" width="16" height="6" rx="3"/><rect x="137" y="164" width="16" height="6" rx="3"/>
+    <rect x="168" y="150" width="16" height="6" rx="3"/><rect x="168" y="164" width="16" height="6" rx="3"/>
+    <rect x="199" y="150" width="16" height="6" rx="3"/><rect x="199" y="164" width="16" height="6" rx="3"/>
+  </g>
+  <!-- the same jar long afterwards, not one marble missing -->
+  <rect x="234" y="78" width="72" height="16" rx="5" fill="#7b8399"/>
+  <rect x="238" y="96" width="64" height="112" rx="12" fill="#ffffff" stroke="#7b8399" stroke-width="4"/>
+  <g fill="#4f46e5">
+    <circle cx="256" cy="186" r="12"/><circle cx="282" cy="186" r="12"/>
+    <circle cx="256" cy="160" r="12"/><circle cx="282" cy="160" r="12"/>
+    <circle cx="269" cy="136" r="12"/>
+  </g>
+</svg>

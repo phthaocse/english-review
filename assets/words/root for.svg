@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="A small crowd with their arms thrown up, all turned towards one figure standing apart from them and cheering them on">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <!-- the supporters, arms up, all turned the same way -->
+  <g fill="#9aa2b4" stroke="#9aa2b4" stroke-width="10" stroke-linecap="round">
+    <g><circle cx="34" cy="126" r="17" stroke="none"/>
+       <path d="M34 146 V196"/><path d="M34 156 L14 128"/><path d="M34 156 L54 128"/>
+       <path d="M34 196 L20 226"/><path d="M34 196 L48 226"/></g>
+    <g><circle cx="90" cy="104" r="17" stroke="none"/>
+       <path d="M90 124 V178"/><path d="M90 134 L70 106"/><path d="M90 134 L110 106"/>
+       <path d="M90 178 L76 212"/><path d="M90 178 L104 212"/></g>
+    <g><circle cx="146" cy="128" r="17" stroke="none"/>
+       <path d="M146 148 V198"/><path d="M146 158 L126 130"/><path d="M146 158 L166 130"/>
+       <path d="M146 198 L132 228"/><path d="M146 198 L160 228"/></g>
+  </g>
+  <!-- the noise coming off their raised hands -->
+  <g stroke="#c9a227" stroke-width="5" fill="none" stroke-linecap="round">
+    <path d="M10 110 L4 100"/><path d="M18 106 L16 94"/>
+    <path d="M56 110 L62 100"/><path d="M50 106 L50 94"/>
+    <path d="M66 88 L60 78"/><path d="M74 84 L72 72"/>
+    <path d="M112 88 L118 78"/><path d="M106 84 L106 72"/>
+    <path d="M122 112 L116 102"/><path d="M130 108 L128 96"/>
+    <path d="M168 112 L174 102"/><path d="M162 108 L162 96"/>
+  </g>
+  <!-- the one they are all behind -->
+  <g fill="#4f46e5" stroke="#4f46e5" stroke-width="13" stroke-linecap="round">
+    <circle cx="254" cy="88" r="24" stroke="none"/>
+    <path d="M254 114 V178"/><path d="M254 126 L222 152"/><path d="M254 126 L288 150"/>
+    <path d="M254 178 L232 224"/><path d="M254 178 L278 224"/>
+  </g>
+</svg>

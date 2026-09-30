@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="Four slots in a row spelling out a pattern: the word let, then an object, then an empty slot crossed out in red, then the plain verb, with a struck-through to underneath the empty slot">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <!-- the verb that starts the pattern -->
+  <rect x="21" y="80" width="64" height="56" rx="8" fill="#4f46e5"/>
+  <!-- whatever is being let: the object -->
+  <rect x="95" y="80" width="48" height="56" rx="8" fill="#7b8399"/>
+  <!-- the slot where a to would go in most other patterns, and here does not -->
+  <rect x="153" y="80" width="56" height="56" rx="8" fill="#ffffff" stroke="#9aa2b4" stroke-width="4" stroke-dasharray="9 8"/>
+  <g stroke="#c0392f" stroke-width="7" stroke-linecap="round">
+    <path d="M165 92 L197 124"/>
+    <path d="M197 92 L165 124"/>
+  </g>
+  <!-- the verb in its bare form, which is what actually follows -->
+  <rect x="219" y="80" width="80" height="56" rx="8" fill="#4f46e5"/>
+  <g font-family="Helvetica, Arial, sans-serif" font-size="24" font-weight="bold" fill="#ffffff" text-anchor="middle">
+    <text x="53" y="116">let</text>
+    <text x="119" y="116">X</text>
+    <text x="259" y="116">fool</text>
+  </g>
+  <!-- the word that has been dropped, and the tick for the form that is kept -->
+  <text x="181" y="180" font-family="Helvetica, Arial, sans-serif" font-size="22" font-weight="bold" fill="#c0392f" text-anchor="middle">to</text>
+  <path d="M162 173 H200" stroke="#c0392f" stroke-width="4" stroke-linecap="round"/>
+  <path d="M245 168 l9 11 l18 -24" fill="none" stroke="#2f6b4f" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

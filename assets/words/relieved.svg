@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="A figure with closed eyes and slumped shoulders breathing out a long stream of air, the boulder they had been carrying now dumped on the ground beside them">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <!-- the ground -->
+  <path d="M18 230 H302" stroke="#7b8399" stroke-width="5" stroke-linecap="round"/>
+  <!-- the dust it threw up when it came down -->
+  <g fill="#9aa2b4">
+    <circle cx="190" cy="218" r="9"/>
+    <circle cx="176" cy="226" r="6"/>
+    <circle cx="310" cy="216" r="8"/>
+  </g>
+  <!-- the load, set down at last -->
+  <path d="M196 228 Q186 194 208 172 Q230 148 264 152 Q298 158 306 190 Q312 212 302 228 Z" fill="#7b8399"/>
+  <g stroke="#9aa2b4" stroke-width="5" fill="none" stroke-linecap="round">
+    <path d="M212 180 Q240 192 260 174"/>
+    <path d="M222 208 Q254 218 290 200"/>
+  </g>
+  <!-- the breath going out -->
+  <g fill="#9aa2b4">
+    <circle cx="138" cy="88" r="7"/>
+    <circle cx="158" cy="78" r="11"/>
+    <circle cx="182" cy="62" r="15"/>
+  </g>
+  <!-- the figure, arms loose and shoulders let down -->
+  <g stroke="#4f46e5" stroke-width="12" stroke-linecap="round" fill="none">
+    <path d="M92 178 L90 226"/>
+    <path d="M128 178 L130 226"/>
+  </g>
+  <g stroke="#4f46e5" stroke-width="11" stroke-linecap="round" fill="none">
+    <path d="M80 128 Q64 154 70 186"/>
+    <path d="M140 128 Q156 154 150 186"/>
+  </g>
+  <path d="M80 126 Q110 106 140 126 L146 182 L74 182 Z" fill="#4f46e5"/>
+  <circle cx="110" cy="84" r="25" fill="#4f46e5"/>
+  <g stroke="#ffffff" stroke-width="4" stroke-linecap="round" fill="none">
+    <path d="M94 82 q8 -9 16 0"/>
+    <path d="M114 80 q7 -8 14 0"/>
+    <path d="M104 96 q8 10 16 0"/>
+  </g>
+</svg>

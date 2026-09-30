@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="A long row of identical grey discs ending in one thing of an entirely different shape and colour">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <!-- the line everything sits on -->
+  <path d="M10 122 H300" stroke="#9aa2b4" stroke-width="4" stroke-linecap="round" stroke-dasharray="2 14"/>
+  <!-- everything that has happened until now: all the same -->
+  <g fill="#9aa2b4">
+    <circle cx="26" cy="122" r="17"/><circle cx="70" cy="122" r="17"/><circle cx="114" cy="122" r="17"/>
+    <circle cx="158" cy="122" r="17"/><circle cx="202" cy="122" r="17"/>
+  </g>
+  <!-- and then this, which is nothing like any of them -->
+  <polygon points="262.0,76.0 270.0,102.6 294.5,89.5 281.4,114.0 308.0,122.0 281.4,130.0 294.5,154.5 270.0,141.4 262.0,168.0 254.0,141.4 229.5,154.5 242.6,130.0 216.0,122.0 242.6,114.0 229.5,89.5 254.0,102.6"
+           fill="#c0392f" stroke="#a02c23" stroke-width="4" stroke-linejoin="round"/>
+</svg>

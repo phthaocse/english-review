@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="Two panels: on the left a hand with its fingers spread clamped across a person mouth so nothing gets out, on the right a lid coming down over a burning flame to put it out">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <!-- two ways of shutting something down, one word -->
+  <path d="M160 20 L160 220" stroke="#9aa2b4" stroke-width="2"/>
+
+  <!-- someone with something to say, and the hand that stops it -->
+  <circle cx="80" cy="102" r="48" fill="#4f46e5"/>
+  <circle cx="60" cy="86" r="8" fill="#ffffff"/>
+  <circle cx="100" cy="86" r="8" fill="#ffffff"/>
+  <path d="M0 214 L44 162" stroke="#9aa2b4" stroke-width="36" stroke-linecap="round"/>
+  <g fill="#9aa2b4">
+    <rect x="38" y="100" width="16" height="46" rx="8" transform="rotate(-12 46 123)"/>
+    <rect x="60" y="96" width="16" height="50" rx="8" transform="rotate(-4 68 121)"/>
+    <rect x="82" y="98" width="16" height="48" rx="8" transform="rotate(4 90 122)"/>
+    <rect x="104" y="104" width="16" height="42" rx="8" transform="rotate(12 112 125)"/>
+    <ellipse cx="78" cy="152" rx="44" ry="22"/>
+    <rect x="22" y="140" width="16" height="36" rx="8" transform="rotate(34 30 158)"/>
+  </g>
+
+  <!-- and the same thing done to a fire -->
+  <rect x="222" y="192" width="36" height="32" fill="#9aa2b4"/>
+  <path d="M240 190 C 210 172, 216 140, 240 116 C 250 140, 270 144, 268 166 C 268 182, 256 190, 240 190 Z" fill="#e0b73a"/>
+  <path d="M240 188 C 224 176, 228 156, 240 142 C 246 156, 258 160, 256 172 C 256 182, 250 188, 240 188 Z" fill="#c0392f"/>
+  <g fill="#7b8399">
+    <path d="M186 94 Q240 56, 294 94 Z"/>
+    <rect x="182" y="94" width="116" height="11" rx="5"/>
+    <rect x="234" y="60" width="12" height="18" rx="4"/>
+  </g>
+  <g stroke="#7b8399" stroke-width="5" stroke-linecap="round">
+    <path d="M192 116 L192 128"/><path d="M288 116 L288 128"/>
+  </g>
+  <polygon points="192,140 184,124 200,124" fill="#7b8399"/>
+  <polygon points="288,140 280,124 296,124" fill="#7b8399"/>
+</svg>

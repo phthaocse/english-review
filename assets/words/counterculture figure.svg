@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="A river whose broad current runs one way and whose near lane pushes back the other way, with one person standing large and alone on the bank in front of it">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <!-- the channel that carries everybody else -->
+  <path d="M0 22 C 90 12, 220 36, 320 20 L320 112 C 220 128, 90 104, 0 116 Z" fill="#4f46e5" fill-opacity=".20"/>
+  <path d="M0 22 C 90 12, 220 36, 320 20" fill="none" stroke="#7b8399" stroke-width="5"/>
+  <g fill="none" stroke="#4f46e5" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" opacity=".75">
+    <path d="M46 38 L66 50 L46 62"/><path d="M128 44 L148 56 L128 68"/>
+    <path d="M210 50 L230 62 L210 74"/><path d="M276 42 L296 54 L276 66"/>
+  </g>
+  <!-- the lane that sets itself against all of it -->
+  <path d="M0 82 C 90 70, 220 96, 320 80 L320 112 C 220 128, 90 104, 0 116 Z" fill="#c0392f" fill-opacity=".32"/>
+  <g fill="none" stroke="#c0392f" stroke-width="9" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M86 90 L64 101 L86 112"/><path d="M182 100 L160 111 L182 122"/>
+    <path d="M272 92 L250 103 L272 114"/>
+  </g>
+  <path d="M0 116 C 90 104, 220 128, 320 112" fill="none" stroke="#7b8399" stroke-width="5"/>
+  <!-- the one who stands out on the bank and will not join in -->
+  <g fill="#4f46e5" stroke="#4f46e5" stroke-width="13" stroke-linecap="round">
+    <circle cx="160" cy="156" r="22" stroke="none"/>
+    <path d="M160 178 L160 202"/>
+    <path d="M136 188 L184 188"/>
+    <path d="M160 202 L142 236"/>
+    <path d="M160 202 L178 236"/>
+  </g>
+</svg>

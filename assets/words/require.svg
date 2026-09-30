@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="A thick ring with one segment missing so it cannot close, the empty gap marked out in red, and the piece that would fill it waiting alongside with an arrow pointing in">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <!-- the ring, complete except for one segment -->
+  <path d="M187.2 155 A66 66 0 1 1 187.2 89" fill="none" stroke="#4f46e5" stroke-width="26"/>
+  <!-- the hole that stops it closing -->
+  <path d="M187.2 89 A66 66 0 0 1 187.2 155" fill="none" stroke="#c0392f"
+        stroke-width="4" stroke-dasharray="7 6"/>
+  <!-- the piece it needs, and nothing else will do -->
+  <g transform="translate(92,-6)">
+    <path d="M187.2 89 A66 66 0 0 1 187.2 155" fill="none" stroke="#4f46e5" stroke-width="26"/>
+  </g>
+  <path d="M256 118 L228 120" stroke="#c0392f" stroke-width="5" stroke-linecap="round"/>
+  <polygon points="214,121 232,113 232,128" fill="#c0392f"/>
+</svg>

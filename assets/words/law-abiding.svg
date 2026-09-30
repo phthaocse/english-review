@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="Five people standing in an even row with a clear stretch of floor in front of them, every one of them staying on the near side of a bold painted line">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <!-- the far side of the line, where none of them has stepped -->
+  <rect x="0" y="200" width="320" height="40" fill="#c8cdd8"/>
+  <!-- the queue: same size, same spacing, all well back from the line -->
+  <g fill="#4f46e5">
+    <circle cx="48" cy="82" r="18"/><path d="M24 158 Q24 104 48 100 Q72 104 72 158 Z"/>
+    <circle cx="106" cy="82" r="18"/><path d="M82 158 Q82 104 106 100 Q130 104 130 158 Z"/>
+    <circle cx="164" cy="82" r="18"/><path d="M140 158 Q140 104 164 100 Q188 104 188 158 Z"/>
+    <circle cx="222" cy="82" r="18"/><path d="M198 158 Q198 104 222 100 Q246 104 246 158 Z"/>
+    <circle cx="280" cy="82" r="18"/><path d="M256 158 Q256 104 280 100 Q304 104 304 158 Z"/>
+  </g>
+  <!-- their feet, so it is plain where each of them is standing -->
+  <g fill="#7b8399">
+    <ellipse cx="48" cy="162" rx="26" ry="6"/><ellipse cx="106" cy="162" rx="26" ry="6"/>
+    <ellipse cx="164" cy="162" rx="26" ry="6"/><ellipse cx="222" cy="162" rx="26" ry="6"/>
+    <ellipse cx="280" cy="162" rx="26" ry="6"/>
+  </g>
+  <!-- the line painted on the floor, a good stride further on -->
+  <rect x="8" y="188" width="304" height="14" rx="7" fill="#e0b73a" stroke="#a8841c" stroke-width="4"/>
+</svg>

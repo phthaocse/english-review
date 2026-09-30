@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="A walker on one track reaching the point where a second track cuts across it, and a key lying there inside a red ring">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <!-- the other track, the one nobody was following -->
+  <path d="M34 54 Q120 96 176 130 Q236 168 300 200" fill="none" stroke="#c9cedb" stroke-width="22" stroke-linecap="round"/>
+  <!-- the track the walker is on -->
+  <path d="M20 214 Q120 190 168 136 Q210 90 300 64" fill="none" stroke="#9aa2b4" stroke-width="26" stroke-linecap="round"/>
+  <!-- the walker, a few steps short of the crossing -->
+  <g stroke="#4f46e5" stroke-width="7" stroke-linecap="round" fill="none">
+    <path d="M75 176 L75 200"/>
+    <path d="M75 200 L65 218"/>
+    <path d="M75 200 L88 216"/>
+    <path d="M75 184 L61 194"/>
+    <path d="M75 184 L89 190"/>
+  </g>
+  <circle cx="75" cy="162" r="13" fill="#4f46e5"/>
+  <!-- the ring that marks the spot where the two meet -->
+  <circle cx="178" cy="128" r="40" fill="none" stroke="#c0392f" stroke-width="6"/>
+  <!-- the thing found lying there -->
+  <g transform="translate(178,128) rotate(-20) scale(1.5)">
+    <circle cx="-15" cy="0" r="9" fill="none" stroke="#a8841c" stroke-width="6"/>
+    <rect x="-8" y="-4" width="29" height="8" rx="2" fill="#e0b73a" stroke="#a8841c" stroke-width="2"/>
+    <rect x="5" y="4" width="6" height="10" rx="2" fill="#e0b73a" stroke="#a8841c" stroke-width="2"/>
+    <rect x="15" y="4" width="6" height="8" rx="2" fill="#e0b73a" stroke="#a8841c" stroke-width="2"/>
+  </g>
+</svg>

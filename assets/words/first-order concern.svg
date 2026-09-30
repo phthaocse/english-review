@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="One large indigo block standing in front, with three progressively smaller grey blocks stepping away behind it">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <!-- the knock-on concerns, each smaller and further back than the last -->
+  <rect x="252" y="66" width="48" height="48" rx="8" fill="#9aa2b4" opacity=".55"/>
+  <rect x="220" y="82" width="66" height="66" rx="9" fill="#9aa2b4" opacity=".75"/>
+  <rect x="178" y="102" width="88" height="88" rx="11" fill="#7b8399"/>
+  <!-- the one that matters most: nearest, largest, and the only one in colour -->
+  <rect x="24" y="52" width="148" height="148" rx="16" fill="#4f46e5" stroke="#2e2896" stroke-width="5"/>
+  <!-- arrows showing the smaller ones follow from it -->
+  <g stroke="#7b8399" stroke-width="4" fill="none" stroke-linecap="round">
+    <path d="M180 38 C218 20, 262 24, 286 44"/>
+  </g>
+  <path d="M286 44 L272 30 L292 26 Z" fill="#7b8399"/>
+</svg>

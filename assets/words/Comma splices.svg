@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="Two complete sentences joined by nothing but a comma, marked wrong, and below them the same two sentences separated by a full stop, marked right">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <!-- the wrong join: two whole sentences and only a comma between them -->
+  <g fill="#4f46e5">
+    <rect x="20" y="50" width="84" height="28" rx="6"/>
+    <rect x="142" y="50" width="84" height="28" rx="6"/>
+  </g>
+  <!-- the white block at the head of each bar, the capital that starts a sentence -->
+  <g fill="#ffffff">
+    <rect x="27" y="56" width="14" height="16" rx="3"/>
+    <rect x="149" y="56" width="14" height="16" rx="3"/>
+  </g>
+  <text x="122" y="80" text-anchor="middle" font-family="Georgia, Times, serif"
+        font-size="96" font-weight="bold" fill="#c0392f">,</text>
+  <g stroke="#c0392f" stroke-width="9" stroke-linecap="round">
+    <path d="M250 50 L292 92"/><path d="M292 50 L250 92"/>
+  </g>
+  <!-- the rule separating the wrong version from the right one -->
+  <path d="M20 128 L300 128" stroke="#9aa2b4" stroke-width="2"/>
+  <!-- the fix: a full stop, so each sentence stands on its own -->
+  <g fill="#4f46e5">
+    <rect x="20" y="162" width="84" height="28" rx="6"/>
+    <rect x="142" y="162" width="84" height="28" rx="6"/>
+  </g>
+  <g fill="#ffffff">
+    <rect x="27" y="168" width="14" height="16" rx="3"/>
+    <rect x="149" y="168" width="14" height="16" rx="3"/>
+  </g>
+  <text x="122" y="192" text-anchor="middle" font-family="Georgia, Times, serif"
+        font-size="96" font-weight="bold" fill="#4f46e5">.</text>
+  <path d="M250 178 L262 192 L292 158" fill="none" stroke="#2f6b4f"
+        stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

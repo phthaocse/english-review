@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="A measuring jug whose liquid stops exactly level with a marked red line on its side, with a green tick beside that line">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <!-- the handle of the jug -->
+  <path d="M97 84 Q60 100 68 134 Q74 162 104 166" fill="none" stroke="#7b8399" stroke-width="10" stroke-linecap="round"/>
+  <!-- the liquid, stopping exactly at the mark and no higher -->
+  <path d="M105 118 L109 210 Q111 220 122 220 L198 220 Q209 220 211 210 L215 118 Z" fill="#4f46e5"/>
+  <!-- the jug itself, open at the top, with a pouring lip -->
+  <path d="M96 52 L110 212 Q112 224 124 224 L196 224 Q208 224 210 212 L224 52" fill="none" stroke="#7b8399" stroke-width="7" stroke-linejoin="round"/>
+  <path d="M224 52 L254 60 L229 74" fill="none" stroke="#7b8399" stroke-width="7" stroke-linejoin="round"/>
+  <!-- the other graduations, which the level has passed but not reached -->
+  <g stroke="#7b8399" stroke-width="4" stroke-linecap="round">
+    <path d="M108 160 H136"/>
+    <path d="M110 190 H138"/>
+  </g>
+  <!-- the mark that says how much is enough -->
+  <path d="M76 118 H246" stroke="#c0392f" stroke-width="6" stroke-linecap="round"/>
+  <!-- and the verdict on hitting it exactly -->
+  <path d="M258 118 l10 12 l20 -28" fill="none" stroke="#2f6b4f" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

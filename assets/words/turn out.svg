@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="A taped-up box on the left, an arrow, and the same box open on the right with something bright rising out of it, watched by a small face with raised eyebrows">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <!-- the box while nobody knew -->
+  <rect x="30" y="104" width="114" height="94" rx="3" fill="#c9a227"/>
+  <rect x="30" y="104" width="114" height="11" fill="#a8841c"/>
+  <rect x="79" y="104" width="16" height="94" fill="#e0b73a"/>
+  <!-- and then it was opened -->
+  <path d="M152 160 H174" stroke="#7b8399" stroke-width="8" stroke-linecap="round"/>
+  <polygon points="190,160 172,150 172,170" fill="#7b8399"/>
+  <!-- what was in it all along -->
+  <g stroke="#c0392f" stroke-width="6" stroke-linecap="round">
+    <path d="M222 83 L212 74"/>
+    <path d="M236 74 L231 61"/>
+    <path d="M253 72 L255 59"/>
+    <path d="M268 79 L277 69"/>
+    <path d="M277 93 L290 88"/>
+  </g>
+  <circle cx="247" cy="104" r="27" fill="#4f46e5"/>
+  <!-- the flaps thrown back, and the box itself -->
+  <polygon points="190,124 172,98 190,90 206,120" fill="#e0b73a"/>
+  <polygon points="304,124 318,100 300,92 286,120" fill="#e0b73a"/>
+  <rect x="190" y="124" width="114" height="74" rx="3" fill="#c9a227"/>
+  <!-- the face that did not see it coming -->
+  <circle cx="290" cy="46" r="21" fill="#ffffff" stroke="#7b8399" stroke-width="4"/>
+  <g fill="#7b8399">
+    <circle cx="283" cy="48" r="3.4"/>
+    <circle cx="297" cy="48" r="3.4"/>
+    <ellipse cx="290" cy="58" rx="4.5" ry="5.5"/>
+  </g>
+  <g fill="none" stroke="#c0392f" stroke-width="3.5" stroke-linecap="round">
+    <path d="M277 38 q6 -7 13 -3"/>
+    <path d="M291 35 q7 -4 12 3"/>
+  </g>
+</svg>

@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
+     aria-label="The same speech bubble drawn three times over, each copy heavier and darker than the one before it">
+  <rect width="320" height="240" fill="#eef0f5"/>
+  <!-- said once, lightly -->
+  <g fill="#ffffff" stroke="#9aa2b4" stroke-width="3" stroke-linejoin="round">
+    <path d="M18 14 h138 a12 12 0 0 1 12 12 v54 a12 12 0 0 1 -12 12 h-96 l-24 22 l8 -22 h-26
+             a12 12 0 0 1 -12 -12 v-54 a12 12 0 0 1 12 -12 z"/>
+  </g>
+  <g stroke="#9aa2b4" stroke-width="7" stroke-linecap="round">
+    <path d="M34 42 H150"/><path d="M34 64 H116"/>
+  </g>
+  <!-- said again, with more weight behind it -->
+  <g fill="#ffffff" stroke="#7b8399" stroke-width="5" stroke-linejoin="round">
+    <path d="M70 84 h138 a12 12 0 0 1 12 12 v54 a12 12 0 0 1 -12 12 h-96 l-24 22 l8 -22 h-26
+             a12 12 0 0 1 -12 -12 v-54 a12 12 0 0 1 12 -12 z"/>
+  </g>
+  <g stroke="#7b8399" stroke-width="8" stroke-linecap="round">
+    <path d="M86 112 H202"/><path d="M86 134 H168"/>
+  </g>
+  <!-- and said a third time, so it cannot be missed -->
+  <g fill="#ffffff" stroke="#4f46e5" stroke-width="8" stroke-linejoin="round">
+    <path d="M124 146 h158 a12 12 0 0 1 12 12 v48 a12 12 0 0 1 -12 12 h-110 l-26 20 l8 -20 h-30
+             a12 12 0 0 1 -12 -12 v-48 a12 12 0 0 1 12 -12 z"/>
+  </g>
+  <g stroke="#4f46e5" stroke-width="10" stroke-linecap="round">
+    <path d="M142 174 H274"/><path d="M142 198 H238"/>
+  </g>
+</svg>
