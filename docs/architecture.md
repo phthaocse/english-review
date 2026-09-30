@@ -14,31 +14,33 @@ is responsible for each step of adding a word.
 
 ## What runs where
 
-The diagram below shows every running piece at once. Two things in it are worth more
-than the rest: exactly one box holds a secret, and the Mac sits outside the cloud
-entirely, reaching the site through git rather than through any API.
+The diagram below names the technology in every component, because "a Worker"
+and "a database" are not descriptions anyone can act on. Two connections in it
+are worth pausing over, since both were drawn wrongly in the first version of
+this document. Signing in happens in the browser, which loads Google's own
+script and receives the token; the Worker never participates in that exchange
+and only later fetches Google's public keys to check the signature. And the call
+to Gemini does not leave the Worker at all. It leaves a Durable Object, because
+Gemini is not served in every region a Worker may be scheduled in, so the relay
+exists to move the call somewhere it is.
 
-![Container diagram: a person reaches a public static site and a private Worker; the Worker alone calls Google, Gemini, Oxford and D1, while the Mac builds the data file the static site serves](containers.svg)
+![Component diagram naming the technology in each part: the browser runs vanilla ES modules and gets its token from Google directly, while inside Cloudflare a Worker reaches D1 and a Durable Object relay through bindings and only the relay calls Gemini](containers.svg)
 
-The static site is ordinary files on GitHub Pages with no build step, because there is
-nothing to compile. Its data is a JSON snapshot of the vault committed next to the
-code, which is why Look up works with the network off and without signing in.
+Bindings are the other thing the picture makes concrete. Inside Cloudflare the
+Worker does not open a connection to D1 or to the relay; `wrangler.toml` declares
+`DB` and `REGION`, and the runtime hands them over as objects. That is why those
+arrows are drawn differently from the ones leaving the platform, and why nothing
+inside that panel needs a URL or a credential.
 
-The Worker is the only component that holds credentials, so it is also the only
-component that needs the allowlist in front of it. It verifies a Google ID token,
-checks the email against a table, and only then does any work. Nothing downstream of
-it trusts a field the browser sent.
+Each third party fails in its own way, which is the practical reason for drawing
+them apart. Google going down stops anyone signing in. Gemini going down stops
+capture by photograph while typing a word still works. Oxford going down costs
+only the dictionary's wording, since the draft falls back to the model's.
 
-Google, Gemini and Oxford are drawn dashed because we do not control them, and each
-one fails differently. Google going down means nobody can sign in. Gemini going down
-means capture by photograph stops while typing a word still works. Oxford going down
-means definitions arrive as the model's draft wording instead of the dictionary's,
-which is a degradation rather than an outage.
-
-The Mac is on the diagram because the vault it holds is the actual source of truth,
-and nothing in the cloud can reach it. It lives on an external drive, so CI cannot
-read it either, which is the reason the generated data file is committed to the repo
-rather than built during deployment.
+The Mac is on the diagram because the vault it holds is the actual source of
+truth and nothing in the cloud can reach it. It sits on an external drive, so CI
+cannot read it either, which is why the generated data file is committed to the
+repository instead of being built during deployment.
 
 ## The split that explains most surprises
 
@@ -57,6 +59,43 @@ A word captured on the phone today therefore sits in D1 while Look up still read
 JSON file that knows nothing about it. It appears only after the Mac regenerates that
 file and pushes. Closing this loop is what [sync.md](sync.md) designs, and it is the
 largest unbuilt piece of the system.
+
+## Inside the database
+
+D1 is SQLite running at Cloudflare's edge, and the schema is ordinary SQL with
+foreign keys on. The same file is loaded into plain SQLite by the test suite, so
+the API tests run against real constraints rather than a mock.
+
+![Data model: nine tables grouped into access, content, limits and audit, plus a progress group that nothing currently writes](data-model.svg)
+
+Nine tables fall into four groups, and the grouping carries the design. Access is
+one table, `user`, holding the allowlist as rows so that granting or revoking
+somebody needs no deployment. Content is `item` with `example`, `sense` and `tag`
+hanging off it, shared by everyone rather than owned per person. Limits and audit
+are `usage_counter` and `vision_log`, which exist to bound and explain the one
+expensive operation in the system. Progress is `review_state` and `review_log`,
+and nothing writes them.
+
+The single most load-bearing line in the schema is `UNIQUE (term, kind)` on
+`item`. It is what turns meeting a word twice into a merge rather than an error,
+and it is also why seeding the vault's existing 204 words matters: until that
+migration runs, the constraint can only catch a word you captured before, not one
+you have had a note for since March.
+
+## The API
+
+Five routes, and the interesting part is what happens before any of them. The
+diagram below shows the three gates every request clears and what each one
+refuses with, then the routes themselves with their real response codes.
+
+![The API surface: every request passes a CORS check, token verification against the allowlist and a route lookup before reaching one of five handlers, each with its own response codes](api.svg)
+
+The two status codes worth remembering are both 429, and they mean different
+things. Ours fires when a person has used the fifty image reads allowed in a day,
+and it is charged before the model is called so that a failure still counts.
+Gemini's fires when the free tier's own daily allowance is gone across every key
+the Worker holds. The first is a limit we chose and can raise; the second resets
+at Google's convenience and is the real ceiling on the feature.
 
 ## Reading a photograph
 

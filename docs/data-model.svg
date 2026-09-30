@@ -1,0 +1,164 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 800" role="img"
+     aria-label="Data model: nine SQLite tables in D1, grouped into access, content, limits and audit, plus a progress group that nothing writes to">
+  <style>
+    .t   { font-family: -apple-system, "Helvetica Neue", Arial, sans-serif; }
+    .m   { font-family: ui-monospace, "SF Mono", Menlo, monospace; }
+    .h1  { font-size: 20px; font-weight: 700; fill: #1b1f2a; }
+    .sub { font-size: 13px; fill: #5b6275; }
+    .tn  { font-size: 13px; font-weight: 700; fill: #ffffff; }
+    .tp  { font-size: 10px; fill: #ffffff; opacity: .85; }
+    .col { font-size: 10.5px; fill: #3b4251; }
+    .key { font-size: 9px; font-weight: 700; fill: #4f46e5; }
+    .cat { font-size: 11px; font-weight: 700; letter-spacing: .06em; }
+    .fk  { font-size: 10px; font-weight: 700; fill: #7b8399; }
+    .lg  { font-size: 11.5px; fill: #5b6275; }
+    .rd  { font-size: 11.5px; font-weight: 700; fill: #c0392f; }
+  </style>
+  <defs>
+    <marker id="f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#7b8399"/></marker>
+  </defs>
+  <rect width="1120" height="800" fill="#ffffff"/>
+  <text class="t h1"  x="30" y="34">Inside D1: SQLite, nine tables</text>
+  <text class="t sub" x="30" y="55">The same schema runs against plain SQLite in the test suite, so the tests exercise real SQL.</text>
+
+  <!-- user -->
+  <rect x="36" y="94" width="262" height="140" rx="8" fill="#ffffff" stroke="#2f6b4f" stroke-width="2"/>
+  <path d="M36 104 a8 8 0 0 1 8 -8 h246 a8 8 0 0 1 8 8 v26 H36 z" fill="#2f6b4f"/>
+  <text class="t tn" x="50" y="114">user</text>
+  <text class="t tp" x="50" y="126">the allowlist. membership is data, not code.</text>
+  <text class="t col m" x="50" y="150">id           <tspan class="key">PK</tspan></text>
+  <text class="t col m" x="50" y="166">email        <tspan class="key">UNIQUE</tspan></text>
+  <text class="t col m" x="50" y="182">name</text>
+  <text class="t col m" x="50" y="198">role         owner | member</text>
+  <text class="t col m" x="50" y="214">status       allowed | revoked</text>
+  <text class="t col m" x="50" y="228">created_at, last_seen_at</text>
+
+  <!-- item -->
+  <rect x="380" y="94" width="352" height="248" rx="8" fill="#ffffff" stroke="#4f46e5" stroke-width="2"/>
+  <path d="M380 104 a8 8 0 0 1 8 -8 h336 a8 8 0 0 1 8 8 v26 H380 z" fill="#4f46e5"/>
+  <text class="t tn" x="394" y="114">item</text>
+  <text class="t tp" x="394" y="126">one row per thing learnt. shared by everyone.</text>
+  <text class="t col m" x="394" y="150">id                       <tspan class="key">PK</tspan></text>
+  <text class="t col m" x="394" y="166">term, kind               <tspan class="key">UNIQUE TOGETHER</tspan></text>
+  <text class="t col m" x="394" y="186">meaning, vi, ipa, cefr</text>
+  <text class="t col m" x="394" y="202">pattern, register, rule, notes</text>
+  <text class="t col m" x="394" y="222">status    captured | enriched | published</text>
+  <text class="t col m" x="394" y="238">source    photo | typed | vault</text>
+  <text class="t col m" x="394" y="254">source_note</text>
+  <text class="t col m" x="394" y="274">captured_by              <tspan class="key">FK user</tspan></text>
+  <text class="t col m" x="394" y="290">created_at, updated_at</text>
+  <line x1="394" y1="304" x2="718" y2="304" stroke="#e3e1fb"/>
+  <text class="t col m" x="394" y="322">idx_item_status, idx_item_created</text>
+  <text class="t col m" x="394" y="336">the UNIQUE pair is what makes a repeat a merge</text>
+
+  <!-- example -->
+  <rect x="800" y="94" width="284" height="104" rx="8" fill="#ffffff" stroke="#4f46e5" stroke-width="2"/>
+  <path d="M800 104 a8 8 0 0 1 8 -8 h268 a8 8 0 0 1 8 8 v26 H800 z" fill="#4f46e5"/>
+  <text class="t tn" x="814" y="114">example</text>
+  <text class="t tp" x="814" y="126">sentences, with the target in asterisks</text>
+  <text class="t col m" x="814" y="150">id                <tspan class="key">PK</tspan></text>
+  <text class="t col m" x="814" y="166">item_id           <tspan class="key">FK CASCADE</tspan></text>
+  <text class="t col m" x="814" y="182">text, position</text>
+
+  <!-- sense -->
+  <rect x="800" y="216" width="284" height="120" rx="8" fill="#ffffff" stroke="#4f46e5" stroke-width="2"/>
+  <path d="M800 226 a8 8 0 0 1 8 -8 h268 a8 8 0 0 1 8 8 v26 H800 z" fill="#4f46e5"/>
+  <text class="t tn" x="814" y="236">sense</text>
+  <text class="t tp" x="814" y="248">a polysemous word gets one row per meaning</text>
+  <text class="t col m" x="814" y="272">id                <tspan class="key">PK</tspan></text>
+  <text class="t col m" x="814" y="288">item_id           <tspan class="key">FK CASCADE</tspan></text>
+  <text class="t col m" x="814" y="304">gloss, vi, example</text>
+  <text class="t col m" x="814" y="320">position</text>
+
+  <!-- tag -->
+  <rect x="800" y="354" width="284" height="88" rx="8" fill="#ffffff" stroke="#4f46e5" stroke-width="2"/>
+  <path d="M800 364 a8 8 0 0 1 8 -8 h268 a8 8 0 0 1 8 8 v26 H800 z" fill="#4f46e5"/>
+  <text class="t tn" x="814" y="374">tag</text>
+  <text class="t tp" x="814" y="386">free-form labels, many to one</text>
+  <text class="t col m" x="814" y="410">item_id, tag      <tspan class="key">PK TOGETHER</tspan></text>
+  <text class="t col m" x="814" y="426">                  <tspan class="key">FK CASCADE</tspan></text>
+
+  <!-- usage_counter -->
+  <rect x="36" y="272" width="262" height="108" rx="8" fill="#ffffff" stroke="#8a6d1f" stroke-width="2"/>
+  <path d="M36 282 a8 8 0 0 1 8 -8 h246 a8 8 0 0 1 8 8 v26 H36 z" fill="#8a6d1f"/>
+  <text class="t tn" x="50" y="292">usage_counter</text>
+  <text class="t tp" x="50" y="304">what bounds a stolen session</text>
+  <text class="t col m" x="50" y="328">user_id, day, kind   <tspan class="key">PK</tspan></text>
+  <text class="t col m" x="50" y="344">count</text>
+  <text class="t col m" x="50" y="364">upsert then read, so it is</text>
+  <text class="t col m" x="50" y="376">charged before any work starts</text>
+
+  <!-- vision_log -->
+  <rect x="36" y="414" width="262" height="168" rx="8" fill="#ffffff" stroke="#8a6d1f" stroke-width="2"/>
+  <path d="M36 424 a8 8 0 0 1 8 -8 h246 a8 8 0 0 1 8 8 v26 H36 z" fill="#8a6d1f"/>
+  <text class="t tn" x="50" y="434">vision_log</text>
+  <text class="t tp" x="50" y="446">one row per photo, win or lose</text>
+  <text class="t col m" x="50" y="470">id                   <tspan class="key">PK</tspan></text>
+  <text class="t col m" x="50" y="486">user_id              <tspan class="key">FK</tspan></text>
+  <text class="t col m" x="50" y="502">at, ok, duration_ms</text>
+  <text class="t col m" x="50" y="518">image_kb, model, items</text>
+  <text class="t col m" x="50" y="534">attempts             JSON</text>
+  <text class="t col m" x="50" y="550">error</text>
+  <text class="t col m" x="50" y="572">a failure on screen quotes its id</text>
+
+  <!-- progress group -->
+  <rect x="366" y="392" width="330" height="266" rx="10" fill="#f7f8fb" stroke="#a8adbb"
+        stroke-width="2" stroke-dasharray="7 5"/>
+  <text class="t cat" x="382" y="414" fill="#6b7183">PROGRESS</text>
+  <text class="t fk"  x="470" y="414">ready in the schema, and nothing writes it</text>
+
+  <rect x="382" y="426" width="298" height="128" rx="8" fill="#ffffff" stroke="#c9cedb" stroke-width="2"/>
+  <path d="M382 436 a8 8 0 0 1 8 -8 h282 a8 8 0 0 1 8 8 v26 H382 z" fill="#8a8f9e"/>
+  <text class="t tn" x="396" y="446">review_state</text>
+  <text class="t tp" x="396" y="458">where each person has got to</text>
+  <text class="t col m" x="396" y="482">user_id, item_id     <tspan class="key">PK</tspan></text>
+  <text class="t col m" x="396" y="498">level, seen, correct, streak, lapses</text>
+  <text class="t col m" x="396" y="514">fsrs                 JSON card</text>
+  <text class="t col m" x="396" y="530">due                  lifted out to be indexed</text>
+  <text class="t col m" x="396" y="546">idx_review_due on (user_id, due)</text>
+
+  <rect x="382" y="566" width="298" height="78" rx="8" fill="#ffffff" stroke="#c9cedb" stroke-width="2"/>
+  <path d="M382 576 a8 8 0 0 1 8 -8 h282 a8 8 0 0 1 8 8 v26 H382 z" fill="#8a8f9e"/>
+  <text class="t tn" x="396" y="586">review_log</text>
+  <text class="t tp" x="396" y="598">every answer, for the history</text>
+  <text class="t col m" x="396" y="622">id, user_id, item_id, at</text>
+  <text class="t col m" x="396" y="638">rating, mode, verdict</text>
+
+  <!-- relationships -->
+  <g fill="none" stroke="#7b8399" stroke-width="2" marker-end="url(#f)">
+    <path d="M376 190 H 304"/>
+    <path d="M796 146 H 738"/>
+    <path d="M796 268 C 760 268, 750 250, 738 236"/>
+    <path d="M796 398 C 756 398, 748 360, 738 330"/>
+    <path d="M167 268 V 240"/>
+    <path d="M36 470 H 20 V 200 H 32"/>
+    <path d="M470 388 V 348"/>
+    <path d="M366 470 H 340 V 200 H 302"/>
+  </g>
+  <text class="t fk" x="340" y="184" text-anchor="middle">captured_by</text>
+  <text class="t fk" x="767" y="140" text-anchor="middle">item_id</text>
+  <text class="t fk" x="790" y="256" text-anchor="end">item_id</text>
+  <text class="t fk" x="790" y="380" text-anchor="end">item_id</text>
+  <text class="t fk" x="176" y="260">user_id</text>
+  <text class="t fk" x="26" y="330" transform="rotate(-90 26 330)" text-anchor="middle">user_id</text>
+  <text class="t fk" x="478" y="374">item_id</text>
+  <text class="t fk" x="346" y="330" transform="rotate(-90 346 330)" text-anchor="middle">user_id</text>
+
+  <!-- legend -->
+  <line x1="740" y1="480" x2="1090" y2="480" stroke="#e3e6ee"/>
+  <g>
+    <rect x="752" y="500" width="20" height="14" rx="3" fill="#2f6b4f"/>
+    <text class="t lg" x="782" y="512">access. who is allowed in at all.</text>
+    <rect x="752" y="530" width="20" height="14" rx="3" fill="#4f46e5"/>
+    <text class="t lg" x="782" y="542">content. one shared library of words.</text>
+    <rect x="752" y="560" width="20" height="14" rx="3" fill="#8a6d1f"/>
+    <text class="t lg" x="782" y="572">limits and audit. what a stolen token cannot do.</text>
+    <rect x="752" y="590" width="20" height="14" rx="3" fill="#8a8f9e"/>
+    <text class="t lg" x="782" y="602">progress. per person, and currently dead.</text>
+  </g>
+  <text class="t rd" x="752" y="640">Progress lives in the browser instead, so the laptop</text>
+  <text class="t rd" x="752" y="656">and the phone keep separate schedules.</text>
+  <text class="t lg" x="752" y="690">Cascading deletes mean removing an item takes its examples,</text>
+  <text class="t lg" x="752" y="706">senses and tags with it. Nothing else cascades.</text>
+</svg>

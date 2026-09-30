@@ -1,159 +1,203 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 800" role="img"
-     aria-label="Container diagram: one person reaches a public static site and a private Worker; the Worker alone calls Google, Gemini, Oxford and the D1 database, and the Mac builds the data file the static site serves">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 1000" role="img"
+     aria-label="Component diagram with technologies: the browser runs vanilla ES modules and gets a token from Google directly; inside Cloudflare a Worker reaches D1 and a Durable Object relay through bindings, and only the relay calls Gemini; the Mac pushes to the GitHub repo">
   <style>
     .t   { font-family: -apple-system, "Helvetica Neue", Arial, sans-serif; }
+    .m   { font-family: ui-monospace, "SF Mono", Menlo, monospace; }
     .h1  { font-size: 20px; font-weight: 700; fill: #1b1f2a; }
     .sub { font-size: 13px; fill: #5b6275; }
-    .hd  { font-size: 12px; font-weight: 700; fill: #ffffff; letter-spacing: .05em; }
-    .nm  { font-size: 14px; font-weight: 700; fill: #1b1f2a; }
-    .bd  { font-size: 12px; fill: #3b4251; }
-    .nt  { font-size: 11px; fill: #6b7183; }
-    .zn  { font-size: 11px; font-weight: 700; fill: #4f46e5; letter-spacing: .04em; }
-    .ex  { font-size: 11px; font-weight: 700; fill: #6b7183; letter-spacing: .04em; }
-    .n   { font-size: 11px; font-weight: 700; fill: #ffffff; }
-    .lg  { font-size: 12px; fill: #3b4251; }
-    .rd  { font-size: 11px; font-weight: 700; fill: #c0392f; }
+    .pl  { font-size: 11.5px; font-weight: 700; letter-spacing: .07em; }
+    .nm  { font-size: 13px; font-weight: 700; fill: #1b1f2a; }
+    .tech{ font-size: 10.5px; fill: #4f46e5; font-weight: 600; }
+    .bd  { font-size: 10.5px; fill: #5b6275; }
+    .mod { font-size: 10px; fill: #3b4251; }
+    .bind{ font-size: 10.5px; font-weight: 700; fill: #4f46e5; }
+    .lbl { font-size: 11.5px; font-weight: 700; fill: #4f46e5; }
+    .glb { font-size: 11px; font-weight: 700; fill: #7b8399; }
+    .rd  { font-size: 11.5px; font-weight: 700; fill: #c0392f; }
+    .lg  { font-size: 11.5px; fill: #5b6275; }
   </style>
   <defs>
-    <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+    <marker id="s" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7.5" markerHeight="7.5" orient="auto">
       <path d="M0 0 L10 5 L0 10 z" fill="#4f46e5"/></marker>
-    <marker id="gr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
-      <path d="M0 0 L10 5 L0 10 z" fill="#8a8f9e"/></marker>
-    <marker id="rd" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+    <marker id="g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7.5" markerHeight="7.5" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#7b8399"/></marker>
+    <marker id="r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7.5" markerHeight="7.5" orient="auto">
       <path d="M0 0 L10 5 L0 10 z" fill="#c0392f"/></marker>
-    <marker id="rs" viewBox="0 0 10 10" refX="1" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+    <marker id="rs" viewBox="0 0 10 10" refX="1" refY="5" markerWidth="7.5" markerHeight="7.5" orient="auto">
       <path d="M10 0 L0 5 L10 10 z" fill="#c0392f"/></marker>
   </defs>
-  <rect width="1000" height="800" fill="#ffffff"/>
+  <rect width="1120" height="1000" fill="#ffffff"/>
+  <text class="t h1"  x="30" y="34">Components, and the technology in each</text>
+  <text class="t sub" x="30" y="55">A panel is one platform. Inside Cloudflare the arrows are bindings, not network calls.</text>
 
-  <text class="t h1"  x="40" y="36">Containers</text>
-  <text class="t sub" x="40" y="57">What runs where. Solid outline is ours, dashed grey is somebody else's.</text>
+  <!-- ===== BROWSER ===== -->
+  <rect x="30" y="76" width="520" height="204" rx="12" fill="#eef1f7" stroke="#aab2c5" stroke-width="2"/>
+  <text class="t pl" x="46" y="98" fill="#5b6275">THE BROWSER</text>
 
-  <!-- actor -->
-  <circle cx="500" cy="96" r="15" fill="#4f46e5"/>
-  <path d="M476 140 a24 27 0 0 1 48 0 z" fill="#4f46e5"/>
-  <text class="t nm" x="500" y="162" text-anchor="middle">Thao</text>
-  <text class="t nt" x="500" y="178" text-anchor="middle">phone or laptop</text>
+  <rect x="46" y="108" width="240" height="78" rx="8" fill="#ffffff" stroke="#c9cedb"/>
+  <text class="t nm"   x="58" y="128">app.js, review.js</text>
+  <text class="t tech" x="58" y="144">vanilla ES modules, no build</text>
+  <text class="t bd"   x="58" y="160">FSRS-6 scheduling, vendored ts-fsrs</text>
+  <text class="t bd"   x="58" y="176">typed answers graded by Levenshtein</text>
 
-  <!-- trust boundary -->
-  <rect x="382" y="196" width="320" height="306" rx="14" fill="#f6f5ff" stroke="#8b83f0"
-        stroke-width="2" stroke-dasharray="7 6"/>
-  <text class="t zn" x="542" y="490" text-anchor="middle">BEHIND GOOGLE SIGN-IN + THE ALLOWLIST</text>
+  <rect x="302" y="108" width="232" height="78" rx="8" fill="#ffffff" stroke="#c9cedb"/>
+  <text class="t nm"   x="314" y="128">capture.js, auth-client.js</text>
+  <text class="t tech" x="314" y="144">Google Identity Services</text>
+  <text class="t bd"   x="314" y="160">holds the RS256 ID token in memory</text>
+  <text class="t bd"   x="314" y="176">renews it before the hour is up</text>
 
-  <!-- github pages -->
-  <g>
-    <rect x="40" y="216" width="300" height="104" rx="10" fill="#ffffff" stroke="#2f6b4f" stroke-width="2"/>
-    <path d="M40 226 a10 10 0 0 1 10 -10 h280 a10 10 0 0 1 10 10 v20 H40 z" fill="#2f6b4f"/>
-    <text class="t hd" x="56" y="240">STATIC SITE</text>
-    <text class="t nm" x="56" y="272">GitHub Pages</text>
-    <text class="t bd" x="56" y="292">the whole app, plus 204 drawings</text>
-    <text class="t nt" x="56" y="310">no server, no sign-in, works offline</text>
-  </g>
+  <rect x="46" y="196" width="240" height="70" rx="8" fill="#ffffff" stroke="#c9cedb"/>
+  <text class="t nm"   x="58" y="216">localStorage</text>
+  <text class="t tech m" x="58" y="232">english-review/progress/v1</text>
+  <text class="t bd"   x="58" y="248">FSRS card state as JSON, per device</text>
+  <text class="t bd"   x="58" y="261">never sent anywhere</text>
 
-  <!-- worker -->
-  <g>
-    <rect x="402" y="216" width="280" height="104" rx="10" fill="#ffffff" stroke="#4f46e5" stroke-width="2"/>
-    <path d="M402 226 a10 10 0 0 1 10 -10 h260 a10 10 0 0 1 10 10 v20 H402 z" fill="#4f46e5"/>
-    <text class="t hd" x="418" y="240">API</text>
-    <text class="t nm" x="418" y="272">Cloudflare Worker</text>
-    <text class="t bd" x="418" y="292">verify, read a photo, look up, store</text>
-    <text class="t nt" x="418" y="310">the only place a key exists</text>
-  </g>
+  <rect x="302" y="196" width="232" height="70" rx="8" fill="#ffffff" stroke="#c9cedb"/>
+  <text class="t nm"   x="314" y="216">data/vocab.json</text>
+  <text class="t tech" x="314" y="232">312 KB of static JSON</text>
+  <text class="t bd"   x="314" y="248">204 items, fetched once at boot</text>
+  <text class="t bd"   x="314" y="261">no API involved on this path</text>
 
-  <!-- vocab.json cylinder -->
-  <g>
-    <path d="M70 368 V404 a120 11 0 0 0 240 0 V368" fill="#e9f1ec" stroke="#2f6b4f" stroke-width="2"/>
-    <ellipse cx="190" cy="368" rx="120" ry="11" fill="#ffffff" stroke="#2f6b4f" stroke-width="2"/>
-    <text class="t nm" x="190" y="392" text-anchor="middle">data/vocab.json</text>
-    <text class="t nt" x="190" y="410" text-anchor="middle">204 items, committed</text>
-  </g>
+  <!-- ===== GOOGLE ===== -->
+  <rect x="862" y="76" width="228" height="204" rx="12" fill="#f7f8fb" stroke="#a8adbb"
+        stroke-width="2" stroke-dasharray="6 5"/>
+  <text class="t pl" x="878" y="98" fill="#6b7183">GOOGLE</text>
+  <rect x="878" y="108" width="196" height="78" rx="8" fill="#ffffff" stroke="#c9cedb"/>
+  <text class="t nm"   x="890" y="128">accounts.google.com</text>
+  <text class="t tech m" x="890" y="144">/gsi/client</text>
+  <text class="t bd"   x="890" y="160">a script the browser loads</text>
+  <text class="t bd"   x="890" y="176">and which returns the token</text>
+  <rect x="878" y="196" width="196" height="70" rx="8" fill="#ffffff" stroke="#c9cedb"/>
+  <text class="t nm"   x="890" y="216">www.googleapis.com</text>
+  <text class="t tech m" x="890" y="232">/oauth2/v3/certs</text>
+  <text class="t bd"   x="890" y="248">the public JWKS keys,</text>
+  <text class="t bd"   x="890" y="261">cached for the max-age given</text>
 
-  <!-- d1 cylinder -->
-  <g>
-    <path d="M432 372 V412 a110 11 0 0 0 220 0 V372" fill="#eceafe" stroke="#4f46e5" stroke-width="2"/>
-    <ellipse cx="542" cy="372" rx="110" ry="11" fill="#ffffff" stroke="#4f46e5" stroke-width="2"/>
-    <text class="t nm" x="542" y="396" text-anchor="middle">D1 &#8212; knowledge</text>
-    <text class="t nt" x="542" y="414" text-anchor="middle">items, allowlist, quota, logs</text>
-  </g>
+  <!-- ===== GITHUB ===== -->
+  <rect x="30" y="344" width="238" height="252" rx="12" fill="#e9f1ec" stroke="#2f6b4f" stroke-width="2"/>
+  <text class="t pl" x="46" y="366" fill="#2f6b4f">GITHUB</text>
+  <rect x="46" y="376" width="206" height="58" rx="8" fill="#ffffff" stroke="#bcd4c4"/>
+  <text class="t nm"   x="58" y="396">Pages CDN</text>
+  <text class="t tech" x="58" y="412">static hosting, no runtime</text>
+  <text class="t bd"   x="58" y="427">cache-control 600s</text>
+  <rect x="46" y="452" width="206" height="48" rx="8" fill="#ffffff" stroke="#bcd4c4"/>
+  <text class="t nm"   x="58" y="472">Pages build</text>
+  <text class="t bd"   x="58" y="489">copies the tree, compiles nothing</text>
+  <rect x="46" y="518" width="206" height="58" rx="8" fill="#ffffff" stroke="#bcd4c4"/>
+  <text class="t nm"   x="58" y="538">repo, branch main</text>
+  <text class="t tech" x="58" y="554">git</text>
+  <text class="t bd"   x="58" y="569">site, worker source, data file</text>
 
-  <!-- third parties -->
-  <text class="t ex" x="726" y="210">THIRD PARTIES</text>
+  <!-- ===== CLOUDFLARE ===== -->
+  <rect x="318" y="344" width="470" height="312" rx="12" fill="#f6f5ff" stroke="#4f46e5" stroke-width="2"/>
+  <text class="t pl" x="334" y="366" fill="#4f46e5">CLOUDFLARE</text>
+
+  <rect x="334" y="376" width="438" height="118" rx="9" fill="#ffffff" stroke="#4f46e5" stroke-width="2"/>
+  <text class="t nm"   x="348" y="396">Worker  knowledge-api</text>
+  <text class="t tech" x="348" y="412">JavaScript on V8 isolates, deployed with wrangler</text>
+  <line x1="348" y1="422" x2="758" y2="422" stroke="#e3e1fb"/>
+  <text class="t mod m" x="348" y="440">index.js   routes, CORS, errors</text>
+  <text class="t mod m" x="560" y="440">auth.js    RS256 verify, allowlist</text>
+  <text class="t mod m" x="348" y="458">gemini.js  photo to draft</text>
+  <text class="t mod m" x="560" y="458">oxford.js  meaning and IPA</text>
+  <text class="t mod m" x="348" y="476">db.js      prepared statements</text>
+  <text class="t mod m" x="560" y="476">region.js  the relay client</text>
+
+  <path d="M346 550 V596 a86 10 0 0 0 172 0 V550" fill="#eceafe" stroke="#4f46e5" stroke-width="2"/>
+  <ellipse cx="432" cy="550" rx="86" ry="10" fill="#ffffff" stroke="#4f46e5" stroke-width="2"/>
+  <text class="t nm"   x="432" y="572" text-anchor="middle">D1  knowledge</text>
+  <text class="t tech" x="432" y="588" text-anchor="middle">SQLite at the edge</text>
+  <text class="t bd"   x="432" y="620" text-anchor="middle">9 tables, 7 indexes</text>
+  <text class="t bd"   x="432" y="634" text-anchor="middle">see the data model overleaf</text>
+
+  <rect x="580" y="538" width="192" height="98" rx="9" fill="#ffffff" stroke="#4f46e5" stroke-width="2"/>
+  <text class="t nm"   x="592" y="558">Durable Object</text>
+  <text class="t tech m" x="592" y="574">RegionalFetcher</text>
+  <text class="t bd"   x="592" y="590">a SQLite-backed DO class</text>
+  <text class="t bd"   x="592" y="606">one instance per region,</text>
+  <text class="t bd"   x="592" y="622">enam first, then apac-ne</text>
+
+  <text class="t bind" x="440" y="520">binding DB</text>
+  <text class="t bind" x="686" y="520">binding REGION</text>
+
+  <!-- ===== third parties ===== -->
   <g stroke="#a8adbb" stroke-width="2" stroke-dasharray="6 5" fill="#f7f8fb">
-    <rect x="726" y="220" width="234" height="58" rx="10"/>
-    <rect x="726" y="294" width="234" height="58" rx="10"/>
-    <rect x="726" y="368" width="234" height="58" rx="10"/>
+    <rect x="862" y="380" width="228" height="76" rx="10"/>
+    <rect x="862" y="520" width="228" height="76" rx="10"/>
   </g>
-  <text class="t nm" x="744" y="244">Google Identity</text>
-  <text class="t nt" x="744" y="264">signs Thao in, publishes the keys</text>
-  <text class="t nm" x="744" y="318">Gemini 3.5 Flash</text>
-  <text class="t nt" x="744" y="338">reads handwriting, 20 a day</text>
-  <text class="t nm" x="744" y="392">Oxford dictionary</text>
-  <text class="t nt" x="744" y="412">plain web page, no key needed</text>
+  <text class="t nm"   x="878" y="404">Oxford dictionary</text>
+  <text class="t tech" x="878" y="420">a server-rendered HTML page</text>
+  <text class="t bd"   x="878" y="436">parsed with regex, 8s timeout</text>
+  <text class="t bd"   x="878" y="450">no key and no quota</text>
+  <text class="t nm"   x="878" y="544">Gemini 3.5 Flash</text>
+  <text class="t tech m" x="878" y="560">v1beta/interactions</text>
+  <text class="t bd"   x="878" y="576">free tier, twenty a day per model</text>
+  <text class="t bd"   x="878" y="590">served from some regions only</text>
 
-  <!-- the mac -->
-  <g>
-    <rect x="40" y="470" width="300" height="212" rx="12" fill="#fbf5e9" stroke="#c9a227" stroke-width="2"/>
-    <text class="t hd" x="56" y="494" style="fill:#8a6d1f">THE MAC</text>
-    <rect x="56" y="504" width="268" height="50" rx="8" fill="#ffffff" stroke="#e3d6b8"/>
-    <text class="t nm" x="70" y="524">Obsidian vault</text>
-    <text class="t nt" x="70" y="542">the notes. the actual truth.</text>
-    <rect x="56" y="562" width="268" height="50" rx="8" fill="#ffffff" stroke="#e3d6b8"/>
-    <text class="t nm" x="70" y="582">english-vocab agent</text>
-    <text class="t nt" x="70" y="600">writes notes, draws pictures</text>
-    <rect x="56" y="620" width="268" height="50" rx="8" fill="#ffffff" stroke="#e3d6b8"/>
-    <text class="t nm" x="70" y="640">build + publish scripts</text>
-    <text class="t nt" x="70" y="658">make the data file, push it</text>
-  </g>
+  <!-- ===== THE MAC ===== -->
+  <rect x="30" y="706" width="420" height="250" rx="12" fill="#fbf5e9" stroke="#c9a227" stroke-width="2"/>
+  <text class="t pl" x="46" y="728" style="fill:#8a6d1f">THE MAC</text>
+  <rect x="46" y="738" width="388" height="60" rx="8" fill="#ffffff" stroke="#e3d6b8"/>
+  <text class="t nm"   x="58" y="758">Obsidian vault, external drive</text>
+  <text class="t tech" x="58" y="774">Markdown with YAML frontmatter</text>
+  <text class="t bd"   x="58" y="790">one note per item. the real source of truth.</text>
+  <rect x="46" y="808" width="388" height="60" rx="8" fill="#ffffff" stroke="#e3d6b8"/>
+  <text class="t nm"   x="58" y="828">english-vocab agent</text>
+  <text class="t tech" x="58" y="844">a Claude skill, no API key</text>
+  <text class="t bd"   x="58" y="860">reads Oxford in a browser, writes notes, draws SVGs</text>
+  <rect x="46" y="878" width="388" height="60" rx="8" fill="#ffffff" stroke="#e3d6b8"/>
+  <text class="t nm"   x="58" y="898">build and publish scripts</text>
+  <text class="t tech" x="58" y="914">Python 3, standard library</text>
+  <text class="t bd"   x="58" y="930">vault to vocab.json, Anki CSV and docx, then push</text>
 
-  <!-- flows -->
-  <g fill="none" stroke="#4f46e5" stroke-width="2.5" marker-end="url(#ar)">
-    <path d="M462 156 C 380 176, 250 180, 205 210"/>
-    <path d="M556 152 C 580 172, 574 190, 560 210"/>
-    <path d="M190 322 V 352"/>
-    <path d="M542 322 V 356"/>
-    <path d="M190 466 V 428"/>
+  <!-- ===== edges ===== -->
+  <g fill="none" stroke="#4f46e5" stroke-width="2.5" marker-end="url(#s)">
+    <path d="M150 270 V370"/>
+    <path d="M420 270 C 430 310, 470 330, 500 370"/>
+    <path d="M432 498 V 536"/>
+    <path d="M676 498 V 532"/>
+    <path d="M150 702 V 582"/>
   </g>
-  <g fill="none" stroke="#8a8f9e" stroke-width="2" marker-end="url(#gr)">
-    <path d="M684 250 H 720"/>
-    <path d="M684 270 C 706 274, 706 310, 720 318"/>
-    <path d="M684 290 C 710 300, 706 380, 720 392"/>
+  <g fill="none" stroke="#7b8399" stroke-width="2.5" marker-end="url(#g)">
+    <path d="M538 140 H 858"/>
+    <path d="M776 416 H 858"/>
+    <path d="M776 562 H 858"/>
+    <path d="M776 396 C 820 360, 826 300, 856 250"/>
   </g>
-
-  <!-- flow badges -->
-  <g>
-    <circle cx="330" cy="177" r="11" fill="#4f46e5"/><text class="t n" x="330" y="181" text-anchor="middle">1</text>
-    <circle cx="590" cy="178" r="11" fill="#4f46e5"/><text class="t n" x="590" y="182" text-anchor="middle">2</text>
-    <circle cx="706" cy="250" r="11" fill="#8a8f9e"/><text class="t n" x="706" y="254" text-anchor="middle">3</text>
-    <circle cx="700" cy="296" r="11" fill="#8a8f9e"/><text class="t n" x="700" y="300" text-anchor="middle">4</text>
-    <circle cx="698" cy="344" r="11" fill="#8a8f9e"/><text class="t n" x="698" y="348" text-anchor="middle">5</text>
-    <circle cx="566" cy="340" r="11" fill="#4f46e5"/><text class="t n" x="566" y="344" text-anchor="middle">6</text>
-    <circle cx="214" cy="446" r="11" fill="#4f46e5"/><text class="t n" x="214" y="450" text-anchor="middle">7</text>
+  <g fill="none" stroke="#2f6b4f" stroke-width="2.5" marker-end="url(#s)" opacity=".9">
+    <path d="M149 516 V 504"/>
+    <path d="M149 450 V 438"/>
   </g>
 
-  <!-- the missing link -->
+  <text class="t lbl" x="158" y="320">GET the site and the drawings</text>
+  <text class="t lbl" x="436" y="310">POST /api, Bearer token</text>
+  <text class="t glb" x="580" y="132">sign in happens here, in the browser</text>
+  <text class="t glb" x="817" y="406" text-anchor="middle">plain GET</text>
+  <text class="t glb" x="817" y="546" text-anchor="middle">the only</text>
+  <text class="t glb" x="817" y="558" text-anchor="middle">model call</text>
+  <text class="t glb" x="800" y="316">check the signature</text>
+  <text class="t lbl" x="162" y="646">git push</text>
+
   <g fill="none" stroke="#c0392f" stroke-width="2.5" stroke-dasharray="7 6"
-     marker-end="url(#rd)" marker-start="url(#rs)">
-    <path d="M424 410 C 390 470, 372 520, 348 560"/>
+     marker-end="url(#r)" marker-start="url(#rs)">
+    <path d="M356 616 C 318 660, 300 680, 372 730"/>
   </g>
-  <text class="t rd" x="374" y="476" text-anchor="middle" transform="rotate(-62 374 476)">no sync</text>
+  <text class="t rd" x="286" y="676">no sync</text>
 
-  <!-- legend -->
-  <line x1="382" y1="524" x2="960" y2="524" stroke="#e3e6ee" stroke-width="1"/>
+  <!-- ===== legend ===== -->
+  <line x1="500" y1="706" x2="1090" y2="706" stroke="#e3e6ee"/>
   <g>
-    <circle cx="394" cy="552" r="10" fill="#4f46e5"/><text class="t n" x="394" y="556" text-anchor="middle">1</text>
-    <text class="t lg" x="414" y="556">Look up and practise. Plain file requests, nothing else.</text>
-    <circle cx="394" cy="582" r="10" fill="#4f46e5"/><text class="t n" x="394" y="586" text-anchor="middle">2</text>
-    <text class="t lg" x="414" y="586">Capture a word. Carries a Google token on every call.</text>
-    <circle cx="394" cy="612" r="10" fill="#8a8f9e"/><text class="t n" x="394" y="616" text-anchor="middle">3</text>
-    <text class="t lg" x="414" y="616">Is this token real, and is this person allowed in?</text>
-    <circle cx="394" cy="642" r="10" fill="#8a8f9e"/><text class="t n" x="394" y="646" text-anchor="middle">4</text>
-    <text class="t lg" x="414" y="646">What words are on this photograph?</text>
-    <circle cx="394" cy="672" r="10" fill="#8a8f9e"/><text class="t n" x="394" y="676" text-anchor="middle">5</text>
-    <text class="t lg" x="414" y="676">What does this word actually mean?</text>
-    <circle cx="394" cy="702" r="10" fill="#4f46e5"/><text class="t n" x="394" y="706" text-anchor="middle">6</text>
-    <text class="t lg" x="414" y="706">Keep it, and remember the quota it cost.</text>
-    <circle cx="394" cy="732" r="10" fill="#4f46e5"/><text class="t n" x="394" y="736" text-anchor="middle">7</text>
-    <text class="t lg" x="414" y="736">Rebuild the data file from the vault and push it.</text>
+    <rect x="512" y="728" width="22" height="16" rx="4" fill="#ffffff" stroke="#4f46e5" stroke-width="2"/>
+    <text class="t lg" x="544" y="741">something we run and can change</text>
+    <rect x="512" y="760" width="22" height="16" rx="4" fill="#f7f8fb" stroke="#a8adbb" stroke-width="2" stroke-dasharray="4 3"/>
+    <text class="t lg" x="544" y="773">somebody else's, failing on its own schedule</text>
+    <path d="M512 800 H 536" stroke="#4f46e5" stroke-width="2.5" marker-end="url(#s)" fill="none"/>
+    <text class="t lg" x="544" y="804">our traffic, or a binding inside a panel</text>
+    <path d="M512 830 H 536" stroke="#7b8399" stroke-width="2.5" marker-end="url(#g)" fill="none"/>
+    <text class="t lg" x="544" y="834">a call out to somebody else</text>
+    <path d="M512 860 H 536" stroke="#c0392f" stroke-width="2.5" stroke-dasharray="6 5" marker-end="url(#r)" fill="none"/>
+    <text class="t lg" x="544" y="864">the connection that does not exist yet</text>
   </g>
-  <text class="t rd" x="394" y="768">The red line is the gap: a word captured on the phone never reaches the vault on its own.</text>
+  <text class="t rd" x="512" y="908">A word captured on the phone lands in D1 and stops. Only the Mac can put it</text>
+  <text class="t rd" x="512" y="926">in the vault, and nothing tells the Mac to go and look.</text>
 </svg>

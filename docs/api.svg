@@ -1,0 +1,144 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 790" role="img"
+     aria-label="The API surface: every request passes a CORS check, token verification against the allowlist and a route lookup before reaching one of five handlers, each with its own response codes">
+  <style>
+    .t   { font-family: -apple-system, "Helvetica Neue", Arial, sans-serif; }
+    .m   { font-family: ui-monospace, "SF Mono", Menlo, monospace; }
+    .h1  { font-size: 20px; font-weight: 700; fill: #1b1f2a; }
+    .h2  { font-size: 13px; font-weight: 700; fill: #1b1f2a; letter-spacing: .04em; }
+    .sub { font-size: 13px; fill: #5b6275; }
+    .st  { font-size: 12px; font-weight: 700; fill: #1b1f2a; }
+    .ss  { font-size: 10.5px; fill: #5b6275; }
+    .err { font-size: 10.5px; font-weight: 700; fill: #ffffff; }
+    .path{ font-size: 13px; font-weight: 700; fill: #1b1f2a; }
+    .desc{ font-size: 11.5px; fill: #3b4251; }
+    .note{ font-size: 10.5px; fill: #6b7183; }
+    .code{ font-size: 10.5px; font-weight: 700; fill: #ffffff; }
+    .meth{ font-size: 11px; font-weight: 700; fill: #ffffff; letter-spacing: .05em; }
+  </style>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#4f46e5"/></marker>
+    <marker id="x" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#c0392f"/></marker>
+  </defs>
+  <rect width="1120" height="790" fill="#ffffff"/>
+  <text class="t h1"  x="30" y="34">The API surface</text>
+  <text class="t sub" x="30" y="55">Five routes, and every one of them clears the same three gates first.</text>
+
+  <!-- pipeline -->
+  <text class="t h2" x="30" y="92" fill="#4f46e5">EVERY REQUEST</text>
+  <g fill="#ffffff" stroke="#4f46e5" stroke-width="2">
+    <rect x="30"  y="106" width="132" height="52" rx="8"/>
+    <rect x="202" y="106" width="150" height="52" rx="8"/>
+    <rect x="392" y="106" width="196" height="52" rx="8"/>
+    <rect x="628" y="106" width="150" height="52" rx="8"/>
+    <rect x="818" y="106" width="150" height="52" rx="8"/>
+  </g>
+  <text class="t st" x="96"  y="128" text-anchor="middle">a request</text>
+  <text class="t ss" x="96"  y="146" text-anchor="middle">from the browser</text>
+  <text class="t st" x="277" y="128" text-anchor="middle">is it OPTIONS?</text>
+  <text class="t ss" x="277" y="146" text-anchor="middle">the CORS preflight</text>
+  <text class="t st" x="490" y="128" text-anchor="middle">authenticate()</text>
+  <text class="t ss" x="490" y="146" text-anchor="middle">RS256, then the allowlist</text>
+  <text class="t st" x="703" y="128" text-anchor="middle">route lookup</text>
+  <text class="t ss" x="703" y="146" text-anchor="middle">method plus path</text>
+  <text class="t st" x="893" y="128" text-anchor="middle">the handler</text>
+  <text class="t ss" x="893" y="146" text-anchor="middle">one of the five below</text>
+
+  <g fill="none" stroke="#4f46e5" stroke-width="2.5" marker-end="url(#a)">
+    <path d="M162 132 H 198"/><path d="M352 132 H 388"/>
+    <path d="M588 132 H 624"/><path d="M778 132 H 814"/>
+    <path d="M968 132 H 1004"/>
+  </g>
+  <rect x="1006" y="118" width="84" height="28" rx="6" fill="#2f6b4f"/>
+  <text class="t code" x="1048" y="136" text-anchor="middle">200 JSON</text>
+
+  <!-- error exits -->
+  <g fill="none" stroke="#c0392f" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#x)">
+    <path d="M277 160 V 190"/>
+    <path d="M450 160 V 190"/><path d="M540 160 V 190"/>
+    <path d="M703 160 V 190"/>
+    <path d="M893 160 V 190"/>
+  </g>
+  <g>
+    <rect x="216" y="192" width="122" height="24" rx="6" fill="#7b8399"/>
+    <text class="t err" x="277" y="208" text-anchor="middle">204 no body</text>
+    <rect x="392" y="192" width="116" height="24" rx="6" fill="#c0392f"/>
+    <text class="t err" x="450" y="208" text-anchor="middle">401 bad token</text>
+    <rect x="516" y="192" width="122" height="24" rx="6" fill="#c0392f"/>
+    <text class="t err" x="577" y="208" text-anchor="middle">403 not allowed</text>
+    <rect x="644" y="192" width="118" height="24" rx="6" fill="#c0392f"/>
+    <text class="t err" x="703" y="208" text-anchor="middle">404 no route</text>
+    <rect x="830" y="192" width="126" height="24" rx="6" fill="#c0392f"/>
+    <text class="t err" x="893" y="208" text-anchor="middle">500 unhandled</text>
+  </g>
+  <text class="t note" x="392" y="238">401 covers a missing header, a bad signature, the wrong audience and an expired token alike. 403 separates
+  </text>
+  <text class="t note" x="392" y="252">a real Google account that is simply not on the list, or has been revoked. A 500 never quotes the real message,
+  </text>
+  <text class="t note" x="392" y="266">because it could carry configuration or the key; the detail goes to the log instead.</text>
+
+  <line x1="30" y1="292" x2="1090" y2="292" stroke="#e3e6ee"/>
+  <text class="t h2" x="30" y="318" fill="#4f46e5">THE FIVE ROUTES</text>
+
+  <!-- rows -->
+  <g>
+    <!-- 1 -->
+    <rect x="30" y="334" width="1060" height="66" rx="8" fill="#fafbfd" stroke="#e3e6ee"/>
+    <rect x="44" y="350" width="52" height="22" rx="5" fill="#2f6b4f"/>
+    <text class="t meth" x="70" y="366" text-anchor="middle">GET</text>
+    <text class="t path m" x="110" y="366">/api/me</text>
+    <text class="t desc" x="110" y="388">Who am I, and how big is the library? Returns the caller plus a count of items and of drafts still unverified.</text>
+    <rect x="1000" y="350" width="76" height="22" rx="5" fill="#2f6b4f"/>
+    <text class="t code" x="1038" y="366" text-anchor="middle">200</text>
+
+    <!-- 2 -->
+    <rect x="30" y="410" width="1060" height="66" rx="8" fill="#fafbfd" stroke="#e3e6ee"/>
+    <rect x="44" y="426" width="52" height="22" rx="5" fill="#2f6b4f"/>
+    <text class="t meth" x="70" y="442" text-anchor="middle">GET</text>
+    <text class="t path m" x="110" y="442">/api/items?status=&amp;limit=&amp;offset=</text>
+    <text class="t desc" x="110" y="464">Newest first. limit is clamped into 1 to 200 and defaults to 50, so a caller cannot ask for the whole table.</text>
+    <rect x="1000" y="426" width="76" height="22" rx="5" fill="#2f6b4f"/>
+    <text class="t code" x="1038" y="442" text-anchor="middle">200</text>
+
+    <!-- 3 -->
+    <rect x="30" y="486" width="1060" height="82" rx="8" fill="#f6f5ff" stroke="#c3bdf5"/>
+    <rect x="44" y="502" width="52" height="22" rx="5" fill="#4f46e5"/>
+    <text class="t meth" x="70" y="518" text-anchor="middle">POST</text>
+    <text class="t path m" x="110" y="518">/api/items</text>
+    <text class="t desc" x="110" y="540">Save one word. Validates, fills any blank field from Oxford, then inserts. If the term and kind already exist,</text>
+    <text class="t desc" x="110" y="556">it merges instead of refusing: blanks are filled, existing values are never overwritten, examples accumulate.</text>
+    <rect x="852" y="502" width="88" height="22" rx="5" fill="#2f6b4f"/>
+    <text class="t code" x="896" y="518" text-anchor="middle">201 created</text>
+    <rect x="948" y="502" width="86" height="22" rx="5" fill="#8a6d1f"/>
+    <text class="t code" x="991" y="518" text-anchor="middle">200 merged</text>
+    <rect x="1042" y="502" width="34" height="22" rx="5" fill="#c0392f"/>
+    <text class="t code" x="1059" y="518" text-anchor="middle">400</text>
+
+    <!-- 4 -->
+    <rect x="30" y="578" width="1060" height="98" rx="8" fill="#f6f5ff" stroke="#c3bdf5"/>
+    <rect x="44" y="594" width="52" height="22" rx="5" fill="#4f46e5"/>
+    <text class="t meth" x="70" y="610" text-anchor="middle">POST</text>
+    <text class="t path m" x="110" y="610">/api/vision</text>
+    <text class="t desc" x="110" y="632">Read a photograph. Charges one of the day's fifty reads first, calls the model through the region relay,</text>
+    <text class="t desc" x="110" y="648">replaces the model's wording with Oxford's where an entry exists, and logs the attempt either way.</text>
+    <text class="t note" x="110" y="666">Two different 429s live here: ours once the fifty daily reads are gone, and Gemini's once its own free quota is. Image capped at 4 MB.</text>
+    <rect x="852" y="594" width="80" height="22" rx="5" fill="#2f6b4f"/>
+    <text class="t code" x="892" y="610" text-anchor="middle">200 draft</text>
+    <rect x="940" y="594" width="80" height="22" rx="5" fill="#8a6d1f"/>
+    <text class="t code" x="980" y="610" text-anchor="middle">429 twice</text>
+    <rect x="1028" y="594" width="48" height="22" rx="5" fill="#c0392f"/>
+    <text class="t code" x="1052" y="610" text-anchor="middle">413</text>
+    <rect x="940" y="622" width="136" height="22" rx="5" fill="#c0392f"/>
+    <text class="t code" x="1008" y="638" text-anchor="middle">502 or 503 the model</text>
+
+    <!-- 5 -->
+    <rect x="30" y="686" width="1060" height="66" rx="8" fill="#fafbfd" stroke="#e3e6ee"/>
+    <rect x="44" y="702" width="52" height="22" rx="5" fill="#2f6b4f"/>
+    <text class="t meth" x="70" y="718" text-anchor="middle">GET</text>
+    <text class="t path m" x="110" y="718">/api/logs?limit=</text>
+    <text class="t desc" x="110" y="740">This person's own read history, which is what lets a failure on screen be traced to the attempt that caused it.</text>
+    <rect x="1000" y="702" width="76" height="22" rx="5" fill="#2f6b4f"/>
+    <text class="t code" x="1038" y="718" text-anchor="middle">200</text>
+  </g>
+</svg>
