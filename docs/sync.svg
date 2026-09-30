@@ -1,0 +1,111 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 812" role="img"
+     aria-label="One run of the sync agent: read the ledger, compare both sides, copy one-sided changes, park conflicts, publish">
+  <style>
+    .t   { font-family: -apple-system, "Helvetica Neue", Arial, sans-serif; }
+    .h1  { font-size: 21px; font-weight: 700; fill: #1b1f2a; }
+    .sub { font-size: 13px; fill: #5b6275; }
+    .lane{ font-size: 13px; font-weight: 700; fill: #ffffff; letter-spacing: .05em; }
+    .lsub{ font-size: 11px; fill: #ffffff; opacity: .8; }
+    .st  { font-size: 13px; fill: #1b1f2a; }
+    .stb { font-size: 13px; font-weight: 700; fill: #1b1f2a; }
+    .num { font-size: 12px; font-weight: 700; fill: #ffffff; }
+    .note{ font-size: 11px; fill: #5b6275; }
+    .warn{ font-size: 13px; font-weight: 700; fill: #8a2a20; }
+    .wsub{ font-size: 12px; fill: #8a2a20; }
+  </style>
+  <rect width="960" height="812" fill="#f7f8fb"/>
+  <text class="t h1" x="32" y="40">The sync agent, one run</text>
+  <text class="t sub" x="32" y="62">Runs on the Mac, because it is the only place that can see both sides. Skips silently when the drive is not mounted.</text>
+
+  <!-- lane heads -->
+  <g>
+    <rect x="60" y="86" width="190" height="52" rx="9" fill="#2f6b4f"/>
+    <text class="t lane" x="155" y="110" text-anchor="middle">OBSIDIAN VAULT</text>
+    <text class="t lsub" x="155" y="128" text-anchor="middle">markdown, external drive</text>
+
+    <rect x="370" y="86" width="210" height="52" rx="9" fill="#4f46e5"/>
+    <text class="t lane" x="475" y="110" text-anchor="middle">SYNC AGENT</text>
+    <text class="t lsub" x="475" y="128" text-anchor="middle">launchd, on the Mac</text>
+
+    <rect x="700" y="86" width="190" height="52" rx="9" fill="#7b8399"/>
+    <text class="t lane" x="795" y="110" text-anchor="middle">D1</text>
+    <text class="t lsub" x="795" y="128" text-anchor="middle">what capture writes to</text>
+  </g>
+  <g stroke="#c3c8d4" stroke-width="2" stroke-dasharray="5 6">
+    <path d="M155 138 V742"/><path d="M475 138 V742"/><path d="M795 138 V742"/>
+  </g>
+
+  <!-- step markers -->
+  <g>
+    <circle cx="475" cy="172" r="12" fill="#4f46e5"/><text class="t num" x="475" y="177" text-anchor="middle">1</text>
+    <text class="t stb" x="500" y="169">Read the ledger</text>
+    <text class="t note" x="500" y="186">~/.config/knowledge/sync-state.json - per id: last vault hash, last D1 updated_at</text>
+  </g>
+
+  <g>
+    <circle cx="475" cy="232" r="12" fill="#4f46e5"/><text class="t num" x="475" y="237" text-anchor="middle">2</text>
+    <path d="M463 232 H167" stroke="#2f6b4f" stroke-width="2.5" fill="none" marker-end="url(#g)"/>
+    <text class="t st" x="300" y="224" text-anchor="middle">hash every note</text>
+    <text class="t note" x="300" y="248" text-anchor="middle">content hash, not mtime - a touch is not an edit</text>
+  </g>
+
+  <g>
+    <circle cx="475" cy="292" r="12" fill="#4f46e5"/><text class="t num" x="475" y="297" text-anchor="middle">3</text>
+    <path d="M487 292 H783" stroke="#7b8399" stroke-width="2.5" fill="none" marker-end="url(#s)"/>
+    <text class="t st" x="640" y="284" text-anchor="middle">rows changed since last run</text>
+    <text class="t note" x="640" y="308" text-anchor="middle">SELECT ... WHERE updated_at &gt; last_sync</text>
+  </g>
+
+  <!-- the decision -->
+  <rect x="250" y="330" width="450" height="118" rx="10" fill="#eceafe" stroke="#c9c2f5" stroke-width="2"/>
+  <circle cx="475" cy="330" r="12" fill="#4f46e5"/><text class="t num" x="475" y="335" text-anchor="middle">4</text>
+  <text class="t stb" x="475" y="362" text-anchor="middle">For each id, who changed since last run?</text>
+  <g class="t st">
+    <text x="272" y="390">only the vault</text>
+    <text x="272" y="412">only D1</text>
+    <text x="272" y="434">neither</text>
+    <text x="500" y="390">push it up</text>
+    <text x="500" y="412">write the note</text>
+    <text x="500" y="434">nothing to do</text>
+  </g>
+  <g stroke="#9aa2b4" stroke-width="1.5"><path d="M470 383 H494"/><path d="M470 405 H494"/><path d="M470 427 H494"/></g>
+
+  <!-- the two one-sided copies -->
+  <g>
+    <circle cx="475" cy="486" r="12" fill="#4f46e5"/><text class="t num" x="475" y="491" text-anchor="middle">5</text>
+    <path d="M487 486 H783" stroke="#7b8399" stroke-width="2.5" fill="none" marker-end="url(#s)"/>
+    <text class="t st" x="640" y="478" text-anchor="middle">upsert by id</text>
+  </g>
+  <g>
+    <circle cx="475" cy="530" r="12" fill="#4f46e5"/><text class="t num" x="475" y="535" text-anchor="middle">6</text>
+    <path d="M463 530 H167" stroke="#2f6b4f" stroke-width="2.5" fill="none" marker-end="url(#g)"/>
+    <text class="t st" x="300" y="522" text-anchor="middle">write the note, english-vocab format</text>
+    <text class="t note" x="300" y="546" text-anchor="middle">text only - the picture is a separate pass</text>
+  </g>
+
+  <!-- conflict -->
+  <rect x="215" y="576" width="520" height="86" rx="10" fill="#fdeeec" stroke="#e8b5ad" stroke-width="2"/>
+  <circle cx="475" cy="576" r="12" fill="#c0392f"/><text class="t num" x="475" y="581" text-anchor="middle">7</text>
+  <text class="t warn" x="475" y="606" text-anchor="middle">Both sides changed: keep the vault, park the other copy</text>
+  <text class="t wsub" x="475" y="628" text-anchor="middle">writes Conflicts/&lt;id&gt; 2026-09-30.md next to it and reports the list</text>
+  <text class="t wsub" x="475" y="648" text-anchor="middle">nothing you typed by hand is ever overwritten to settle a tie</text>
+
+  <!-- publish -->
+  <g>
+    <circle cx="475" cy="700" r="12" fill="#4f46e5"/><text class="t num" x="475" y="705" text-anchor="middle">8</text>
+    <text class="t stb" x="500" y="697">Publish, then write the ledger back</text>
+    <text class="t note" x="500" y="714">build_site.py - vocab.json - git push - Pages. The ledger moves only if the run finished.</text>
+  </g>
+
+  <rect x="60" y="752" width="830" height="40" rx="9" fill="#1b1f2a"/>
+  <text class="t" x="475" y="777" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">
+    The id is the note filename. That one fact is what makes both sides talk about the same word.
+  </text>
+
+  <defs>
+    <marker id="g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#2f6b4f"/></marker>
+    <marker id="s" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#7b8399"/></marker>
+  </defs>
+</svg>

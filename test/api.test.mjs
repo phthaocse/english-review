@@ -1,5 +1,5 @@
 import worker from '../worker/src/index.js';
-import { parseItems, GeminiError, readPhoto } from '../worker/src/gemini.js';
+import { parseItems, GeminiError, readPhoto, keysFrom } from '../worker/src/gemini.js';
 import { viaRegion, REGIONS } from '../worker/src/region.js';
 import { makeSigner, claimsFor } from './jwt.mjs';
 import { makeD1, addUser } from './d1.mjs';
@@ -199,6 +199,56 @@ console.log('== one photo costs one request ==');
   ok('  and carries the upstream status', /400/.test(r.body.error), r.body.error);
 }
 
+
+console.log('== more than one key: order, failover, and what does not earn a retry ==');
+{
+  const env = makeEnv();
+  const ok = () => ({ ok: true, json: async () => ({
+    steps: [{ type: 'model_output', content: [{ type: 'text', text:
+      '{"items":[{"term":"go off","kind":"phrasal-verb","confidence":"high"}]}' }] }] }) });
+  env.GEMINI_API_KEY_2 = 'second-key-do-not-log';
+  env.GEMINI_API_KEY_10 = 'tenth-key-do-not-log';
+
+  eq('keys come back in order, 2 before 10', keysFrom(env).length, 3);
+  eq('  the plain name leads', keysFrom(env)[0], env.GEMINI_API_KEY);
+  eq('  then _2', keysFrom(env)[1], 'second-key-do-not-log');
+  eq('  then _10, numerically not alphabetically', keysFrom(env)[2], 'tenth-key-do-not-log');
+
+  // The happy path still costs exactly one request, however many keys are held.
+  let used = [];
+  geminiHandler = async (_h, init) => { used.push(init.headers['x-goog-api-key']); return ok(); };
+  let r = await call(env, 'POST', '/api/vision', { body: { image: 'AAAA' } });
+  eq('a good read uses the first key only', used.length, 1);
+  eq('  and it is the first one', used[0], env.GEMINI_API_KEY);
+
+  // A spent key hands over; a busy service does not, because 503 is not about
+  // the key and trying another would spend two requests to learn one thing.
+  for (const [status, expected] of [[429, 3], [401, 3], [403, 3], [503, 1], [500, 1]]) {
+    used = [];
+    geminiHandler = async (_h, init) => { used.push(init.headers['x-goog-api-key']); return { ok: false, status, json: async () => ({}) }; };
+    await call(env, 'POST', '/api/vision', { body: { image: 'AAAA' } });
+    eq(`upstream ${status} tries ${expected} key(s)`, used.length, expected);
+  }
+
+  // The point of holding a second key: the first is spent, the read still works.
+  used = [];
+  geminiHandler = async (_h, init) => {
+    const key = init.headers['x-goog-api-key'];
+    used.push(key);
+    return key === env.GEMINI_API_KEY ? { ok: false, status: 429, json: async () => ({}) } : ok();
+  };
+  r = await call(env, 'POST', '/api/vision', { body: { image: 'AAAA' } });
+  eq('a spent first key falls through to the second', r.status, 200);
+  eq('  and stops there', used.length, 2);
+  eq('  the log says which key answered', r.body.items[0].term, 'go off');
+
+  // Nothing about any key may reach the client or the log.
+  geminiHandler = async () => ({ ok: false, status: 400,
+    text: async () => JSON.stringify({ error: { message: `bad key ${env.GEMINI_API_KEY_2}` } }) });
+  r = await call(env, 'POST', '/api/vision', { body: { image: 'AAAA' } });
+  ok('every key is redacted, not just the first',
+     !JSON.stringify(r.body).includes('second-key-do-not-log'), JSON.stringify(r.body));
+}
 
 console.log('== every read leaves something to look up afterwards ==');
 {

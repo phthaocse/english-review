@@ -19,6 +19,25 @@ const ENDPOINT = 'https://generativelanguage.googleapis.com/v1beta/interactions'
 const DEFAULT_MODEL = 'gemini-3.5-flash';
 const RATE_LIMITED = 429;
 
+// A key is done for the day (429) or no longer valid (401/403). Either way the
+// next key has a real chance, which is not true of a 503 - when a pool is
+// saturated it is saturated for every key, so retrying there spends two
+// requests to learn one thing.
+const KEY_IS_SPENT = new Set([401, 403, RATE_LIMITED]);
+
+/**
+ * Every key the Worker holds, in the order they should be tried:
+ * GEMINI_API_KEY first, then GEMINI_API_KEY_2, _3 and so on. Adding one is a
+ * `wrangler secret put` and nothing else - no deploy, no code change - which is
+ * what makes retiring a key possible without downtime.
+ */
+export function keysFrom(env) {
+  const numbered = Object.keys(env)
+    .filter((name) => /^GEMINI_API_KEY_\d+$/.test(name))
+    .sort((a, b) => Number(a.split('_').pop()) - Number(b.split('_').pop()));
+  return [env.GEMINI_API_KEY, ...numbered.map((n) => env[n])].filter(Boolean);
+}
+
 // The free tier is slow when busy - an 8-token text prompt took 17s the day
 // this was written - so waiting beats failing, but not for ever.
 const ATTEMPT_TIMEOUT_MS = 90_000;
@@ -101,7 +120,7 @@ export class GeminiError extends Error {
 }
 
 /** One attempt at one model. Returns the parsed draft, or the status to act on. */
-async function askModel(model, image, env, fetchImpl) {
+async function askModel(model, image, env, fetchImpl, key) {
   const body = {
     model,
     input: [
@@ -116,7 +135,7 @@ async function askModel(model, image, env, fetchImpl) {
   try {
     res = await fetchImpl(ENDPOINT, {
       method: 'POST',
-      headers: { 'x-goog-api-key': env.GEMINI_API_KEY, 'Content-Type': 'application/json' },
+      headers: { 'x-goog-api-key': key, 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
       signal: AbortSignal.timeout(ATTEMPT_TIMEOUT_MS),
     });
@@ -152,7 +171,7 @@ async function reason(res, env) {
   } catch { /* not JSON; the raw text is still a clue */ }
 
   let clean = String(message);
-  if (env.GEMINI_API_KEY) clean = clean.split(env.GEMINI_API_KEY).join('<key>');
+  for (const key of keysFrom(env)) clean = clean.split(key).join('<key>');
   return clean.replace(/[A-Za-z0-9+/]{40,}={0,2}/g, '<data>').replace(/\s+/g, ' ').trim().slice(0, 160);
 }
 
@@ -191,23 +210,30 @@ export async function readPhoto(image, env, { regions = REGIONS, relay = viaRegi
  * The chain is the retry: a busy model is rarely free a second later.
  */
 export async function draftFromImage(image, env, { fetchImpl = fetch, region = null } = {}) {
-  if (!env.GEMINI_API_KEY) throw new GeminiError('image reading is not configured', 503);
+  const keys = keysFrom(env);
+  if (!keys.length) throw new GeminiError('image reading is not configured', 503);
 
   const model = env.GEMINI_MODEL || DEFAULT_MODEL;
-  const attempts = [];  // what the model said, for the log and the UI
+  const attempts = [];  // what came back, for the log and the UI
 
   // Attached to the error so the caller can record why this failed.
   const give = (message, status) => Object.assign(new GeminiError(message, status), { attempts });
 
-  const { status, ms, colo, detail, payload } = await askModel(model, image, env, fetchImpl);
-  attempts.push({ model, status, ms, ...(region ? { region } : {}), ...(colo ? { colo } : {}),
-                  ...(detail ? { detail } : {}) });
+  let status, ms, colo, detail, payload;
+  for (let k = 0; k < keys.length; k++) {
+    ({ status, ms, colo, detail, payload } = await askModel(model, image, env, fetchImpl, keys[k]));
+    attempts.push({ model, status, ms, ...(keys.length > 1 ? { key: k + 1 } : {}),
+                    ...(region ? { region } : {}), ...(colo ? { colo } : {}),
+                    ...(detail ? { detail } : {}) });
+    if (!KEY_IS_SPENT.has(status)) break;   // this key is fine; the answer is not about the key
+  }
 
   if (status === 200) return { items: parseItems(payload), model, attempts };
 
   if (status === RATE_LIMITED) {
-    throw give("today's free quota for reading photos is used up - it resets "
-      + 'tomorrow, or you can type the word in instead', RATE_LIMITED);
+    throw give(`today's free quota for reading photos is used up${
+      keys.length > 1 ? ` on all ${keys.length} keys` : ''} - it resets tomorrow, `
+      + 'or you can type the word in instead', RATE_LIMITED);
   }
   // The status is in the message on purpose: it is the one fact that tells a
   // refusal apart from an outage when this is reported second-hand.
