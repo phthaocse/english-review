@@ -22,9 +22,10 @@ The note is complete when it lands. Nothing is left for a second pass.
 Thao photographs a page on the phone. Here the API does the reading, because
 there is no agent on the phone:
 
-1. Gemini drafts from the photo, using the `url_context` tool to check the word
-   against Oxford itself - **this route does use the API key**, and its daily
-   quota is the constraint
+1. Gemini transcribes the photo - **this route does use the API key**, and its
+   daily quota is the constraint. The meaning comes from Oxford, which the
+   Worker fetches itself; Gemini's `url_context` tool was tried and cannot read
+   Oxford, which returns an error to Google's fetcher.
 2. Thao confirms or corrects on the review screen
 3. the API writes the item into the vault, **text only**
 

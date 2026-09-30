@@ -101,7 +101,9 @@ and never sent to the browser; the client calls the Worker, and the Worker calls
 Google. The endpoint is itself behind the allowlist and capped at 50 image reads
 per person per day, so a stolen session cannot drain the quota.
 
-Setup is in [docs/SETUP.md](docs/SETUP.md).
+Setup is in [docs/SETUP.md](docs/SETUP.md); the structural view — components,
+boundaries, where each kind of state lives — is in
+[docs/architecture.md](docs/architecture.md).
 
 ## Repo layout
 
@@ -122,7 +124,7 @@ worker/
   src/gemini.js   image → draft, key never leaves here
   src/db.js       queries
   src/index.js    routes
-docs/SETUP.md     one-time setup
+docs/             architecture, setup, design notes
 ```
 
 ## Tests
