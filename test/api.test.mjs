@@ -153,54 +153,52 @@ console.log('== vision: the key never leaves the Worker ==');
   eq('vision stores nothing by itself', list.body.items.length, 0);
 }
 
-console.log('== busy and exhausted models are worked around ==');
+console.log('== one photo costs one request ==');
 {
   const env = makeEnv();
   const ok = () => ({ ok: true, json: async () => ({
     steps: [{ type: 'model_output', content: [{ type: 'text', text:
       '{"items":[{"term":"go off","kind":"phrasal-verb","confidence":"high"}]}' }] }] }) });
 
-  // The model the chain reaches for first is overloaded; the next one answers.
+  // A good read asks once and stops.
   let seen = [];
-  geminiHandler = async (_h, init) => {
-    const model = JSON.parse(init.body).model;
-    seen.push(model);
-    return model === 'gemini-3.5-flash' ? { ok: false, status: 503, json: async () => ({}) } : ok();
-  };
+  geminiHandler = async (_h, init) => { seen.push(JSON.parse(init.body).model); return ok(); };
   let r = await call(env, 'POST', '/api/vision', { body: { image: 'AAAA' } });
-  eq('falls through to a working model', r.status, 200);
-  eq('  and returns the draft', r.body.items[0].term, 'go off');
-  eq('  asking the busy one only once', seen.filter((m) => m === 'gemini-3.5-flash').length, 1);
-  eq('  and stopping at the first answer', seen.length, 2);
+  eq('a good read returns the draft', r.body.items[0].term, 'go off');
+  eq('  having spent exactly one request', seen.length, 1);
 
-  // 500 and 504 are the service having a bad moment, not a verdict on the photo.
-  for (const status of [500, 502, 504]) {
+  // A bad one does NOT go looking for another model. Three models in a row
+  // turned one bad minute into three of the day's twenty, and a saturated pool
+  // is saturated for all of them anyway.
+  for (const status of [500, 502, 503, 504]) {
     seen = [];
     geminiHandler = async (_h, init) => {
-      const model = JSON.parse(init.body).model;
-      seen.push(model);
-      return model === 'gemini-3.5-flash' ? { ok: false, status, json: async () => ({}) } : ok();
+      seen.push(JSON.parse(init.body).model);
+      return { ok: false, status, json: async () => ({}) };
     };
     r = await call(env, 'POST', '/api/vision', { body: { image: 'AAAA' } });
-    eq(`upstream ${status} falls through rather than failing`, r.status, 200);
+    eq(`upstream ${status} still costs only one request`, seen.length, 1);
+    eq(`  and is reported as busy`, r.status, 503);
   }
+  ok('  saying busy, not out of quota',
+     /busy/i.test(r.body.error) && !/quota/i.test(r.body.error), r.body.error);
 
-  // Every model out of quota: say so plainly, and do not retry a quota error.
+  // Out of quota: say so plainly, and never retry it.
   let attempts = 0;
   geminiHandler = async () => { attempts++; return { ok: false, status: 429, json: async () => ({}) }; };
   r = await call(env, 'POST', '/api/vision', { body: { image: 'AAAA' } });
-  eq('all exhausted → 429', r.status, 429);
+  eq('exhausted quota -> 429', r.status, 429);
   ok('  explains the quota resets', /quota|resets tomorrow/i.test(r.body.error), r.body.error);
   ok('  suggests typing instead', /type the word/i.test(r.body.error), r.body.error);
-  eq('  tries each model once', attempts, 3);
+  eq('  without spending another request', attempts, 1);
 
-  // Busy is not the same as spent, and the message has to say which.
-  geminiHandler = async () => ({ ok: false, status: 503, json: async () => ({}) });
+  // A refusal is a verdict on the photo, not an outage, and reads differently.
+  geminiHandler = async () => ({ ok: false, status: 400, json: async () => ({}) });
   r = await call(env, 'POST', '/api/vision', { body: { image: 'AAAA' } });
-  eq('every model busy → 503', r.status, 503);
-  ok('  says busy, not out of quota', /busy/i.test(r.body.error) && !/quota/i.test(r.body.error),
-     r.body.error);
+  eq('a refusal is not dressed up as busy', r.status, 502);
+  ok('  and carries the upstream status', /400/.test(r.body.error), r.body.error);
 }
+
 
 console.log('== every read leaves something to look up afterwards ==');
 {
@@ -209,10 +207,7 @@ console.log('== every read leaves something to look up afterwards ==');
     steps: [{ type: 'model_output', content: [{ type: 'text', text:
       '{"items":[{"term":"go off","kind":"phrasal-verb","confidence":"high"}]}' }] }] }) });
 
-  // One model busy, the next answers: the log has to show both.
-  geminiHandler = async (_h, init) =>
-    (JSON.parse(init.body).model === 'gemini-3.5-flash'
-      ? { ok: false, status: 503, json: async () => ({}) } : answer());
+  geminiHandler = async () => answer();
   let r = await call(env, 'POST', '/api/vision', { body: { image: 'AAAA' } });
   eq('a read that worked', r.status, 200);
   ok('  answers with its log id', Number.isInteger(r.body.trace), JSON.stringify(r.body.trace));
@@ -227,11 +222,11 @@ console.log('== every read leaves something to look up afterwards ==');
   eq('  newest first', logs.body.logs[0].id, bad.body.trace);
   eq('  the failure is marked as one', logs.body.logs[0].ok, false);
   ok('  and says why', /quota/i.test(logs.body.logs[0].error), logs.body.logs[0].error);
-  eq('  with every model it asked', logs.body.logs[0].attempts.length, 3);
-  eq('  and what each one said', logs.body.logs[0].attempts[0].status, 429);
-  eq('the success records the model that answered', logs.body.logs[1].model, 'gemini-3.7-flash');
+  eq('  with the one request it spent', logs.body.logs[0].attempts.length, 1);
+  eq('  and what came back', logs.body.logs[0].attempts[0].status, 429);
+  eq('the success records the model that answered', logs.body.logs[1].model, 'gemini-3.5-flash');
   eq('  and how many items it read', logs.body.logs[1].items, 1);
-  eq('  and the busy one before it', logs.body.logs[1].attempts[0].status, 503);
+  eq('  on one request as well', logs.body.logs[1].attempts.length, 1);
   ok('  and the size of the photo', logs.body.logs[1].image_kb >= 0);
 
   // Someone else's reads are none of your business.
@@ -292,14 +287,14 @@ console.log('== the call to Google leaves from a region Google serves ==');
     steps: [{ type: 'model_output', content: [{ type: 'text', text:
       '{"items":[{"term":"go off","kind":"phrasal-verb","confidence":"high"}]}' }] }] }) });
 
-  // Every model refuses the first region for the same reason: try the next one.
+  // The first region is geo-blocked, which one request is enough to establish.
   const asked = [];
   let draft = await readPhoto({ base64: 'AAAA', mimeType: 'image/jpeg' }, env, {
     regions: ['first', 'second'],
     relay: (_e, region) => async () => { asked.push(region); return region === 'first' ? blocked(region) : answer(); },
   });
   eq('a blocked region is abandoned for the next', draft.items[0].term, 'go off');
-  eq('  after trying every model there', asked.filter((r) => r === 'first').length, 3);
+  eq('  having spent one request there, not three', asked.filter((r) => r === 'first').length, 1);
   eq('  and the log says which region answered', draft.attempts.at(-1).region, 'second');
 
   // A refusal that is NOT about location stays a refusal - no second region.
@@ -346,7 +341,7 @@ console.log('== the call to Google leaves from a region Google serves ==');
     regions: ['first', 'second'],
     relay: (_e, region) => async () => { seen.push(region); return region === 'first' ? blocked(region) : answer(); },
   });
-  eq('every region it tried is in the log', draft2.attempts.length, 4);
+  eq('every region it tried is in the log', draft2.attempts.length, 2);
   eq('  the blocked one first', draft2.attempts[0].region, 'first');
   eq('  then the one that answered', draft2.attempts.at(-1).region, 'second');
 

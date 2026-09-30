@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 600" role="img"
+     aria-label="Two routes a word takes into the vocabulary system, and who is responsible for each step">
+  <style>
+    text { font-family: -apple-system, "Helvetica Neue", Arial, sans-serif; fill: #1b1f2a; }
+    .h    { font-size: 21px; font-weight: 700; }
+    .lane { font-size: 16px; font-weight: 700; fill: #4a5168; letter-spacing: .04em; }
+    .s    { font-size: 14px; }
+    .n    { font-size: 12px; fill: #5b6275; }
+    .tag  { font-size: 11px; font-weight: 700; letter-spacing: .06em; }
+    .rule { font-size: 15px; font-weight: 700; fill: #ffffff; }
+    .box  { rx: 9; }
+  </style>
+  <rect width="940" height="600" fill="#f7f8fb"/>
+
+  <text class="h" x="32" y="42">How a word gets in</text>
+  <text class="n" x="32" y="64">Two routes. One rule: the agent owns the picture, the API never makes one.</text>
+
+  <!-- the person -->
+  <g>
+    <circle cx="64" cy="176" r="15" fill="none" stroke="#1b1f2a" stroke-width="3"/>
+    <path d="M64 192 V232 M40 206 H88 M64 232 L46 262 M64 232 L82 262"
+          stroke="#1b1f2a" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <text class="s" x="64" y="284" text-anchor="middle" font-weight="700">Thao</text>
+  </g>
+
+  <!-- ================= lane A ================= -->
+  <rect x="140" y="96" width="770" height="184" fill="#eceafe" stroke="#c9c2f5" stroke-width="2" class="box"/>
+  <text class="lane" x="160" y="124">A. FROM OBSIDIAN OR CHAT</text>
+  <text class="n" x="160" y="144">Thao gives a word list, or edits a note in the vault</text>
+
+  <g fill="#4f46e5">
+    <rect x="160" y="160" width="168" height="86" class="box"/>
+    <rect x="352" y="160" width="168" height="86" class="box"/>
+    <rect x="544" y="160" width="168" height="86" class="box"/>
+    <rect x="736" y="160" width="154" height="86" class="box"/>
+  </g>
+  <g fill="#ffffff" class="s" text-anchor="middle">
+    <text x="244" y="192">Look up Oxford</text><text x="244" y="212">IPA, CEFR, examples</text>
+    <text x="436" y="192">Write the note</text><text x="436" y="212">english-vocab format</text>
+    <text x="628" y="192">Draw the image</text><text x="628" y="212">SVG, by hand</text>
+    <text x="813" y="192">Publish</text><text x="813" y="212">Anki, docx, site</text>
+  </g>
+  <g class="tag" fill="#cdc7fb" text-anchor="middle">
+    <text x="244" y="236">CLAUDE</text><text x="436" y="236">CLAUDE</text>
+    <text x="628" y="236">CLAUDE</text><text x="813" y="236">CLAUDE</text>
+  </g>
+  <g stroke="#4f46e5" stroke-width="3" fill="none" marker-end="url(#a)">
+    <path d="M96 190 H154"/><path d="M330 203 H346"/><path d="M522 203 H538"/><path d="M714 203 H730"/>
+  </g>
+  <text class="n" x="900" y="268" text-anchor="end">Complete on arrival - text and picture together</text>
+
+  <!-- ================= lane B ================= -->
+  <rect x="140" y="312" width="770" height="212" fill="#e6f2ec" stroke="#b6dbc9" stroke-width="2" class="box"/>
+  <text class="lane" x="160" y="340">B. FROM THE WEB</text>
+  <text class="n" x="160" y="360">Thao photographs a page on the phone</text>
+
+  <g fill="#2f6b4f">
+    <rect x="160" y="376" width="168" height="86" class="box"/>
+    <rect x="352" y="376" width="168" height="86" class="box"/>
+    <rect x="544" y="376" width="168" height="86" class="box"/>
+  </g>
+  <rect x="736" y="376" width="154" height="86" fill="#4f46e5" class="box"/>
+  <g fill="#ffffff" class="s" text-anchor="middle">
+    <text x="244" y="408">Gemini drafts</text><text x="244" y="428">from the photo</text>
+    <text x="436" y="408">Thao confirms</text><text x="436" y="428">on the review screen</text>
+    <text x="628" y="402">Write to the vault</text><text x="628" y="422">TEXT ONLY</text>
+    <text x="813" y="402">Check it,</text><text x="813" y="422">add the image</text>
+  </g>
+  <g class="tag" text-anchor="middle">
+    <text x="244" y="452" fill="#a9cfbd">API</text><text x="436" y="452" fill="#a9cfbd">THAO</text>
+    <text x="628" y="452" fill="#a9cfbd">API</text><text x="813" y="452" fill="#cdc7fb">CLAUDE</text>
+  </g>
+  <g stroke="#2f6b4f" stroke-width="3" fill="none" marker-end="url(#b)">
+    <path d="M96 240 Q120 419 154 419"/><path d="M330 419 H346"/><path d="M522 419 H538"/>
+  </g>
+  <!-- the async hop: the only dashed edge, because it happens later -->
+  <path d="M714 419 H730" stroke="#4f46e5" stroke-width="3" stroke-dasharray="7 5" fill="none" marker-end="url(#a)"/>
+  <text class="n" x="722" y="482" text-anchor="middle">later, async</text>
+  <text class="n" x="900" y="508" text-anchor="end">Complete in two passes - the picture arrives on the next run</text>
+
+  <!-- the rule -->
+  <rect x="140" y="540" width="770" height="40" fill="#1b1f2a" class="box"/>
+    <text class="rule" x="525" y="565" text-anchor="middle">The API never creates an image. Every picture is drawn by the agent.</text>
+
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#4f46e5"/></marker>
+    <marker id="b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#2f6b4f"/></marker>
+  </defs>
+</svg>

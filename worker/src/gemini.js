@@ -12,15 +12,16 @@ import { REGIONS, viaRegion } from './region.js';
 
 const ENDPOINT = 'https://generativelanguage.googleapis.com/v1beta/interactions';
 
-// Ordered by what answered fastest and most accurately on a handwritten page;
-// each carries its own free-tier quota, so a bad day for one is survivable.
-const MODEL_CHAIN = ['gemini-3.5-flash', 'gemini-3.7-flash', 'gemini-3.8-flash'];
+// One photo costs one request. Trying three models in a row turned a bad minute
+// into three of the day's twenty, and when a pool is saturated they are all
+// saturated together - so a failure is reported and the reader offers a retry,
+// which spends the next request only if the person asks for it.
+const DEFAULT_MODEL = 'gemini-3.5-flash';
 const RATE_LIMITED = 429;
 
 // The free tier is slow when busy - an 8-token text prompt took 17s the day
 // this was written - so waiting beats failing, but not for ever.
 const ATTEMPT_TIMEOUT_MS = 90_000;
-const CHAIN_DEADLINE_MS = 150_000;
 
 // 500 and up is the service having a bad moment rather than a verdict on the
 // photo, so the next model gets a turn. 0 is our own timeout or network.
@@ -192,34 +193,26 @@ export async function readPhoto(image, env, { regions = REGIONS, relay = viaRegi
 export async function draftFromImage(image, env, { fetchImpl = fetch, region = null } = {}) {
   if (!env.GEMINI_API_KEY) throw new GeminiError('image reading is not configured', 503);
 
-  const chain = env.GEMINI_MODEL
-    ? [env.GEMINI_MODEL, ...MODEL_CHAIN.filter((m) => m !== env.GEMINI_MODEL)]
-    : MODEL_CHAIN;
-
-  let refused = 0;      // a 4xx: the service looked at the request and said no
-  let exhausted = 0;    // models with nothing left in today's free quota
-  const startedAt = Date.now();
-  const attempts = [];  // what every model said, for the log and the UI
+  const model = env.GEMINI_MODEL || DEFAULT_MODEL;
+  const attempts = [];  // what the model said, for the log and the UI
 
   // Attached to the error so the caller can record why this failed.
   const give = (message, status) => Object.assign(new GeminiError(message, status), { attempts });
 
-  for (const model of chain) {
-    if (Date.now() - startedAt > CHAIN_DEADLINE_MS) break;
-    const { status, ms, colo, detail, payload } = await askModel(model, image, env, fetchImpl);
-    attempts.push({ model, status, ms, ...(region ? { region } : {}), ...(colo ? { colo } : {}),
-                    ...(detail ? { detail } : {}) });
-    if (status === 200) return { items: parseItems(payload), model, attempts };
-    if (status === RATE_LIMITED) exhausted += 1;
-    else if (!isTransient(status)) refused = status;
-  }
+  const { status, ms, colo, detail, payload } = await askModel(model, image, env, fetchImpl);
+  attempts.push({ model, status, ms, ...(region ? { region } : {}), ...(colo ? { colo } : {}),
+                  ...(detail ? { detail } : {}) });
 
-  // The status is in the message on purpose: it is the one fact that tells a
-  // refusal apart from an outage when this is reported second-hand.
-  if (refused) throw give(`the image service could not read that photo (${refused})`, 502);
-  if (exhausted === chain.length) {
+  if (status === 200) return { items: parseItems(payload), model, attempts };
+
+  if (status === RATE_LIMITED) {
     throw give("today's free quota for reading photos is used up - it resets "
       + 'tomorrow, or you can type the word in instead', RATE_LIMITED);
+  }
+  // The status is in the message on purpose: it is the one fact that tells a
+  // refusal apart from an outage when this is reported second-hand.
+  if (!isTransient(status)) {
+    throw give(`the image service could not read that photo (${status})`, 502);
   }
   throw give('the image service is busy right now - try again in a moment', 503);
 }
