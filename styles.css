@@ -434,6 +434,14 @@ body.signed-out .view { padding-top: 12vh; max-width: 460px; }
   font-size: .92rem; line-height: 1.45;
 }
 
+/* The licence credit under a photograph. Small, but it is the condition the
+   picture is published under, so it is never hidden. */
+.shot { margin: 0; }
+.credit {
+  margin-top: 6px; font-size: .72rem; line-height: 1.35; color: var(--muted);
+}
+.credit a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
+
 .alert {
   margin-top: 14px; padding: 14px; border-radius: 10px;
   background: var(--bad-soft); border: 1px solid var(--bad);

@@ -16,8 +16,9 @@ import argparse, json, pathlib, re, sys, urllib.parse, urllib.request
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 STAGE = ROOT / 'tools' / 'candidates'
 API = 'https://api.openverse.org/v1/images/'
+COMMONS = 'https://commons.wikimedia.org/w/api.php'
 UA = {'User-Agent': 'english-review/1.0 (personal vocabulary site)'}
-CANDIDATES = 4
+CANDIDATES = 8
 
 # Words that carry no visual information; a query built from them returns noise.
 STOP = set('a an the of to in on for with and or is are be being been that this '
@@ -29,6 +30,56 @@ STOP = set('a an the of to in on for with and or is are be being been that this 
 def keywords(meaning, limit=3):
     words = re.findall(r"[a-z]+", (meaning or '').lower())
     return [w for w in words if w not in STOP and len(w) > 2][:limit]
+
+
+QUERIES = {
+    'grain':    ['barley grains close up', 'cereal grain pile', 'wheat grains macro'],
+    'capsule':  ['wine bottle foil capsule', 'bottle neck foil seal', 'champagne bottle foil'],
+    'prong':    ['fork tines close up', 'fork prongs macro', 'table fork detail'],
+    'rake':     ['hay rake farm tool', 'rastrillo jardin', 'rake leaves autumn garden'],
+    'suture':   ['sutured incision skin', 'stitches closing wound', 'surgical stitches scar'],
+    'yeast':    ['dried yeast granules', 'fresh yeast block baking', 'yeast sachet baking'],
+    'barley':   ['barley ear close up', 'barley spike field', 'hordeum vulgare ear'],
+    'wort':     ['wort running off mash tun', 'homebrew wort bucket', 'sweet wort brewing liquid'],
+    'mash':     ['mash tun brewing', 'brewery mash grain water', 'mashing in brewery'],
+    'bacteria': ['bacteria electron micrograph', 'bacterial cells microscope'],
+    'malt':     ['malted barley grains', 'malt grain close up'],
+    'cork':     ['wine corks pile', 'cork stopper bottle'],
+    'sprout':   ['seed germinating root shoot', 'sprouting seedling soil'],
+    'washback': ['washback distillery fermentation', 'wooden washback whisky'],
+}
+
+
+def _strip(html_text):
+    return re.sub(r'\s+', ' ', re.sub(r'<[^>]+>', '', html_text or '')).strip()
+
+
+def search_commons(query, page_size=CANDIDATES):
+    """Wikimedia Commons, normalised to the Openverse result shape."""
+    q = urllib.parse.urlencode({
+        'action': 'query', 'generator': 'search', 'gsrsearch': query,
+        'gsrnamespace': 6, 'gsrlimit': page_size, 'prop': 'imageinfo',
+        'iiprop': 'url|extmetadata|size', 'iiurlwidth': 800, 'format': 'json'})
+    try:
+        with urllib.request.urlopen(urllib.request.Request(f'{COMMONS}?{q}', headers=UA), timeout=30) as r:
+            pages = (json.load(r).get('query') or {}).get('pages') or {}
+    except Exception as e:
+        print(f'    commons failed: {type(e).__name__}', file=sys.stderr)
+        return []
+    out = []
+    for page in pages.values():
+        info = (page.get('imageinfo') or [{}])[0]
+        meta = info.get('extmetadata') or {}
+        thumb = info.get('thumburl')
+        if not thumb or not re.search(r'\.(jpg|jpeg|png)$', thumb, re.I):
+            continue
+        out.append({'id': 'commons:' + page['title'], 'url': thumb,
+                    'title': page['title'][5:],
+                    'creator': _strip(meta.get('Artist', {}).get('value')),
+                    'license': _strip(meta.get('LicenseShortName', {}).get('value')),
+                    'license_version': '', 'source': 'wikimedia commons',
+                    'foreign_landing_url': info.get('descriptionurl')})
+    return out
 
 
 def search(query, page_size=CANDIDATES):
@@ -44,6 +95,8 @@ def search(query, page_size=CANDIDATES):
 def queries_for(item):
     """Narrow first, then wider — the bare term alone collides with proper nouns."""
     term, kw = item['term'], keywords(item.get('meaning'))
+    if term in QUERIES:
+        return QUERIES[term]
     out = [f'{term} {" ".join(kw[:2])}'.strip(), term]
     if kw:
         out.append(' '.join(kw))
@@ -60,7 +113,7 @@ def collect(item):
     folder.mkdir(parents=True, exist_ok=True)
     seen, kept = set(), []
     for query in queries_for(item):
-        for hit in search(query):
+        for hit in search(query) + search_commons(query, 4):
             if hit['id'] in seen or len(kept) >= CANDIDATES:
                 continue
             seen.add(hit['id'])

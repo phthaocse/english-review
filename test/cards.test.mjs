@@ -387,15 +387,21 @@ s = await B.evaluate(`
   let loaded = false;
   if (img) { try { await img.decode(); loaded = img.naturalWidth > 0; } catch {} }
   return { drawn, hiddenUpFront, src: img?.getAttribute('src'), alt: img?.getAttribute('alt'), loaded,
+           file: m.state.drawings[drawn].src,
+           credit: document.querySelector('.credit')?.textContent?.trim() || null,
            count: Object.keys(m.state.drawings || {}).length };
 `);
 ok('the drawings index reached the page', s.count > 0, `${s.count} drawings`);
 ok('the front does not show the picture', s.hiddenUpFront);
 // A filename with spaces has to be encoded in the attribute, so compare encoded.
-eq('  the back shows the one filed under the word id', s.src,
-   'assets/words/' + encodeURIComponent(s.drawn) + '.svg');
+// The index names the file, because a word is illustrated by a drawing or a photograph.
+eq('  the back shows the one the index names', s.src,
+   'assets/words/' + encodeURIComponent(s.file));
 ok('  the file actually loads', s.loaded, s.src);
 ok('  and it carries a description, not the bare term', (s.alt || '').length > (s.drawn || '').length, s.alt);
+// A licensed photograph may only be published with its credit shown.
+ok('  a photograph shows its credit', !s.file.endsWith('.jpg') || /CC |Public Domain/.test(s.credit || ''),
+   `${s.file} -> ${s.credit}`);
 
 const appErrors = B.consoleErrors.filter((e) => !/GSI_LOGGER|FedCM|client ID/.test(e));
 ok('no application errors', appErrors.length === 0, appErrors.slice(0, 3).join(' | '));

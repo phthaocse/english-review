@@ -1,5 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
-     aria-label="A bottle neck filling the frame with a dark foil capsule sleeved over its cork, the cut edge of the foil showing across the middle">
-  <rect width="320" height="240" fill="#2f7357"/>
-  <path d="M66 240 V150 q0 -34 24 -54 V-10 H230 V96 q24 20 24 54 V240 Z" fill="#2f7357"/><path d="M84 240 V152 q0 -28 20 -46 V-10 H134 V106 q-20 16 -20 46 V240 Z" fill="#4d9d79" opacity=".75"/><path d="M236 240 V152 q0 -28 -16 -44" stroke="#17402f" stroke-width="10" fill="none" opacity=".5"/><path d="M90 -10 H230 V100 q24 20 24 54 V176 H66 V154 q0 -34 24 -54 Z" fill="#171a21"/><path d="M90 -10 H126 V106 q-18 16 -18 48 V176 H66 V154 q0 -34 24 -54 Z" fill="#3b4250" opacity=".85"/><path d="M214 -10 H230 V100 q24 20 24 54 V176 H236 V154 q0 -32 -22 -50 Z" fill="#05070b" opacity=".55"/><path d="M66 176 H254" stroke="#9aa1ad" stroke-width="5"/><path d="M66 168 H254" stroke="#000000" stroke-width="3" opacity=".4"/><path d="M104 34 H216" stroke="#9aa1ad" stroke-width="3" opacity=".5"/><path d="M104 54 H216" stroke="#9aa1ad" stroke-width="2" opacity=".3"/>
-</svg>

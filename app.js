@@ -653,15 +653,23 @@ function resultRow(item, q) {
  */
 function imageFor(item) {
   if (item.image) return { src: item.image, alt: item.imageAlt || item.meaning || item.term };
-  const alt = state.drawings[item.id];
-  if (alt === undefined) return null;
-  return { src: `${item.id}.svg`, alt: alt || item.meaning || item.term };
+  const art = state.drawings[item.id];
+  if (!art) return null;
+  return { src: art.src, alt: art.alt || item.meaning || item.term, credit: art.credit };
 }
 
+// A CC BY or CC BY-SA photograph may only be shown with its credit, so the
+// credit travels with the picture rather than being rendered separately.
 const imageTag = (item, cls) => {
   const art = imageFor(item);
-  return art ? `<img class="${cls}" src="assets/words/${encodeURIComponent(art.src)}"
-           alt="${esc(art.alt)}" loading="lazy">` : '';
+  if (!art) return '';
+  const img = `<img class="${cls}" src="assets/words/${encodeURIComponent(art.src)}"
+           alt="${esc(art.alt)}" loading="lazy">`;
+  if (!art.credit) return img;
+  const line = esc(art.credit.text);
+  return `<figure class="shot">${img}<figcaption class="credit">${
+    art.credit.url ? `<a href="${esc(art.credit.url)}" target="_blank" rel="noopener">${line}</a>` : line
+  }</figcaption></figure>`;
 };
 
 // -------------------------------------------------------------- item view --

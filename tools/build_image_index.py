@@ -16,13 +16,25 @@ def alt_of(svg):
     return m.group(1) if m else ''
 
 def main():
-    index = {f.stem: alt_of(f) for f in sorted(WORDS.glob('*.svg'))}
+    credits_file = WORDS / 'credits.json'
+    credits = json.loads(credits_file.read_text()) if credits_file.exists() else {}
+
+    index = {}
+    for f in sorted(WORDS.glob('*.svg')):
+        index[f.stem] = {'src': f.name, 'alt': alt_of(f)}
     for f in sorted(WORDS.glob('*.jpg')) + sorted(WORDS.glob('*.png')):
-        index.setdefault(f.stem, '')
-    (WORDS / 'index.json').write_text(json.dumps(index, indent=1, ensure_ascii=False) + '\n')
-    print(f'{len(index)} drawings')
-    for k, v in index.items():
-        print(f'  {k:14} {"(no aria-label)" if not v else v[:62]}')
+        index.setdefault(f.stem, {'src': f.name, 'alt': ''})
+    for term, credit in credits.items():
+        if term in index:
+            index[term]['credit'] = credit
+
+    (WORDS / 'index.json').write_text(
+        json.dumps(dict(sorted(index.items())), indent=1, ensure_ascii=False) + '\n')
+    photos = sum(1 for v in index.values() if not v['src'].endswith('.svg'))
+    print(f'{len(index)} pictures: {photos} photographs, {len(index) - photos} drawings')
+    for k, v in sorted(index.items()):
+        mark = 'photo' if 'credit' in v else '  svg'
+        print(f'  {mark}  {k:12} {(v["alt"] or v.get("credit", {}).get("text", ""))[:58]}')
 
 if __name__ == '__main__':
     main()
