@@ -1,5 +1,5 @@
 import worker from '../worker/src/index.js';
-import { chooseBand, coreOf, makeGap, hintFor, today, bandOf, SET_SIZE,
+import { chooseBand, coreOf, contextFor, today, bandOf, SET_SIZE,
          REPLACEMENTS_PER_LIST_PER_DAY, SCENES_PER_REQUEST } from '../worker/src/daily.js';
 import { parseSense } from '../worker/src/oxford.js';
 import { makeSigner, claimsFor } from './jwt.mjs';
@@ -20,20 +20,16 @@ console.log('== the draw leans on B1-B2 ==');
   eq('every band empty draws nothing', chooseBand([], new Set(['a', 'b1', 'b2', 'c1'])), null);
 }
 
-console.log('== the gap ==');
+console.log('== the item in context ==');
 {
-  const g = makeGap('abolish', ['This tax should be abolished.']);
-  eq('takes the form the sentence uses', g.answer, 'abolished');
-  eq('  and blanks it', g.sentence, 'This tax should be ____.');
-  eq('  hinting first letters only', g.hint, 'a········');
-
-  const p = makeGap('a great deal', ['We don\'t see them a great deal these days.']);
-  eq('a phrase is gapped whole', p.answer, 'a great deal');
-  eq('placeholders are not part of what is typed', coreOf('a bit of sth').join(' '), 'a bit of');
+  const c = contextFor('abolish', ['This tax should be abolished.']);
+  eq('finds the form the sentence uses', c.target, 'abolished');
+  eq('  splitting around it', c.before + '|' + c.after, 'This tax should be |.');
+  eq('a phrase is found whole', contextFor('a great deal', ['We don\'t see them a great deal these days.']).target, 'a great deal');
+  eq('placeholders are not part of what is found', coreOf('a bit of sth').join(' '), 'a bit of');
   eq('  "do sth" is a slot too', coreOf('able to do sth').join(' '), 'able to');
-  eq('no example containing it → no context gap', makeGap('abolish', ['Nothing here.']), null);
-  eq('a short word does not match a longer one', makeGap('go', ['They gossip a lot.']), null);
-  eq('hint for two words', hintFor('a bit'), 'a b··');
+  eq('no example containing it → no context', contextFor('abolish', ['Nothing here.']), null);
+  eq('a short word does not match a longer one', contextFor('go', ['They gossip a lot.']), null);
 }
 
 console.log('== the day turns over in Vietnam ==');
@@ -88,7 +84,7 @@ const scenes = (prompt) => reply({ items: idsIn(prompt).map((id) => ({
 let verdictFor = () => true;
 const grades = (prompt) => reply({ items: idsIn(prompt).map((id) => {
   const good = verdictFor(id);
-  return { id, meaning_ok: good, grammar_ok: good, natural_ok: true,
+  return { id, understood: good, meaning_ok: good, grammar_ok: good, natural_ok: true,
            feedback: good ? 'Good.' : 'Wrong preposition.', corrected: 'Fixed.' };
 }) });
 geminiHandler = (prompt) => (prompt.includes('examiner') ? grades(prompt) : scenes(prompt));
@@ -133,8 +129,7 @@ console.log('== today\'s set ==');
      bands.a === 1 && bands.b1 === 3 && bands.b2 === 4 && bands.c1 === 2, JSON.stringify(bands));
   const card = r.body.lists.word[0];
   eq('the meaning is Oxford\'s', card.meaning, `meaning of ${card.term}`);
-  eq('the gap comes from Oxford\'s example', card.recall.sentence, 'I said ____ today.');
-  eq('  and the answer is hidden behind it', card.recall.answer, card.term);
+  eq('the context is Oxford\'s example', card.context.before + card.context.target + card.context.after, `I said ${card.term} today.`);
   eq('the set comes back without waiting for the model', geminiCalls.length, 0);
   eq('  saying how many situations are still to come', r.body.scenesPending, 20);
 
@@ -166,17 +161,19 @@ console.log('== marking ==');
   geminiCalls = [];
 
   const r = await call(env, 'POST', '/api/daily/grade', { answers: [
-    { id: a.id, verdict: 'exact', typed: a.recall.answer, sentence: `I used ${a.term} well.` },
-    { id: b.id, verdict: 'exact', typed: b.recall.answer, sentence: `I used ${b.term} badly.` },
-    { id: c.id, verdict: 'skipped', typed: '', sentence: '' },
+    { id: a.id, explanation: 'to end officially', sentence: `I used ${a.term} well.` },
+    { id: b.id, explanation: 'something else', sentence: `I used ${b.term} badly.` },
+    { id: c.id, skipped: true },
   ] });
   eq('200', r.status, 200);
   const byId = new Map(r.body.results.map((x) => [x.id, x]));
-  eq('recalled and used well → mastered', byId.get(a.id).mastered, true);
-  eq('recalled but misused → kept', byId.get(b.id).mastered, false);
+  eq('understood and used well → mastered', byId.get(a.id).mastered, true);
+  eq('not understood or misused → kept', byId.get(b.id).mastered, false);
   eq('  with the examiner\'s feedback', byId.get(b.id).judgement.feedback, 'Wrong preposition.');
-  eq('not recalled → kept, never sent to the examiner', byId.get(c.id).judgement, null);
-  ok('only recalled answers were judged',
+  eq('"I don\'t know it" → kept, never sent to the examiner', byId.get(c.id).judgement, null);
+  eq('  and recorded as new to you', byId.get(c.id).skipped, true);
+  ok('the examiner sees your explanation', geminiCalls[0].includes('"learner_explanation":"to end officially"'), '');
+  ok('only answered items were judged',
      idsIn(geminiCalls[0]).length === 2, JSON.stringify(idsIn(geminiCalls[0])));
 
   const words = r.body.state.lists.word;
@@ -185,11 +182,11 @@ console.log('== marking ==');
   eq('the kept ones are marked as done for today', words.find((w) => w.id === b.id).testedToday, true);
 
   const twice = await call(env, 'POST', '/api/daily/grade', { answers: [
-    { id: b.id, verdict: 'exact', typed: 'x', sentence: 'again' }] });
+    { id: b.id, explanation: 'x', sentence: 'again' }] });
   eq('a second try on the same day does not count', twice.body.results.length, 0);
 
   const stranger = await call(env, 'POST', '/api/daily/grade', { answers: [
-    { id: 99999, verdict: 'exact', typed: 'x', sentence: 'y' }] });
+    { id: 99999, explanation: 'x', sentence: 'y' }] });
   eq('an entry not in your set is ignored', stranger.body.results.length, 0);
 }
 
@@ -200,7 +197,7 @@ console.log('== a failed marking writes nothing ==');
   const a = state.lists.word[0];
   geminiHandler = async () => ({ ok: false, status: 503, text: async () => 'busy' });
   const r = await call(env, 'POST', '/api/daily/grade', { answers: [
-    { id: a.id, verdict: 'exact', typed: 'x', sentence: 'A sentence.' }] });
+    { id: a.id, explanation: 'x', sentence: 'A sentence.' }] });
   eq('the outage is reported', r.status, 503);
   geminiHandler = (prompt) => (prompt.includes('examiner') ? grades(prompt) : scenes(prompt));
   const after = await call(env, 'GET', '/api/daily');
@@ -217,7 +214,7 @@ console.log('== replacements are capped per day ==');
     const { body } = await call(env, 'GET', '/api/daily');
     const fresh = body.lists.word.filter((w) => !w.testedToday);
     const r = await call(env, 'POST', '/api/daily/grade', { answers: fresh.map((w) => ({
-      id: w.id, verdict: 'exact', typed: w.recall.answer, sentence: 'ok' })) });
+      id: w.id, explanation: 'means x', sentence: 'ok' })) });
     mastered += r.body.results.filter((x) => x.mastered).length;
   }
   const { body } = await call(env, 'GET', '/api/daily');

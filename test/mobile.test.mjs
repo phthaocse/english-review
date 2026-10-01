@@ -20,7 +20,12 @@ await B.addInitScript(`
 
 await B.goto(`${BASE}/#/lookup`);
 await B.setViewport(390, 844, { mobile: true });
-await B.evaluate('await new Promise(r => setTimeout(r, 600));');
+// Wait for the view to exist rather than guessing at a delay; see capture.test.mjs.
+await B.evaluate(`
+  for (let i = 0; i < 100; i++) {
+    if (document.querySelector('.section')) break;
+    await new Promise(r => setTimeout(r, 50));
+  }`);
 
 const m = await B.evaluate(`
   const rect = (s) => { const e = document.querySelector(s); if (!e) return null;

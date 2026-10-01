@@ -165,6 +165,7 @@ CREATE TABLE IF NOT EXISTS daily_card (
   tested_on    TEXT,
   mastered_on  TEXT,
   attempts     INTEGER NOT NULL DEFAULT 0,
+  passes       INTEGER NOT NULL DEFAULT 0,  -- days passed; see RELEARN_PASSES
   situation    TEXT,              -- a fresh scene each day, so yesterday's answer cannot be reused
   sample       TEXT,
   situation_on TEXT,

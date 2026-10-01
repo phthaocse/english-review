@@ -19,7 +19,7 @@ const card = (id, list, term, extra = {}) => ({
   meaning: `the meaning of item ${id}`, vi: 'nghĩa', ipa: '/x/', examples: [`They ${term} it.`],
   url: `https://www.oxfordlearnersdictionaries.com/definition/english/${term}`,
   situation: `Your team asks about ${id}. Answer them.`, sample: `A sample with ${term}.`,
-  recall: { kind: 'context', sentence: 'They ____ it.', answer: term, hint: term[0] + '·'.repeat(term.length - 1) },
+  context: { before: 'They ', target: term, after: ' it.' },
   testedToday: false, attempts: 0, addedOn: '2026-10-01', lastResult: null, ...extra,
 });
 const state = {
@@ -56,13 +56,13 @@ await B.addInitScript(`
     if (href.endsWith('/api/daily/grade')) {
       if (window.__gradeFail) return reply({ error: 'the language model is busy right now' }, 503);
       const word = { ...state.lists.word[0], testedToday: true,
-        lastResult: { recall: { verdict: 'exact' }, sentence: 'bad one',
+        lastResult: { explanation: 'to end', sentence: 'bad one',
                       judgement: { feedback: 'Wrong object.', corrected: 'Good one.' } } };
       return reply({
         results: [
-          { id: 1, term: 'abolish', list: 'word', mastered: false, recall: { verdict: 'exact' },
-            judgement: { feedback: 'Wrong object.', corrected: 'Good one.' } },
-          { id: 2, term: 'a bit', list: 'phrase', mastered: false, recall: { verdict: 'skipped' }, judgement: null },
+          { id: 1, term: 'abolish', list: 'word', mastered: false, skipped: false, explanation: 'to end',
+            judgement: { understood: true, feedback: 'Wrong object.', corrected: 'Good one.' } },
+          { id: 2, term: 'a bit', list: 'phrase', mastered: false, skipped: true, judgement: null },
         ],
         state: { ...state, lists: { word: [word], phrase: [{ ...state.lists.phrase[0], testedToday: true }] } },
       });
@@ -91,20 +91,22 @@ console.log('== step 1 then step 2 ==');
 s = await B.evaluate(`
   document.querySelector('#start').click();
   await new Promise(r => setTimeout(r, 200));
-  const before = { prompt: document.querySelector('.prompt')?.textContent,
-                   leaked: document.querySelector('.quiz').textContent.includes('abolish') };
-  document.querySelector('#typed').value = 'abolish';
-  document.querySelector('#check').click();
-  await new Promise(r => setTimeout(r, 100));
-  const verdict = document.querySelector('.verdict-head')?.textContent;
+  const before = { term: document.querySelector('.prompt-serif')?.textContent,
+                   context: document.querySelector('.quiz mark')?.textContent,
+                   meaningShown: document.querySelector('.quiz').textContent.includes('the meaning of item 1') };
+  document.querySelector('#next').click();
+  await new Promise(r => setTimeout(r, 50));
+  const stillHere = !!document.querySelector('#explanation');
+  document.querySelector('#explanation').value = 'to end';
   document.querySelector('#next').click();
   await new Promise(r => setTimeout(r, 100));
-  return { ...before, verdict, use: document.querySelector('.prompt-serif')?.textContent,
+  return { ...before, stillHere, use: document.querySelector('.prompt-serif')?.textContent,
            situation: [...document.querySelectorAll('.prompt')].map(p => p.textContent).join('|') };`);
-ok('recall shows the gapped sentence', /They\s*\?\s*it\./.test(s.prompt || ''), s.prompt);
-eq('  without the answer', s.leaked, false);
-eq('a right answer is marked right', s.verdict, 'Right');
-eq('step 2 reveals the term', s.use, 'abolish');
+eq('step 1 shows the item itself', s.term, 'abolish');
+eq('  highlighted in Oxford\'s sentence', s.context, 'abolish');
+eq('  without giving the meaning away', s.meaningShown, false);
+eq('an empty explanation is not accepted', s.stillHere, true);
+eq('step 2 keeps the term', s.use, 'abolish');
 ok('  with the situation', s.situation.includes('Your team asks about 1'), s.situation);
 
 console.log('== the draft survives a reload ==');
@@ -121,9 +123,7 @@ console.log('== "I don\'t know" and marking ==');
 s = await B.evaluate(`
   document.querySelector('#dunno').click();
   await new Promise(r => setTimeout(r, 100));
-  const head = document.querySelector('.verdict-head')?.textContent;
-  document.querySelector('#next').click();
-  await new Promise(r => setTimeout(r, 100));
+  const head = document.querySelector('#mark') ? 'straight to marking' : 'stuck';
   window.__gradeFail = true;
   document.querySelector('#mark').click();
   await new Promise(r => setTimeout(r, 300));
@@ -135,12 +135,12 @@ s = await B.evaluate(`
   return { head, failed, answers: post?.body?.answers,
            results: document.querySelector('#view').textContent,
            details: document.querySelectorAll('details.result').length };`);
-eq('skipping says so', s.head, 'New to you');
+eq('"I don\'t know it" skips step 2', s.head, 'straight to marking');
 ok('a failed marking keeps the answers', /answers are kept/.test(s.failed), s.failed);
 eq('both answers were sent', s.answers?.length, 2);
 ok('  the recalled one with its sentence',
-   s.answers?.some((a) => a.id === 1 && a.verdict === 'exact' && a.sentence === 'bad one'), JSON.stringify(s.answers));
-ok('  the skipped one without', s.answers?.some((a) => a.id === 2 && a.verdict === 'skipped'), JSON.stringify(s.answers));
+   s.answers?.some((a) => a.id === 1 && a.explanation === 'to end' && a.sentence === 'bad one'), JSON.stringify(s.answers));
+ok('  the skipped one marked as skipped', s.answers?.some((a) => a.id === 2 && a.skipped), JSON.stringify(s.answers));
 ok('the results name what to fix', s.results.includes('Wrong object.'), '');
 eq('each kept item has a learning card', s.details, 2);
 ok('  and the check is done for today', s.results.includes('Done for today'), '');
@@ -152,9 +152,7 @@ await wait(500);
 s = await B.evaluate(`
   document.querySelector('#start').click();
   await new Promise(r => setTimeout(r, 100));
-  document.querySelector('#typed').value = 'abolish';
-  document.querySelector('#check').click();
-  await new Promise(r => setTimeout(r, 50));
+  document.querySelector('#explanation').value = 'to end';
   document.querySelector('#next').click();
   await new Promise(r => setTimeout(r, 50));
   const waiting = !!document.querySelector('[data-waiting]');

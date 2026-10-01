@@ -1,19 +1,18 @@
 // Today: ten Oxford 5000 words and ten Oxford phrases, each tested cold.
 //
-// Step 1 hides the item and asks for it in one of Oxford's own sentences
-// (recall). Step 2 shows it and asks for a sentence of your own in a given
-// situation (use), marked by the Worker. An item leaves the set only on a pass
-// at both; anything else becomes a learning card and comes back tomorrow.
+// Step 1 shows the item in one of Oxford's sentences and asks what it means, in
+// your own words (understand). Step 2 asks for a sentence of your own in a given
+// situation (use). The Worker marks both; an item leaves the set only on a pass
+// at both, and anything else becomes a learning card that comes back tomorrow.
 
 import { api, ApiError } from './auth-client.js';
-import { grade } from './review.js';
 
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) =>
   ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
 const LIST_LABEL = { word: 'Oxford 5000', phrase: 'Oxford Phrase List' };
-const PASSING = new Set(['exact', 'typo']);
-const DRAFT_KEY = 'today-draft';
+// v2: answers are explanations now, not typed recalls, so older drafts are dropped.
+const DRAFT_KEY = 'today-draft-v2';
 
 let data = null;          // the Worker's state for today
 let run = null;           // { queue, index, step, answers: Map }
@@ -41,7 +40,7 @@ function clearDraft() {
 }
 
 const allCards = () => (data ? [...data.lists.word, ...data.lists.phrase] : []);
-const untested = () => allCards().filter((c) => !c.testedToday && c.recall);
+const untested = () => allCards().filter((c) => !c.testedToday && c.meaning);
 
 export async function renderToday(view) {
   if (!data && !busy) {
@@ -110,8 +109,8 @@ function renderShell(view) {
   const s = data.stats;
   view.innerHTML = `
     <h2 class="section">Today</h2>
-    <p class="lede">Ten words and ten phrases. Each one is tested before you see it;
-      it leaves the list only when you can recall it <i>and</i> use it.</p>
+    <p class="lede">Ten words and ten phrases. Each one is tested before you study it;
+      it leaves the list only when you can explain it <i>and</i> use it.</p>
 
     <div class="statgrid">
       <div class="card stat ${pending.length ? 'is-due' : ''}"><b>${pending.length}</b><span>to check</span></div>
@@ -126,8 +125,8 @@ function renderShell(view) {
     <div class="card block">
       ${pending.length
         ? `<button class="btn" id="start">Start the check · ${pending.length} item${pending.length === 1 ? '' : 's'}</button>
-           <p class="next-hint">About a minute each. Step 1: type the missing word. Step 2: write your own sentence.
-             Sentences are marked together at the end.</p>`
+           <p class="next-hint">About a minute each. Step 1: say what it means. Step 2: write your own sentence.
+             Both are marked together at the end.</p>`
         : `<p style="margin:0">Done for today. What you did not master is below — read it now,
              and it comes back tomorrow.</p>`}
     </div>
@@ -148,13 +147,13 @@ function renderList(list) {
     </div>`;
 }
 
-// An untested item stays hidden: seeing it first would turn the recall step into recognition.
+// An untested item stays hidden, so the check meets it cold.
 function renderRow(card) {
   const level = `<span class="pill">${card.level.toUpperCase()}</span>`;
   if (!card.testedToday) {
     return `<div class="result"><div class="result-top">
       <span class="result-term muted">Hidden until you check it</span>${level}
-      ${card.recall ? '' : '<span class="pill warn">Oxford unreachable — retry later</span>'}</div></div>`;
+      ${card.meaning ? '' : '<span class="pill warn">Oxford unreachable — retry later</span>'}</div></div>`;
   }
   return `<details class="result">
     <summary class="result-top"><span class="result-term">${esc(card.term)}</span>${level}
@@ -172,7 +171,8 @@ function learningCard(card, result) {
     ${card.vi ? `<p class="result-vi" style="margin:4px 0 0">${esc(card.vi)}</p>` : ''}
     ${card.examples?.length ? `<ul style="margin:10px 0 0; padding-left:20px">${card.examples
       .map((e) => `<li>${esc(e)}</li>`).join('')}</ul>` : ''}
-    ${result?.sentence ? `<p style="margin:12px 0 0"><b>You wrote:</b> ${esc(result.sentence)}</p>` : ''}
+    ${result?.explanation ? `<p style="margin:12px 0 0"><b>You said it means:</b> ${esc(result.explanation)}</p>` : ''}
+    ${result?.sentence ? `<p style="margin:4px 0 0"><b>You wrote:</b> ${esc(result.sentence)}</p>` : ''}
     ${j ? `<p style="margin:4px 0 0">${esc(j.feedback)}</p>
            ${j.corrected && j.corrected !== result.sentence ? `<p class="rightline" style="margin:4px 0 0">→ ${esc(j.corrected)}</p>` : ''}` : ''}
     ${card.sample ? `<p class="muted" style="margin:8px 0 0"><b>A natural way to say it:</b> ${esc(card.sample)}</p>` : ''}
@@ -189,8 +189,8 @@ function renderResults(list) {
       <div class="result"><div class="result-top">
         <span class="result-term">${esc(r.term)}</span>
         ${r.mastered ? '<span class="pill good">mastered · dropped and replaced</span>'
-          : `<span class="pill bad">${r.recall.verdict === 'skipped' ? 'new to you'
-            : !PASSING.has(r.recall.verdict) ? 'not recalled' : 'not used correctly yet'}</span>`}
+          : `<span class="pill bad">${r.skipped ? 'new to you'
+            : !r.judgement?.understood ? 'meaning not right yet' : 'not used correctly yet'}</span>`}
       </div>
       ${r.judgement && !r.mastered ? `<p class="result-gloss">${esc(r.judgement.feedback)}</p>` : ''}
       </div>`).join('')}</div>
@@ -201,7 +201,7 @@ function renderResults(list) {
 
 function startRun(view) {
   const queue = untested();
-  run = { queue, index: 0, step: 'recall', answers: loadDraft(data.day), started: Date.now() };
+  run = { queue, index: 0, answers: loadDraft(data.day) };
   // Resume where a reload left off.
   while (run.index < queue.length && run.answers.get(queue[run.index].id)?.done) run.index++;
   renderToday(view);
@@ -210,60 +210,44 @@ function startRun(view) {
 function renderStep(view) {
   const card = run.queue[run.index];
   const answer = run.answers.get(card.id) || { id: card.id };
-  const step = answer.verdict ? 'use' : 'recall';
+  const step = answer.explanation === undefined ? 'understand' : 'use';
   const bar = `<div class="quizbar">
       <div class="progressbar"><i style="width:${(run.index / run.queue.length) * 100}%"></i></div>
       <span class="quizcount">${run.index + 1} / ${run.queue.length}</span>
       <button class="btn secondary small" id="pause">Pause</button></div>`;
   const mode = `<div class="quiz-mode"><span>${LIST_LABEL[card.list]}</span>
       <span class="pill">${card.level.toUpperCase()}</span>
-      <span>${step === 'recall' ? 'Step 1 of 2 · Recall' : 'Step 2 of 2 · Use it'}</span></div>`;
+      <span>${step === 'understand' ? 'Step 1 of 2 · What does it mean?' : 'Step 2 of 2 · Use it'}</span></div>`;
 
-  if (step === 'recall') {
-    const r = card.recall;
+  if (step === 'understand') {
+    const c = card.context;
     view.innerHTML = `${bar}<div class="card quiz">${mode}
-      ${r.kind === 'context'
-        ? `<p class="prompt">${esc(r.sentence).replace('____', '<span class="gap">?</span>')}</p>
-           <p class="prompt-sub">Meaning: ${esc(card.meaning)}</p>`
-        : `<p class="prompt">${esc(card.meaning)}</p>
-           <p class="prompt-sub">Type the ${card.list === 'word' ? 'word' : 'phrase'} that means this.</p>`}
-      <p class="prompt-sub">Starts with: <b style="font-family:var(--mono)">${esc(r.hint)}</b></p>
-      <input class="answer" id="typed" autocomplete="off" autocapitalize="off" spellcheck="false"
-             placeholder="Type it in the form the sentence needs">
+      <p class="prompt prompt-serif">${esc(card.term)}</p>
+      ${c ? `<p class="prompt">${esc(c.before)}<mark>${esc(c.target)}</mark>${esc(c.after)}</p>` : ''}
+      <p class="prompt-sub">What does it mean${c ? ' here' : ''}? Explain in your own words —
+        English or Vietnamese, a synonym or a short example all count.</p>
+      <textarea class="answer" id="explanation" rows="2" maxlength="300"></textarea>
       <div class="row" style="margin-top:12px">
-        <button class="btn" id="check">Check</button>
+        <button class="btn" id="next">Next →</button>
         <button class="btn secondary" id="dunno">I don't know it</button>
-      </div>
-      <div id="verdict"></div></div>`;
-    const input = view.querySelector('#typed');
-    const started = Date.now();
-    input.focus();
-    const finish = (typed, verdict) => {
-      answer.typed = typed;
-      answer.verdict = verdict;
-      if (!PASSING.has(verdict)) answer.done = true;   // no sentence for an item you could not recall
+      </div></div>`;
+    const box = view.querySelector('#explanation');
+    box.focus();
+    view.querySelector('#next').addEventListener('click', () => {
+      if (!box.value.trim()) return box.focus();
+      answer.explanation = box.value.trim();
       run.answers.set(card.id, answer);
       saveDraft();
-      const right = PASSING.has(verdict);
-      view.querySelector('#verdict').innerHTML = `<div class="verdict ${right ? 'exact' : verdict === 'form' ? 'form' : 'wrong'}">
-        <div class="verdict-head">${right ? (verdict === 'typo' ? 'Right — mind the spelling' : 'Right')
-          : verdict === 'form' ? 'Right word, wrong form' : verdict === 'skipped' ? 'New to you' : 'Not quite'}</div>
-        <div class="verdict-body">It is <b class="solution">${esc(r.answer)}</b>
-          ${right ? '' : '— you will see it properly at the end, and again tomorrow.'}</div>
-        <div class="row" style="margin-top:12px"><button class="btn" id="next">${right ? 'Now use it →' : 'Next →'}</button></div>
-      </div>`;
-      view.querySelectorAll('#check, #dunno').forEach((b) => { b.disabled = true; });
-      input.disabled = true;
-      const next = view.querySelector('#next');
-      next.focus();
-      next.addEventListener('click', () => { if (!right) run.index++; renderToday(view); });
-    };
-    view.querySelector('#check').addEventListener('click', () => {
-      if (!input.value.trim()) return input.focus();
-      finish(input.value.trim(), grade(input.value, [r.answer], Date.now() - started).verdict);
+      renderToday(view);
     });
-    input.addEventListener('keydown', (e) => { if (e.key === 'Enter') view.querySelector('#check').click(); });
-    view.querySelector('#dunno').addEventListener('click', () => finish('', 'skipped'));
+    // Nothing to mark for an item you have not met: it goes straight to the learning cards.
+    view.querySelector('#dunno').addEventListener('click', () => {
+      Object.assign(answer, { explanation: '', skipped: true, done: true });
+      run.answers.set(card.id, answer);
+      saveDraft();
+      run.index++;
+      renderToday(view);
+    });
   } else if (!card.situation && !scenes.error && data.scenesPending > 0) {
     view.innerHTML = `${bar}<div class="card quiz" data-waiting>${mode}
       <p class="prompt prompt-serif">${esc(card.term)}</p>
@@ -272,7 +256,6 @@ function renderStep(view) {
   } else {
     view.innerHTML = `${bar}<div class="card quiz">${mode}
       <p class="prompt prompt-serif">${esc(card.term)}</p>
-      <p class="prompt-sub">${esc(card.meaning)}</p>
       <p class="prompt">${esc(card.situation || 'Write a sentence about your own life or work.')}</p>
       <p class="prompt-sub">Write what you would actually say, using <b>${esc(card.term)}</b> in this meaning.</p>
       ${!card.situation && scenes.error ? `<p class="next-hint">No situation: ${esc(scenes.error)}.
@@ -301,10 +284,10 @@ function renderStep(view) {
 
 function renderSubmit(view) {
   const answers = [...run.answers.values()].filter((a) => a.done && run.queue.some((c) => c.id === a.id));
-  const sentences = answers.filter((a) => a.sentence).length;
+  const toMark = answers.filter((a) => !a.skipped).length;
   view.innerHTML = `<div class="card quiz">
-    <p class="prompt">${busy === 'marking' ? 'Marking your sentences…' : `All ${answers.length} answered.`}</p>
-    <p class="prompt-sub">${sentences} sentence${sentences === 1 ? '' : 's'} to mark, in one request.</p>
+    <p class="prompt">${busy === 'marking' ? 'Marking your answers…' : `All ${answers.length} answered.`}</p>
+    <p class="prompt-sub">${toMark} to mark, ${MARK_BATCH} per request.</p>
     ${error ? `<p class="verdict wrong">${esc(error)} Your answers are kept — try again.</p>` : ''}
     <button class="btn" id="mark" ${busy ? 'disabled' : ''}>${error ? 'Try again' : 'Mark them'}</button></div>`;
   view.querySelector('#mark').addEventListener('click', async () => {

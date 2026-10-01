@@ -55,7 +55,14 @@ await B.addInitScript(`
 `);
 
 await B.goto(`${BASE}/#/capture`);
-await B.evaluate(`await new Promise(r => setTimeout(r, 600));`);
+// Wait for the screen itself rather than a fixed delay: with the other suites
+// launching browsers alongside this one, 600ms was sometimes not enough and the
+// first four assertions failed on a page that simply had not rendered yet.
+await B.evaluate(`
+  for (let i = 0; i < 100; i++) {
+    if (document.querySelector('.section')) break;
+    await new Promise(r => setTimeout(r, 50));
+  }`);
 
 console.log('== signed in, typed capture ==');
 let s = await B.evaluate(`return {

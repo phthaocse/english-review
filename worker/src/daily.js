@@ -1,6 +1,6 @@
 // The daily check: ten Oxford 5000 words and ten Oxford phrases per person,
-// each tested cold before it is shown. An item leaves the set only when it is
-// recalled from context AND used correctly in a sentence of the person's own.
+// each tested cold. An item leaves the set only when its meaning is explained
+// AND it is used correctly in a sentence of the person's own.
 
 import { askJson, GeminiError } from './gemini.js';
 import { fetchSense } from './oxford.js';
@@ -11,6 +11,10 @@ export const SET_SIZE = 10;
 // words from turning one sitting into fifty.
 export const REPLACEMENTS_PER_LIST_PER_DAY = 10;
 const OXFORD_FETCHES_PER_REQUEST = 24;
+// Passing on first sight means you already knew it. An item learnt here has to be
+// passed on this many separate days: about three relearning sessions is where
+// the successive-relearning studies stop finding more benefit.
+export const RELEARN_PASSES = 3;
 
 // Mostly the learning zone for a B1→B2 learner, one quick easy check, two stretch items.
 export const BANDS = [
@@ -41,7 +45,7 @@ export function chooseBand(levels, exhausted = new Set()) {
   return open.reduce((best, b) => (b.target - have[b.key] > best.target - have[best.key] ? b : best));
 }
 
-// ------------------------------------------------------------- gap-fill ---
+// --------------------------------------------------------------- context ---
 
 const PLACEHOLDERS = new Set(['sb', 'sth', 'somebody', 'something', 'someone', "sb's", "one's", 'oneself']);
 const MIN_STEM = 3;
@@ -69,17 +73,11 @@ function sameWord(token, word) {
   return token.startsWith(stem) && token.length <= word.length + MAX_SUFFIX;
 }
 
-/** First letter of each word, the rest as dots: "a great deal" → "a g…. d…". */
-export function hintFor(answer) {
-  return answer.split(' ').map((w) => w[0] + '·'.repeat(Math.max(0, w.length - 1))).join(' ');
-}
-
 /**
- * A gap in one of Oxford's own example sentences, in whatever form the
- * sentence uses. Null when no example contains the entry, so the caller falls
- * back to recall from the meaning alone.
+ * The first of Oxford's example sentences that contains the entry, split
+ * around it so the page can highlight it in whatever form the sentence uses.
  */
-export function makeGap(term, examples = []) {
+export function contextFor(term, examples = []) {
   const core = coreOf(term);
   if (!core.length) return null;
   for (const sentence of examples) {
@@ -89,24 +87,16 @@ export function makeGap(term, examples = []) {
       if (!run.every((t, k) => sameWord(t[0].toLowerCase(), core[k]))) continue;
       const from = run[0].index;
       const to = run.at(-1).index + run.at(-1)[0].length;
-      const answer = sentence.slice(from, to);
-      return { kind: 'context', sentence: `${sentence.slice(0, from)}____${sentence.slice(to)}`, answer, hint: hintFor(answer) };
+      return { before: sentence.slice(0, from), target: sentence.slice(from, to), after: sentence.slice(to) };
     }
   }
   return null;
 }
 
-function recallTask(card) {
-  const gap = makeGap(card.term, card.examples);
-  if (gap) return gap;
-  const answer = coreOf(card.term).join(' ') || card.term;
-  return { kind: 'meaning', sentence: null, answer, hint: hintFor(answer) };
-}
-
 // ------------------------------------------------------------------ store --
 
 const CARD_SQL = `
-  SELECT d.entry_id AS id, d.list, d.status, d.added_on, d.tested_on, d.mastered_on, d.attempts,
+  SELECT d.entry_id AS id, d.list, d.status, d.added_on, d.tested_on, d.mastered_on, d.attempts, d.passes,
          d.situation, d.sample, d.situation_on, d.last_result,
          e.term, e.pos, e.level, e.path, e.meaning, e.examples, e.ipa, e.vi, e.fetched_at
   FROM daily_card d JOIN oxford_entry e ON e.id = d.entry_id`;
@@ -267,9 +257,11 @@ function publicCard(card, day) {
     url: `https://www.oxfordlearnersdictionaries.com${card.path}`,
     situation: fresh ? card.situation : null,
     sample: fresh ? card.sample : null,
-    recall: card.meaning ? recallTask(card) : null,
+    context: contextFor(card.term, card.examples),
     testedToday: card.tested_on === day,
     attempts: card.attempts,
+    passes: card.passes,
+    passesNeeded: RELEARN_PASSES,
     addedOn: card.added_on,
     lastResult: card.last_result,
   };
@@ -321,13 +313,14 @@ const GRADE_SCHEMA = {
         type: 'object',
         properties: {
           id: { type: 'integer' },
+          understood: { type: 'boolean' },
           meaning_ok: { type: 'boolean' },
           grammar_ok: { type: 'boolean' },
           natural_ok: { type: 'boolean' },
           feedback: { type: 'string' },
           corrected: { type: 'string' },
         },
-        required: ['id', 'meaning_ok', 'grammar_ok', 'natural_ok', 'feedback', 'corrected'],
+        required: ['id', 'understood', 'meaning_ok', 'grammar_ok', 'natural_ok', 'feedback', 'corrected'],
       },
     },
   },
@@ -335,11 +328,17 @@ const GRADE_SCHEMA = {
 };
 
 export function gradePrompt(entries) {
-  return `You are an English examiner judging whether a B1-B2 learner can USE a word or
-phrase in real communication. For each answer you get the target entry, its meaning,
-the situation the learner was given, and the sentence they wrote.
+  return `You are an English examiner judging whether a B1-B2 learner UNDERSTANDS a word or
+phrase and can USE it in real communication. For each answer you get the target entry,
+its dictionary meaning, the learner's own explanation of that meaning (English or
+Vietnamese), the situation the learner was given, and the sentence they wrote.
 
-Judge only how the TARGET is used, strictly but fairly:
+- understood: the learner's explanation shows they know this meaning. Any wording,
+  a synonym, a Vietnamese translation or a short example all count; it does not need
+  to match the dictionary. A different sense of the same word, or something vague
+  enough to fit many words, does not: false.
+
+Then judge only how the TARGET is used in the sentence, strictly but fairly:
 - meaning_ok: the target is used in the given meaning, in a sentence that could
   belong to this kind of situation. The learner may change the details of the
   scene; that is fine. A sentence that would make sense with almost any word in
@@ -351,7 +350,8 @@ Judge only how the TARGET is used, strictly but fairly:
   suits the situation.
 
 feedback: one or two short sentences in simple English, addressed to the learner
-("You..."), naming the most important problem, or confirming what was good.
+("You..."), naming the most important problem with the explanation or the sentence,
+or confirming what was good.
 corrected: the learner's sentence with the smallest changes that make it right and
 natural, fixing other mistakes too. If it is already right, repeat it unchanged.
 When the target is used well, say so in the feedback even if you fixed something else.
@@ -361,14 +361,14 @@ If the target is missing from the sentence, all three are false.
 Answers (JSON): ${JSON.stringify(entries)}`;
 }
 
-const PASSING_RECALL = new Set(['exact', 'typo']);
 const MAX_SENTENCE = 400;
-const MAX_TYPED = 120;
+const MAX_EXPLANATION = 300;
+const clip = (text, max) => (typeof text === 'string' ? text.trim().slice(0, max) : '');
 
 /**
- * Mark one pass of the check and apply it: a pass on both steps retires the
- * entry, anything else keeps it for tomorrow. Nothing is written if the
- * sentences cannot be marked, so the answers can be sent again.
+ * Mark one pass of the check and apply it. A pass is understood AND used well;
+ * an item is dropped on a pass at first sight, or after RELEARN_PASSES passes. Nothing is
+ * written if the answers cannot be marked, so they can be sent again.
  */
 export async function gradeDaily(env, user, answers, { now = new Date(), allowModelCall = async () => true } = {}) {
   const day = today(now);
@@ -378,35 +378,40 @@ export async function gradeDaily(env, user, answers, { now = new Date(), allowMo
   for (const raw of Array.isArray(answers) ? answers : []) {
     const card = cards.get(Number(raw?.id));
     if (!card || card.tested_on === day) continue;     // not yours, or already counted today
-    const verdict = PASSING_RECALL.has(raw.verdict) || ['form', 'wrong', 'skipped'].includes(raw.verdict)
-      ? raw.verdict : 'wrong';
-    const sentence = typeof raw.sentence === 'string' ? raw.sentence.trim().slice(0, MAX_SENTENCE) : '';
-    marked.push({ card, verdict, typed: String(raw.typed ?? '').slice(0, MAX_TYPED), sentence });
+    const explanation = clip(raw.explanation, MAX_EXPLANATION);
+    const sentence = clip(raw.sentence, MAX_SENTENCE);
+    const skipped = raw.skipped === true || (!explanation && !sentence);
+    marked.push({ card, skipped, explanation, sentence });
   }
 
-  const toJudge = marked.filter((m) => PASSING_RECALL.has(m.verdict) && m.sentence);
+  const toJudge = marked.filter((m) => !m.skipped);
   const judged = new Map();
   if (toJudge.length) {
     if (!(await allowModelCall())) throw new GeminiError('today\'s limit of marking requests is reached', 429);
-    const { data } = await askJson(gradePrompt(toJudge.map(({ card, sentence }) => ({
+    const { data } = await askJson(gradePrompt(toJudge.map(({ card, explanation, sentence }) => ({
       id: card.id, target: card.term, meaning: card.meaning,
+      learner_explanation: explanation || '(left blank)',
       situation: card.situation_on === day ? card.situation : 'Use it in a sentence about your own life or work.',
-      sentence,
+      sentence: sentence || '(left blank)',
     }))), GRADE_SCHEMA, env);
     for (const row of data.items || []) judged.set(row.id, row);
   }
 
   const results = [];
-  for (const { card, verdict, typed, sentence } of marked) {
+  for (const { card, skipped, explanation, sentence } of marked) {
     const judgement = judged.get(card.id) || null;
-    const used = !!judgement && judgement.meaning_ok && judgement.grammar_ok && judgement.natural_ok;
-    const mastered = PASSING_RECALL.has(verdict) && used;
-    const result = { recall: { verdict, typed }, sentence: sentence || null, judgement, mastered };
+    const passed = !!judgement && judgement.understood && judgement.meaning_ok
+      && judgement.grammar_ok && judgement.natural_ok;
+    const passes = card.passes + (passed ? 1 : 0);
+    const knewIt = passed && card.attempts === 0;
+    const mastered = knewIt || passes >= RELEARN_PASSES;
+    const result = { skipped, explanation: explanation || null, sentence: sentence || null, judgement,
+                     passed, passes, passesNeeded: RELEARN_PASSES, knewIt, mastered };
     await env.DB.prepare(`
-      UPDATE daily_card SET tested_on = ?, attempts = attempts + 1, last_result = ?,
+      UPDATE daily_card SET tested_on = ?, attempts = attempts + 1, passes = ?, last_result = ?,
              status = ?, mastered_on = ?
       WHERE user_id = ? AND entry_id = ?`).bind(
-      day, JSON.stringify(result), mastered ? 'mastered' : 'active', mastered ? day : null,
+      day, passes, JSON.stringify(result), mastered ? 'mastered' : 'active', mastered ? day : null,
       user.id, card.id).run();
     results.push({ id: card.id, term: card.term, list: card.list, ...result });
   }

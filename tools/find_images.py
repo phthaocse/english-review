@@ -58,7 +58,7 @@ QUERIES = {
     'amenity':      ['public swimming pool leisure centre', 'playground park amenity'],
     'frontier':     ['border fence frontier post', 'national border crossing'],
     'blocked':      ['road blocked fallen tree', 'blocked road barrier'],
-    'primitive':    ['stone age hand axe tool', 'prehistoric stone tool'],
+    'primitive':    ['flint hand axe in hand', 'palaeolithic handaxe', 'stone age axe held'],
     'soak':         ['grain soaking in water', 'steeping barley water tank'],
     'steep':        ['steeping grain water vessel', 'soaking barley steep tank'],
     'germinate':    ['germinating seed root shoot', 'seed germination soil'],
