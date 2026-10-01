@@ -109,8 +109,9 @@ function renderShell(view) {
   const s = data.stats;
   view.innerHTML = `
     <h2 class="section">Today</h2>
-    <p class="lede">Ten words and ten phrases. Each one is tested before you study it;
-      it leaves the list only when you can explain it <i>and</i> use it.</p>
+    <p class="lede">Ten words and ten phrases, each tested before you study it. One you can
+      explain <i>and</i> use the first time leaves the list at once; one you learn here
+      leaves after you pass it on three separate days.</p>
 
     <div class="statgrid">
       <div class="card stat ${pending.length ? 'is-due' : ''}"><b>${pending.length}</b><span>to check</span></div>
@@ -158,7 +159,9 @@ function renderRow(card) {
   return `<details class="result">
     <summary class="result-top"><span class="result-term">${esc(card.term)}</span>${level}
       ${card.pos ? `<span class="muted">${esc(card.pos)}</span>` : ''}
-      <span class="pill bad">keep learning</span></summary>
+      ${card.lastResult?.passed
+        ? `<span class="pill warn">passed today · ${card.passes} of ${card.passesNeeded} days</span>`
+        : '<span class="pill bad">keep learning</span>'}</summary>
     ${learningCard(card, card.lastResult)}
   </details>`;
 }
@@ -188,11 +191,13 @@ function renderResults(list) {
     <div class="results">${list.map((r) => `
       <div class="result"><div class="result-top">
         <span class="result-term">${esc(r.term)}</span>
-        ${r.mastered ? '<span class="pill good">mastered · dropped and replaced</span>'
+        ${r.mastered
+          ? `<span class="pill good">${r.knewIt ? 'you already knew it' : `learnt · passed on ${r.passesNeeded} days`} · dropped and replaced</span>`
+          : r.passed ? `<span class="pill warn">passed · ${r.passes} of ${r.passesNeeded} days</span>`
           : `<span class="pill bad">${r.skipped ? 'new to you'
             : !r.judgement?.understood ? 'meaning not right yet' : 'not used correctly yet'}</span>`}
       </div>
-      ${r.judgement && !r.mastered ? `<p class="result-gloss">${esc(r.judgement.feedback)}</p>` : ''}
+      ${r.judgement && !r.passed ? `<p class="result-gloss">${esc(r.judgement.feedback)}</p>` : ''}
       </div>`).join('')}</div>
   </div>`;
 }

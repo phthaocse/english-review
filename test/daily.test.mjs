@@ -1,4 +1,5 @@
 import worker from '../worker/src/index.js';
+import { dailyState, gradeDaily, RELEARN_PASSES } from '../worker/src/daily.js';
 import { chooseBand, coreOf, contextFor, today, bandOf, SET_SIZE,
          REPLACEMENTS_PER_LIST_PER_DAY, SCENES_PER_REQUEST } from '../worker/src/daily.js';
 import { parseSense } from '../worker/src/oxford.js';
@@ -168,6 +169,7 @@ console.log('== marking ==');
   eq('200', r.status, 200);
   const byId = new Map(r.body.results.map((x) => [x.id, x]));
   eq('understood and used well → mastered', byId.get(a.id).mastered, true);
+  eq('  on first sight, so you already knew it', byId.get(a.id).knewIt, true);
   eq('not understood or misused → kept', byId.get(b.id).mastered, false);
   eq('  with the examiner\'s feedback', byId.get(b.id).judgement.feedback, 'Wrong preposition.');
   eq('"I don\'t know it" → kept, never sent to the examiner', byId.get(c.id).judgement, null);
@@ -188,6 +190,32 @@ console.log('== marking ==');
   const stranger = await call(env, 'POST', '/api/daily/grade', { answers: [
     { id: 99999, explanation: 'x', sentence: 'y' }] });
   eq('an entry not in your set is ignored', stranger.body.results.length, 0);
+}
+
+console.log('== an item learnt here needs three separate days ==');
+{
+  const env = makeEnv();
+  const user = { id: 1 };
+  const dayAt = (n) => new Date(Date.UTC(2026, 9, 1 + n, 3));   // 10:00 in Hanoi, day n
+  const first = (await dailyState(env, user, { now: dayAt(0) })).lists.word[0];
+  const answer = [{ id: first.id, explanation: 'x', sentence: 'y' }];
+  const statusOn = async (n, good) => {
+    verdictFor = () => good;
+    return (await gradeDaily(env, user, answer, { now: dayAt(n) }))[0];
+  };
+  let r = await statusOn(0, false);
+  eq('day 1: failed, so it is being learnt', r.mastered, false);
+  r = await statusOn(1, true);
+  eq('day 2: a pass is not enough', r.mastered, false);
+  eq('  it counts as 1 of 3', `${r.passes}/${r.passesNeeded}`, `1/${RELEARN_PASSES}`);
+  r = await statusOn(2, false);
+  eq('day 3: a slip keeps it', r.mastered, false);
+  eq('  without wiping the passes', r.passes, 1);
+  r = await statusOn(3, true);
+  eq('day 4: second pass', r.passes, 2);
+  r = await statusOn(4, true);
+  eq('day 5: third pass drops it', r.mastered, true);
+  eq('  and says it was learnt, not already known', r.knewIt, false);
 }
 
 console.log('== a failed marking writes nothing ==');
