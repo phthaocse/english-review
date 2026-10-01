@@ -23,12 +23,28 @@
    "url": "https://commons.wikimedia.org/w/index.php?curid=20139035"
   }
  },
+ "congestion": {
+  "src": "congestion.jpg",
+  "alt": "",
+  "credit": {
+   "text": "Traffic in Bangkok by Jo@net (CC BY 2.0)",
+   "url": "https://www.flickr.com/photos/15411972@N00/8818368324"
+  }
+ },
  "cork": {
   "src": "cork.jpg",
   "alt": "",
   "credit": {
    "text": "Wine Not... by derekGavey (CC BY 2.0)",
    "url": "https://www.flickr.com/photos/45170709@N06/4320481155"
+  }
+ },
+ "germinate": {
+  "src": "germinate.jpg",
+  "alt": "",
+  "credit": {
+   "text": "One Seed, Two Seperate Palm Seedlings by thienzieyung (CC BY 2.0)",
+   "url": "https://www.flickr.com/photos/26978304@N08/5699579028"
   }
  },
  "grain": {
@@ -51,6 +67,14 @@
   "src": "mash.svg",
   "alt": "The surface of hot mash filling the frame, a thick porridge of ground malt and water with a wooden paddle resting in it and steam lifting off"
  },
+ "primitive": {
+  "src": "primitive.jpg",
+  "alt": "",
+  "credit": {
+   "text": "Prehistoric stone tools from archaeological excavations in southern Africa by gbaku (CC BY-SA 2.0)",
+   "url": "https://www.flickr.com/photos/72105154@N00/2282291580"
+  }
+ },
  "prong": {
   "src": "prong.jpg",
   "alt": "",
@@ -71,12 +95,36 @@
    "url": "https://www.flickr.com/photos/45605988@N03/5714142360"
   }
  },
+ "surveillance": {
+  "src": "surveillance.jpg",
+  "alt": "",
+  "credit": {
+   "text": "Wall-Mounted Surveillance Cameras At Twelfth Street, NW & H Street, NW (Washington, DC) by takomabibelot (CC BY 2.0)",
+   "url": "https://www.flickr.com/photos/38782010@N00/2078277204"
+  }
+ },
  "suture": {
   "src": "suture.jpg",
   "alt": "",
   "credit": {
    "text": "Stitches by quinn.anya (CC BY-SA 2.0)",
    "url": "https://www.flickr.com/photos/53326337@N00/3429981840"
+  }
+ },
+ "trial": {
+  "src": "trial.jpg",
+  "alt": "",
+  "credit": {
+   "text": "Liberty County Courthouse, Liberty, Texas 1806051216 by Patrick Feller (CC BY 2.0)",
+   "url": "https://www.flickr.com/photos/32345848@N07/41773216575"
+  }
+ },
+ "vandalize": {
+  "src": "vandalize.jpg",
+  "alt": "",
+  "credit": {
+   "text": "Graffiti Art by Dominic's pics (CC BY 2.0)",
+   "url": "https://www.flickr.com/photos/64097751@N00/820426697"
   }
  },
  "washback": {
