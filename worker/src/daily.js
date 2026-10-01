@@ -207,27 +207,56 @@ For each entry below, write:
 Entries (JSON): ${JSON.stringify(list)}`;
 }
 
-/** A fresh situation per item per day, and a Vietnamese gloss the first time. One request for all. */
-async function fillScenes(db, userId, cards, day, env, allowModelCall) {
-  const need = cards.filter((c) => c.tested_on !== day && c.situation_on !== day && c.meaning);
-  if (!need.length) return null;
-  if (!(await allowModelCall())) return 'today\'s limit of model requests is reached';
-  try {
-    const { data } = await askJson(scenePrompt(need), SCENE_SCHEMA, env);
-    const byId = new Map(need.map((c) => [c.id, c]));
-    for (const row of data.items || []) {
-      const card = byId.get(row.id);
-      if (!card || !row.situation) continue;
-      Object.assign(card, { situation: row.situation, sample: row.sample, situation_on: day, vi: card.vi || row.vi });
-      await db.prepare('UPDATE daily_card SET situation = ?, sample = ?, situation_on = ? WHERE user_id = ? AND entry_id = ?')
-        .bind(row.situation, row.sample || null, day, userId, row.id).run();
-      if (row.vi) await db.prepare('UPDATE oxford_entry SET vi = COALESCE(vi, ?) WHERE id = ?').bind(row.vi, row.id).run();
-    }
-    return null;
-  } catch (error) {
-    console.error('could not prepare situations', error?.message);
-    return error?.message || 'the language model is unavailable';
+// A situation takes the model 5-6 seconds per item, so twenty in one request ran
+// past the timeout. Small batches finish, and the page asks for the next one itself.
+export const SCENES_PER_REQUEST = 4;
+
+const needsScene = (card, day) => card.tested_on !== day && card.situation_on !== day && !!card.meaning;
+
+/** A fresh situation per item per day, and a Vietnamese gloss the first time. */
+async function fillScenes(db, userId, need, day, env) {
+  const { data } = await askJson(scenePrompt(need), SCENE_SCHEMA, env);
+  const byId = new Map(need.map((c) => [c.id, c]));
+  for (const row of data.items || []) {
+    const card = byId.get(row.id);
+    if (!card || !row.situation) continue;
+    Object.assign(card, { situation: row.situation, sample: row.sample, situation_on: day, vi: card.vi || row.vi });
+    await db.prepare('UPDATE daily_card SET situation = ?, sample = ?, situation_on = ? WHERE user_id = ? AND entry_id = ?')
+      .bind(row.situation, row.sample || null, day, userId, row.id).run();
+    if (row.vi) await db.prepare('UPDATE oxford_entry SET vi = COALESCE(vi, ?) WHERE id = ?').bind(row.vi, row.id).run();
   }
+}
+
+/**
+ * Prepare situations for the next few untested items, those named in `ids`
+ * first. Errors are returned, not thrown: the check works without them.
+ */
+export async function prepareScenes(env, user, ids = [], { now = new Date(), allowModelCall = async () => true } = {}) {
+  const day = today(now);
+  const cards = (await activeCards(env.DB, user.id)).filter((c) => needsScene(c, day));
+  const wanted = new Set((Array.isArray(ids) ? ids : []).map(Number));
+  const ordered = [...cards.filter((c) => wanted.has(c.id)), ...cards.filter((c) => !wanted.has(c.id))];
+  const batch = ordered.slice(0, SCENES_PER_REQUEST);
+
+  let error = null;
+  if (batch.length) {
+    if (!(await allowModelCall())) {
+      error = 'today\'s limit of model requests is reached';
+    } else {
+      try {
+        await fillScenes(env.DB, user.id, batch, day, env);
+      } catch (e) {
+        console.error('could not prepare situations', e?.message);
+        error = e?.message || 'the language model is unavailable';
+      }
+    }
+  }
+  const prepared = batch.filter((c) => c.situation_on === day);
+  return {
+    cards: prepared.map((c) => publicCard(c, day)),
+    remaining: cards.length - prepared.length,
+    ...(error ? { error } : {}),
+  };
 }
 
 function publicCard(card, day) {
@@ -266,19 +295,18 @@ async function stats(db, userId, day) {
   return out;
 }
 
-/** Today's set for one person: refilled, filled in, ready to test. */
-export async function dailyState(env, user, { now = new Date(), fetchImpl = fetch, allowModelCall = async () => true } = {}) {
+/** Today's set for one person, refilled and read from Oxford. Situations come separately. */
+export async function dailyState(env, user, { now = new Date(), fetchImpl = fetch } = {}) {
   const day = today(now);
   await refill(env.DB, user.id, day);
   const cards = await activeCards(env.DB, user.id);
   await fillFromOxford(env.DB, cards, { fetchImpl });
-  const sceneError = await fillScenes(env.DB, user.id, cards, day, env, allowModelCall);
   return {
     day,
     lists: Object.fromEntries(LISTS.map((list) => [list,
       cards.filter((c) => c.list === list).map((c) => publicCard(c, day))])),
     stats: await stats(env.DB, user.id, day),
-    ...(sceneError ? { warning: `Situations could not be prepared: ${sceneError}` } : {}),
+    scenesPending: cards.filter((c) => needsScene(c, day)).length,
   };
 }
 

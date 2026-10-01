@@ -40,7 +40,19 @@ await B.addInitScript(`
     const reply = (obj, status = 200) =>
       new Response(JSON.stringify(obj), { status, headers: { 'Content-Type': 'application/json' } });
     const state = ${JSON.stringify(state)};
-    if (href.endsWith('/api/daily')) return reply(state);
+    if (localStorage.getItem('slow-scenes')) {
+      const bare = (c) => ({ ...c, situation: null, sample: null });
+      if (href.endsWith('/api/daily')) {
+        return reply({ ...state, scenesPending: 2,
+          lists: { word: state.lists.word.map(bare), phrase: state.lists.phrase.map(bare) } });
+      }
+      if (href.endsWith('/api/daily/scenes')) {
+        await new Promise((r) => setTimeout(r, 2500));
+        return reply({ cards: [...state.lists.word, ...state.lists.phrase], remaining: 0 });
+      }
+    }
+    if (href.endsWith('/api/daily')) return reply({ ...state, scenesPending: 0 });
+    if (href.endsWith('/api/daily/scenes')) return reply({ cards: [], remaining: 0 });
     if (href.endsWith('/api/daily/grade')) {
       if (window.__gradeFail) return reply({ error: 'the language model is busy right now' }, 503);
       const word = { ...state.lists.word[0], testedToday: true,
@@ -132,6 +144,27 @@ ok('  the skipped one without', s.answers?.some((a) => a.id === 2 && a.verdict =
 ok('the results name what to fix', s.results.includes('Wrong object.'), '');
 eq('each kept item has a learning card', s.details, 2);
 ok('  and the check is done for today', s.results.includes('Done for today'), '');
+
+console.log('== step 2 waits for a situation still being prepared ==');
+await B.evaluate(`localStorage.clear(); localStorage.setItem('slow-scenes', '1');`);
+await B.goto(`${BASE}/?again=1#/today`);
+await wait(500);
+s = await B.evaluate(`
+  document.querySelector('#start').click();
+  await new Promise(r => setTimeout(r, 100));
+  document.querySelector('#typed').value = 'abolish';
+  document.querySelector('#check').click();
+  await new Promise(r => setTimeout(r, 50));
+  document.querySelector('#next').click();
+  await new Promise(r => setTimeout(r, 50));
+  const waiting = !!document.querySelector('[data-waiting]');
+  await new Promise(r => setTimeout(r, 3000));
+  return { waiting, after: [...document.querySelectorAll('.prompt')].map(p => p.textContent).join('|'),
+           box: !!document.querySelector('#sentence') };`);
+eq('it shows that the situation is coming', s.waiting, true);
+ok('  then the situation itself, without a reload', s.after.includes('Your team asks about 1'), s.after);
+eq('  ready for the sentence', s.box, true);
+await B.evaluate(`localStorage.clear();`);
 
 await B.close();
 console.log(`\n${pass} passed, ${fail} failed`);

@@ -1,6 +1,6 @@
 import worker from '../worker/src/index.js';
 import { chooseBand, coreOf, makeGap, hintFor, today, bandOf, SET_SIZE,
-         REPLACEMENTS_PER_LIST_PER_DAY } from '../worker/src/daily.js';
+         REPLACEMENTS_PER_LIST_PER_DAY, SCENES_PER_REQUEST } from '../worker/src/daily.js';
 import { parseSense } from '../worker/src/oxford.js';
 import { makeSigner, claimsFor } from './jwt.mjs';
 import { makeD1, addUser } from './d1.mjs';
@@ -135,14 +135,26 @@ console.log('== today\'s set ==');
   eq('the meaning is Oxford\'s', card.meaning, `meaning of ${card.term}`);
   eq('the gap comes from Oxford\'s example', card.recall.sentence, 'I said ____ today.');
   eq('  and the answer is hidden behind it', card.recall.answer, card.term);
-  ok('a situation is ready', /^Situation \d+/.test(card.situation), card.situation);
-  eq('one request prepared all twenty', geminiCalls.length, 1);
-  ok('the situation prompt forbids naming the word', /must NOT contain the\s+entry/.test(geminiCalls[0]));
+  eq('the set comes back without waiting for the model', geminiCalls.length, 0);
+  eq('  saying how many situations are still to come', r.body.scenesPending, 20);
+
+  const wanted = r.body.lists.phrase[2].id;
+  let s = await call(env, 'POST', '/api/daily/scenes', { ids: [wanted] });
+  eq('situations come a few at a time', s.body.cards.length, SCENES_PER_REQUEST);
+  ok('  the item you asked for first', s.body.cards.some((c) => c.id === wanted), JSON.stringify(s.body.cards.map((c) => c.id)));
+  ok('  each with its situation', /^Situation \d+/.test(s.body.cards[0].situation), s.body.cards[0].situation);
+  eq('  and the count goes down', s.body.remaining, 20 - SCENES_PER_REQUEST);
+  ok('the prompt forbids naming the word', /must NOT contain the\s+entry/.test(geminiCalls[0]));
+  while (s.body.remaining > 0) s = await call(env, 'POST', '/api/daily/scenes', {});
+  eq('twenty items take five requests', geminiCalls.length, 20 / SCENES_PER_REQUEST);
+  s = await call(env, 'POST', '/api/daily/scenes', {});
+  eq('with none left, asking again costs nothing', geminiCalls.length, 20 / SCENES_PER_REQUEST);
 
   const again = await call(env, 'GET', '/api/daily');
   eq('coming back keeps the same set',
      again.body.lists.word.map((c) => c.id).join(), r.body.lists.word.map((c) => c.id).join());
-  eq('  and spends no further request', geminiCalls.length, 1);
+  eq('  and spends no further request', geminiCalls.length, 20 / SCENES_PER_REQUEST);
+  ok('  with the situations kept', again.body.lists.word.every((c) => c.situation), '');
 }
 
 console.log('== marking ==');
@@ -223,13 +235,14 @@ console.log('== a thin band borrows from the others ==');
 console.log('== the model quota ==');
 {
   const env = makeEnv();
-  env.DB._raw.prepare("INSERT INTO usage_counter (user_id, day, kind, count) VALUES (1, ?, 'gemini_daily', 30)")
+  env.DB._raw.prepare("INSERT INTO usage_counter (user_id, day, kind, count) VALUES (1, ?, 'gemini_daily', 40)")
     .run(new Date().toISOString().slice(0, 10));
   geminiCalls = [];
   const r = await call(env, 'GET', '/api/daily');
   eq('the set is still served', r.body.lists.word.length, SET_SIZE);
-  eq('  without asking the model', geminiCalls.length, 0);
-  ok('  and says why there are no situations', /limit/.test(r.body.warning || ''), r.body.warning);
+  const s = await call(env, 'POST', '/api/daily/scenes', {});
+  eq('  situations are not asked for', geminiCalls.length, 0);
+  ok('  and the reason is given', /limit/.test(s.body.error || ''), s.body.error);
 }
 
 globalThis.fetch = realFetch;

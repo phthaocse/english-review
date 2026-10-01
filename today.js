@@ -20,6 +20,9 @@ let run = null;           // { queue, index, step, answers: Map }
 let results = null;       // the last marking
 let busy = null;          // 'loading' | 'marking'
 let error = null;
+let scenes = { running: false, error: null };   // situations arrive in the background
+let currentView = null;
+const MARK_BATCH = 5;     // sentences per marking request; twenty in one ran past the model's timeout
 
 // Answers survive a reload: the check can take a while and a phone can drop the page.
 function loadDraft(day) {
@@ -51,11 +54,43 @@ export async function renderToday(view) {
       error = e instanceof ApiError ? e.message : 'could not load today\'s set';
     }
     busy = null;
+    prepareScenes();
     if (!location.hash.startsWith('#/today')) return;   // you left while it loaded
   }
+  currentView = view;
   if (run && run.index < run.queue.length) return renderStep(view);
   if (run) return renderSubmit(view);
   return renderShell(view);
+}
+
+// ------------------------------------------------------------- situations --
+
+const byId = (id) => allCards().find((c) => c.id === id);
+
+/** Ask for situations a few at a time, the items you will meet next first. */
+async function prepareScenes() {
+  if (scenes.running || !data) return;
+  scenes = { running: true, error: null };
+  try {
+    while (data.scenesPending > 0) {
+      const next = run ? run.queue.slice(run.index).map((c) => c.id) : untested().map((c) => c.id);
+      const res = await api('/api/daily/scenes', { method: 'POST', body: { ids: next } });
+      for (const card of res.cards) Object.assign(byId(card.id) || {}, card);
+      data.scenesPending = res.remaining;
+      if (res.error) { scenes.error = res.error; break; }
+      if (!res.cards.length) break;
+      refreshIfWaiting();
+    }
+  } catch (e) {
+    scenes.error = e instanceof ApiError ? e.message : 'could not prepare situations';
+  }
+  scenes.running = false;
+  refreshIfWaiting();
+}
+
+// Only the "preparing a situation" screen redraws itself; anything else would lose what you are typing.
+function refreshIfWaiting() {
+  if (currentView?.querySelector('[data-waiting]') && location.hash.startsWith('#/today')) renderToday(currentView);
 }
 
 // ---------------------------------------------------------------- overview --
@@ -84,8 +119,8 @@ function renderShell(view) {
       <div class="card stat"><b>${s.word.mastered}</b><span>words mastered</span></div>
       <div class="card stat"><b>${s.phrase.mastered}</b><span>phrases mastered</span></div>
     </div>
-    ${data.warning ? `<p class="verdict typo">${esc(data.warning)} You can still do the check;
-      step 2 will ask for a sentence about your own life instead.</p>` : ''}
+    ${scenes.error ? `<p class="verdict typo">Situations could not be prepared: ${esc(scenes.error)}.
+      You can still do the check; step 2 will ask for a sentence about your own life instead.</p>` : ''}
     ${error ? `<p class="verdict wrong">${esc(error)}</p>` : ''}
 
     <div class="card block">
@@ -229,16 +264,28 @@ function renderStep(view) {
     });
     input.addEventListener('keydown', (e) => { if (e.key === 'Enter') view.querySelector('#check').click(); });
     view.querySelector('#dunno').addEventListener('click', () => finish('', 'skipped'));
+  } else if (!card.situation && !scenes.error && data.scenesPending > 0) {
+    view.innerHTML = `${bar}<div class="card quiz" data-waiting>${mode}
+      <p class="prompt prompt-serif">${esc(card.term)}</p>
+      <p class="prompt-sub">Preparing a situation for this one — a few seconds…</p></div>`;
+    if (!scenes.running) prepareScenes();
   } else {
     view.innerHTML = `${bar}<div class="card quiz">${mode}
       <p class="prompt prompt-serif">${esc(card.term)}</p>
       <p class="prompt-sub">${esc(card.meaning)}</p>
       <p class="prompt">${esc(card.situation || 'Write a sentence about your own life or work.')}</p>
       <p class="prompt-sub">Write what you would actually say, using <b>${esc(card.term)}</b> in this meaning.</p>
+      ${!card.situation && scenes.error ? `<p class="next-hint">No situation: ${esc(scenes.error)}.
+        <button class="override" id="retry-scenes">Try preparing it again</button></p>` : ''}
       <textarea class="answer" id="sentence" rows="3" maxlength="400">${esc(answer.sentence || '')}</textarea>
       <div class="row" style="margin-top:12px"><button class="btn" id="done">Next →</button></div></div>`;
     const box = view.querySelector('#sentence');
     box.focus();
+    view.querySelector('#retry-scenes')?.addEventListener('click', () => {
+      scenes.error = null;
+      prepareScenes();
+      renderToday(view);
+    });
     view.querySelector('#done').addEventListener('click', () => {
       if (!box.value.trim()) return box.focus();
       answer.sentence = box.value.trim();
@@ -264,14 +311,23 @@ function renderSubmit(view) {
     busy = 'marking';
     error = null;
     renderSubmit(view);
+    const marked = [];
     try {
-      const res = await api('/api/daily/grade', { method: 'POST', body: { answers } });
-      results = res.results;
-      data = res.state;
+      for (let i = 0; i < answers.length; i += MARK_BATCH) {
+        const res = await api('/api/daily/grade', { method: 'POST', body: { answers: answers.slice(i, i + MARK_BATCH) } });
+        marked.push(...res.results);
+        data = res.state;
+        // What was marked is final; only the rest is retried after a failure.
+        for (const a of answers.slice(i, i + MARK_BATCH)) run.answers.delete(a.id);
+        saveDraft();
+      }
+      results = marked;
       run = null;
       clearDraft();
+      prepareScenes();      // replacements need situations too
     } catch (e) {
       error = e instanceof ApiError ? e.message : 'marking failed';
+      if (marked.length) results = marked;
     }
     busy = null;
     renderToday(view);
