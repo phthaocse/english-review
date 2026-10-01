@@ -1,31 +1,174 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
-     aria-label="A potato cut through, the pale flat face turned towards us, with a magnified circle showing the grains packed inside it">
-  <rect width="320" height="240" fill="#eef0f5"/>
-  <!-- the potato: skin on the outside, cut off square on the near end -->
-  <path d="M152 86 Q96 74 64 110 Q28 150 56 188 Q90 218 152 206 Z"
-        fill="#c9a227" stroke="#8a6a12" stroke-width="3"/>
-  <g fill="#8a6a12">
-    <ellipse cx="92" cy="114" rx="8" ry="5" transform="rotate(-25 92 114)"/>
-    <ellipse cx="74" cy="178" rx="7" ry="4" transform="rotate(20 74 178)"/>
-  </g>
-  <!-- the face the knife left, paler than the skin -->
-  <ellipse cx="152" cy="146" rx="27" ry="60" fill="#e0b73a" stroke="#8a6a12" stroke-width="3"/>
-  <!-- the patch of it being looked at closely -->
-  <circle cx="152" cy="140" r="17" fill="none" stroke="#7b8399" stroke-width="3"/>
-  <g stroke="#7b8399" stroke-width="3">
-    <path d="M166 129 L198 92"/><path d="M168 152 L204 124"/>
-  </g>
-  <!-- what is in there: the pale grains themselves -->
-  <circle cx="244" cy="74" r="54" fill="#eef0f5" stroke="#7b8399" stroke-width="4"/>
-  <g fill="#ffffff" stroke="#9aa2b4" stroke-width="2">
-    <ellipse cx="222" cy="56" rx="11" ry="8" transform="rotate(-20 222 56)"/>
-    <ellipse cx="252" cy="50" rx="10" ry="7" transform="rotate(15 252 50)"/>
-    <ellipse cx="268" cy="74" rx="11" ry="8" transform="rotate(30 268 74)"/>
-    <ellipse cx="230" cy="88" rx="10" ry="7" transform="rotate(-10 230 88)"/>
-    <ellipse cx="256" cy="96" rx="9" ry="6" transform="rotate(40 256 96)"/>
-    <ellipse cx="216" cy="82" rx="8" ry="5" transform="rotate(0 216 82)"/>
-    <ellipse cx="246" cy="70" rx="9" ry="6" transform="rotate(-35 246 70)"/>
-    <ellipse cx="272" cy="54" rx="8" ry="5" transform="rotate(20 272 54)"/>
-    <ellipse cx="238" cy="62" rx="7" ry="5" transform="rotate(50 238 62)"/>
-  </g>
+     aria-label="A potato cut in half and filling the frame, its brown skin around the rim and the pale cut flesh dense with white starch granules">
+  <rect width="320" height="240" fill="#6d5a3f"/>
+  <rect width="320" height="240" fill="#6d5a3f"/><path d="M-24 120 C -24 36, 60 -18, 160 -18 C 262 -18, 344 36, 344 120 C 344 206, 262 258, 160 258 C 60 258, -24 206, -24 120 Z" fill="#9a6b3c"/><path d="M-6 120 C -6 48, 72 2, 160 2 C 250 2, 326 48, 326 120 C 326 194, 250 240, 160 240 C 72 240, -6 194, -6 120 Z" fill="#f1e6c9"/>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <circle cx="88" cy="28" r="1.9" fill="#ffffff" opacity="0.70"/>
+  <circle cx="119" cy="27" r="2.1" fill="#ffffff" opacity="0.52"/>
+  <circle cx="142" cy="24" r="3.3" fill="#ffffff" opacity="0.53"/>
+  <circle cx="165" cy="26" r="3.5" fill="#ffffff" opacity="0.92"/>
+  <circle cx="188" cy="25" r="3.7" fill="#ffffff" opacity="0.70"/>
+  <circle cx="214" cy="21" r="2.8" fill="#ffffff" opacity="0.57"/>
+  
+  
+  
+  
+  
+  
+  
+  <circle cx="48" cy="48" r="4.5" fill="#ffffff" opacity="0.79"/>
+  <circle cx="84" cy="50" r="3.6" fill="#ffffff" opacity="0.91"/>
+  <circle cx="110" cy="43" r="2.5" fill="#ffffff" opacity="0.57"/>
+  <circle cx="133" cy="51" r="3.5" fill="#ffffff" opacity="0.94"/>
+  <circle cx="153" cy="42" r="2.9" fill="#ffffff" opacity="0.81"/>
+  <circle cx="181" cy="53" r="3.0" fill="#ffffff" opacity="0.89"/>
+  <circle cx="211" cy="46" r="4.9" fill="#ffffff" opacity="0.80"/>
+  <circle cx="240" cy="54" r="4.1" fill="#ffffff" opacity="0.70"/>
+  <circle cx="257" cy="53" r="2.9" fill="#ffffff" opacity="0.92"/>
+  
+  
+  
+  
+  <circle cx="41" cy="72" r="4.7" fill="#ffffff" opacity="0.95"/>
+  <circle cx="62" cy="66" r="5.0" fill="#ffffff" opacity="0.74"/>
+  <circle cx="95" cy="63" r="2.4" fill="#ffffff" opacity="0.63"/>
+  <circle cx="116" cy="68" r="4.6" fill="#ffffff" opacity="0.84"/>
+  <circle cx="143" cy="76" r="5.0" fill="#ffffff" opacity="0.93"/>
+  <circle cx="164" cy="66" r="2.0" fill="#ffffff" opacity="0.57"/>
+  <circle cx="200" cy="62" r="3.9" fill="#ffffff" opacity="0.51"/>
+  <circle cx="226" cy="62" r="3.8" fill="#ffffff" opacity="0.89"/>
+  <circle cx="245" cy="68" r="4.8" fill="#ffffff" opacity="0.89"/>
+  <circle cx="279" cy="70" r="4.5" fill="#ffffff" opacity="0.90"/>
+  <circle cx="299" cy="72" r="4.0" fill="#ffffff" opacity="0.59"/>
+  
+  
+  
+  <circle cx="30" cy="88" r="3.9" fill="#ffffff" opacity="0.66"/>
+  <circle cx="45" cy="85" r="3.9" fill="#ffffff" opacity="0.60"/>
+  <circle cx="75" cy="94" r="4.3" fill="#ffffff" opacity="0.50"/>
+  <circle cx="102" cy="96" r="2.5" fill="#ffffff" opacity="0.54"/>
+  <circle cx="137" cy="91" r="4.5" fill="#ffffff" opacity="0.52"/>
+  <circle cx="156" cy="94" r="2.1" fill="#ffffff" opacity="0.85"/>
+  <circle cx="182" cy="97" r="3.9" fill="#ffffff" opacity="0.82"/>
+  <circle cx="215" cy="98" r="4.9" fill="#ffffff" opacity="0.54"/>
+  <circle cx="228" cy="93" r="2.4" fill="#ffffff" opacity="0.63"/>
+  <circle cx="260" cy="98" r="2.1" fill="#ffffff" opacity="0.92"/>
+  <circle cx="283" cy="100" r="3.2" fill="#ffffff" opacity="0.76"/>
+  <circle cx="308" cy="93" r="3.1" fill="#ffffff" opacity="0.80"/>
+  
+  <circle cx="19" cy="116" r="4.0" fill="#ffffff" opacity="0.71"/>
+  <circle cx="34" cy="118" r="2.1" fill="#ffffff" opacity="0.60"/>
+  <circle cx="69" cy="114" r="3.4" fill="#ffffff" opacity="0.80"/>
+  <circle cx="94" cy="113" r="4.1" fill="#ffffff" opacity="0.60"/>
+  <circle cx="121" cy="108" r="2.3" fill="#ffffff" opacity="0.73"/>
+  <circle cx="140" cy="118" r="4.5" fill="#ffffff" opacity="0.72"/>
+  <circle cx="163" cy="107" r="3.1" fill="#ffffff" opacity="0.90"/>
+  <circle cx="197" cy="121" r="4.4" fill="#ffffff" opacity="0.84"/>
+  <circle cx="225" cy="108" r="3.4" fill="#ffffff" opacity="0.67"/>
+  <circle cx="243" cy="120" r="3.3" fill="#ffffff" opacity="0.81"/>
+  <circle cx="275" cy="111" r="3.4" fill="#ffffff" opacity="0.68"/>
+  <circle cx="297" cy="117" r="2.8" fill="#ffffff" opacity="0.51"/>
+  
+  
+  <circle cx="4" cy="130" r="3.7" fill="#ffffff" opacity="0.72"/>
+  <circle cx="30" cy="139" r="3.8" fill="#ffffff" opacity="0.80"/>
+  <circle cx="57" cy="140" r="3.0" fill="#ffffff" opacity="0.64"/>
+  <circle cx="83" cy="137" r="3.3" fill="#ffffff" opacity="0.89"/>
+  <circle cx="102" cy="131" r="3.7" fill="#ffffff" opacity="0.89"/>
+  <circle cx="135" cy="135" r="3.0" fill="#ffffff" opacity="0.57"/>
+  <circle cx="163" cy="133" r="4.7" fill="#ffffff" opacity="0.72"/>
+  <circle cx="186" cy="139" r="3.3" fill="#ffffff" opacity="0.77"/>
+  <circle cx="215" cy="144" r="3.0" fill="#ffffff" opacity="0.92"/>
+  <circle cx="231" cy="142" r="4.9" fill="#ffffff" opacity="0.70"/>
+  <circle cx="263" cy="132" r="3.1" fill="#ffffff" opacity="0.57"/>
+  <circle cx="294" cy="145" r="3.4" fill="#ffffff" opacity="0.85"/>
+  <circle cx="309" cy="132" r="2.0" fill="#ffffff" opacity="0.82"/>
+  
+  
+  <circle cx="46" cy="164" r="3.7" fill="#ffffff" opacity="0.61"/>
+  <circle cx="65" cy="162" r="3.0" fill="#ffffff" opacity="0.67"/>
+  <circle cx="95" cy="164" r="2.9" fill="#ffffff" opacity="0.67"/>
+  <circle cx="117" cy="163" r="3.6" fill="#ffffff" opacity="0.64"/>
+  <circle cx="138" cy="160" r="2.9" fill="#ffffff" opacity="0.69"/>
+  <circle cx="176" cy="163" r="3.9" fill="#ffffff" opacity="0.82"/>
+  <circle cx="201" cy="161" r="3.2" fill="#ffffff" opacity="0.75"/>
+  <circle cx="214" cy="156" r="2.5" fill="#ffffff" opacity="0.71"/>
+  <circle cx="253" cy="164" r="3.4" fill="#ffffff" opacity="0.69"/>
+  <circle cx="276" cy="158" r="4.0" fill="#ffffff" opacity="0.82"/>
+  <circle cx="291" cy="166" r="1.8" fill="#ffffff" opacity="0.88"/>
+  
+  
+  
+  <circle cx="34" cy="180" r="3.6" fill="#ffffff" opacity="0.71"/>
+  <circle cx="56" cy="183" r="4.9" fill="#ffffff" opacity="0.61"/>
+  <circle cx="75" cy="182" r="4.0" fill="#ffffff" opacity="0.95"/>
+  <circle cx="105" cy="184" r="4.7" fill="#ffffff" opacity="0.94"/>
+  <circle cx="138" cy="188" r="2.8" fill="#ffffff" opacity="0.72"/>
+  <circle cx="150" cy="183" r="4.2" fill="#ffffff" opacity="0.67"/>
+  <circle cx="182" cy="190" r="4.1" fill="#ffffff" opacity="0.83"/>
+  <circle cx="200" cy="192" r="3.8" fill="#ffffff" opacity="0.73"/>
+  <circle cx="231" cy="178" r="2.7" fill="#ffffff" opacity="0.72"/>
+  <circle cx="268" cy="179" r="2.7" fill="#ffffff" opacity="0.56"/>
+  
+  
+  
+  
+  
+  <circle cx="68" cy="213" r="3.7" fill="#ffffff" opacity="0.79"/>
+  <circle cx="97" cy="212" r="2.1" fill="#ffffff" opacity="0.73"/>
+  <circle cx="111" cy="214" r="4.3" fill="#ffffff" opacity="0.79"/>
+  <circle cx="142" cy="210" r="3.3" fill="#ffffff" opacity="0.63"/>
+  <circle cx="167" cy="206" r="2.8" fill="#ffffff" opacity="0.93"/>
+  <circle cx="202" cy="213" r="1.9" fill="#ffffff" opacity="0.65"/>
+  <circle cx="222" cy="200" r="3.2" fill="#ffffff" opacity="0.57"/>
+  <circle cx="245" cy="200" r="4.2" fill="#ffffff" opacity="0.85"/>
+  
+  
+  
+  
+  
+  
+  
+  
+  <circle cx="103" cy="224" r="4.2" fill="#ffffff" opacity="0.60"/>
+  <circle cx="135" cy="223" r="2.8" fill="#ffffff" opacity="0.58"/>
+  <circle cx="161" cy="226" r="4.7" fill="#ffffff" opacity="0.90"/>
+  <circle cx="174" cy="223" r="2.5" fill="#ffffff" opacity="0.73"/>
+  
+  
+  
+  
+  
+  <path d="M40 70 C 92 40, 230 44, 282 78" stroke="#ffffff" stroke-width="7" fill="none" opacity=".35"/><path d="M-6 120 C -6 48, 72 2, 160 2 C 250 2, 326 48, 326 120" stroke="#fbf5e4" stroke-width="5" fill="none" opacity=".55"/>
 </svg>

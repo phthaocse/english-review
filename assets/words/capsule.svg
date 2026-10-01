@@ -1,27 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
-     aria-label="A thin sleeve being drawn down over the cork and the top of a bottle neck, so that the seal ends up covered">
-  <rect width="320" height="240" fill="#eef0f5"/>
-  <!-- bottle: neck and shoulders, cut off by the frame so the neck fills it -->
-  <path d="M96 240 L96 202 Q96 178 130 164 L130 114 L190 114 L190 164 Q224 178 224 202 L224 240 Z"
-        fill="#2f6b4f" opacity=".85"/>
-  <!-- the cork, standing well clear of the neck so you can see what is being covered -->
-  <rect x="136" y="46" width="48" height="78" rx="3" fill="#e0b73a" stroke="#a8841c" stroke-width="4"/>
-  <g stroke="#a8841c" stroke-width="3" opacity=".6">
-    <path d="M144 96 L176 96"/><path d="M144 110 L176 110"/>
-  </g>
-  <!-- the sleeve: wider than the cork, open at the bottom, only half way down it -->
-  <g>
-    <rect x="122" y="28" width="76" height="42" fill="#4f46e5"/>
-    <ellipse cx="160" cy="28" rx="38" ry="9" fill="#6f68ea"/>
-    <ellipse cx="160" cy="70" rx="38" ry="9" fill="#3730a3"/>
-    <!-- crimp lines, the detail that says thin foil rather than a screw cap -->
-    <g stroke="#3730a3" stroke-width="3" opacity=".8">
-      <path d="M122 42 L198 42"/><path d="M122 56 L198 56"/>
-    </g>
-  </g>
-  <!-- the direction it is being pulled -->
-  <g stroke="#c0392f" stroke-width="7" stroke-linecap="round" fill="none">
-    <path d="M72 40 L72 112"/><path d="M58 98 L72 118 L86 98"/>
-    <path d="M248 40 L248 112"/><path d="M234 98 L248 118 L262 98"/>
-  </g>
+     aria-label="A bottle neck filling the frame with a dark foil capsule sleeved over its cork, the cut edge of the foil showing across the middle">
+  <rect width="320" height="240" fill="#2f7357"/>
+  <path d="M66 240 V150 q0 -34 24 -54 V-10 H230 V96 q24 20 24 54 V240 Z" fill="#2f7357"/><path d="M84 240 V152 q0 -28 20 -46 V-10 H134 V106 q-20 16 -20 46 V240 Z" fill="#4d9d79" opacity=".75"/><path d="M236 240 V152 q0 -28 -16 -44" stroke="#17402f" stroke-width="10" fill="none" opacity=".5"/><path d="M90 -10 H230 V100 q24 20 24 54 V176 H66 V154 q0 -34 24 -54 Z" fill="#171a21"/><path d="M90 -10 H126 V106 q-18 16 -18 48 V176 H66 V154 q0 -34 24 -54 Z" fill="#3b4250" opacity=".85"/><path d="M214 -10 H230 V100 q24 20 24 54 V176 H236 V154 q0 -32 -22 -50 Z" fill="#05070b" opacity=".55"/><path d="M66 176 H254" stroke="#9aa1ad" stroke-width="5"/><path d="M66 168 H254" stroke="#000000" stroke-width="3" opacity=".4"/><path d="M104 34 H216" stroke="#9aa1ad" stroke-width="3" opacity=".5"/><path d="M104 54 H216" stroke="#9aa1ad" stroke-width="2" opacity=".3"/>
 </svg>

@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img"
-     aria-label="A mass of barley grains filling the whole frame, each one an oval with a crease down the middle">
+     aria-label="A mass of barley grains filling the whole frame, each an oval with a crease down the middle">
   <rect width="320" height="240" fill="#9c6c12"/>
   <g transform="translate(-10 -20) rotate(21)"><ellipse rx="9" ry="4.6" fill="#c8941f"/><path d="M-6 0 H6" stroke="#8a5f10" stroke-width="1.1" opacity=".75"/></g>
   <g transform="translate(12 -20) rotate(12)"><ellipse rx="9" ry="4.6" fill="#a97214"/><path d="M-6 0 H6" stroke="#8a5f10" stroke-width="1.1" opacity=".75"/></g>
