@@ -126,15 +126,12 @@ export class GeminiError extends Error {
   constructor(message, status = 502) { super(message); this.status = status; }
 }
 
-/** One attempt at one model. Returns the parsed draft, or the status to act on. */
-async function askModel(model, image, env, fetchImpl, key) {
+/** One attempt at one model. Returns the payload, or the status to act on. */
+async function askModel(model, input, schema, env, fetchImpl, key) {
   const body = {
     model,
-    input: [
-      { type: 'text', text: PROMPT },
-      { type: 'image', data: image.base64, mime_type: image.mimeType },
-    ],
-    response_format: { type: 'text', mime_type: 'application/json', schema: RESPONSE_SCHEMA },
+    input,
+    response_format: { type: 'text', mime_type: 'application/json', schema },
   };
 
   const started = Date.now();
@@ -194,13 +191,18 @@ const blockedByLocation = (attempts) => attempts.length > 0
  * the same photo rather than the reader getting a dead end.
  */
 export async function readPhoto(image, env, { regions = REGIONS, relay = viaRegion } = {}) {
+  return inServedRegion(regions, (region) =>
+    draftFromImage(image, env, { fetchImpl: relay(env, region), region }));
+}
+
+async function inServedRegion(regions, attempt) {
   const tried = [];      // every region's attempts, so the log tells the whole story
   let last;
 
   for (const region of regions) {
     try {
-      const draft = await draftFromImage(image, env, { fetchImpl: relay(env, region), region });
-      return { ...draft, attempts: [...tried, ...draft.attempts] };
+      const result = await attempt(region);
+      return { ...result, attempts: [...tried, ...result.attempts] };
     } catch (error) {
       const here = error.attempts || [];
       tried.push(...here);
@@ -212,13 +214,32 @@ export async function readPhoto(image, env, { regions = REGIONS, relay = viaRegi
   throw last;
 }
 
-/**
- * Turn a photo into draft items, asking each model in turn until one answers.
- * The chain is the retry: a busy model is rarely free a second later.
- */
+const PHOTO_MESSAGES = {
+  unconfigured: 'image reading is not configured',
+  quota: 'today\'s free quota for reading photos is used up',
+  quotaHint: 'or you can type the word in instead',
+  refused: (status) => `the image service could not read that photo (${status})`,
+  busy: 'the image service is busy right now - try again in a moment',
+};
+
+/** Turn a photo into draft items. */
 export async function draftFromImage(image, env, { fetchImpl = fetch, region = null } = {}) {
+  const input = [
+    { type: 'text', text: PROMPT },
+    { type: 'image', data: image.base64, mime_type: image.mimeType },
+  ];
+  const { payload, model, attempts } = await ask(input, RESPONSE_SCHEMA, env,
+    { fetchImpl, region, messages: PHOTO_MESSAGES });
+  return { items: parseItems(payload), model, attempts };
+}
+
+/**
+ * One request to the model, trying each key only when the last one is spent.
+ * Resolves with the raw payload; throws a GeminiError carrying the attempts.
+ */
+async function ask(input, schema, env, { fetchImpl, region, messages }) {
   const keys = keysFrom(env);
-  if (!keys.length) throw new GeminiError('image reading is not configured', 503);
+  if (!keys.length) throw new GeminiError(messages.unconfigured, 503);
 
   const model = env.GEMINI_MODEL || DEFAULT_MODEL;
   const attempts = [];  // what came back, for the log and the UI
@@ -228,26 +249,45 @@ export async function draftFromImage(image, env, { fetchImpl = fetch, region = n
 
   let status, ms, colo, detail, payload;
   for (let k = 0; k < keys.length; k++) {
-    ({ status, ms, colo, detail, payload } = await askModel(model, image, env, fetchImpl, keys[k]));
+    ({ status, ms, colo, detail, payload } = await askModel(model, input, schema, env, fetchImpl, keys[k]));
     attempts.push({ model, status, ms, ...(keys.length > 1 ? { key: k + 1 } : {}),
                     ...(region ? { region } : {}), ...(colo ? { colo } : {}),
                     ...(detail ? { detail } : {}) });
     if (!KEY_IS_SPENT.has(status)) break;   // this key is fine; the answer is not about the key
   }
 
-  if (status === 200) return { items: parseItems(payload), model, attempts };
+  if (status === 200) return { payload, model, attempts };
 
   if (status === RATE_LIMITED) {
-    throw give(`today's free quota for reading photos is used up${
-      keys.length > 1 ? ` on all ${keys.length} keys` : ''} - it resets tomorrow, `
-      + 'or you can type the word in instead', RATE_LIMITED);
+    throw give(`${messages.quota}${
+      keys.length > 1 ? ` on all ${keys.length} keys` : ''} - it resets tomorrow, ${messages.quotaHint}`,
+      RATE_LIMITED);
   }
   // The status is in the message on purpose: it is the one fact that tells a
   // refusal apart from an outage when this is reported second-hand.
-  if (!isTransient(status)) {
-    throw give(`the image service could not read that photo (${status})`, 502);
+  if (!isTransient(status)) throw give(messages.refused(status), 502);
+  throw give(messages.busy, 503);
+}
+
+const TEXT_MESSAGES = {
+  unconfigured: 'the language model is not configured',
+  quota: 'today\'s free model quota is used up',
+  quotaHint: 'so try again then',
+  refused: (status) => `the language model refused the request (${status})`,
+  busy: 'the language model is busy right now - try again in a moment',
+};
+
+/** A text prompt in, the model's JSON (matching `schema`) out. */
+export async function askJson(prompt, schema, env, { regions = REGIONS, relay = viaRegion } = {}) {
+  const { payload, model, attempts } = await inServedRegion(regions, (region) =>
+    ask([{ type: 'text', text: prompt }], schema, env,
+      { fetchImpl: relay(env, region), region, messages: TEXT_MESSAGES }));
+  const text = modelText(payload);
+  try {
+    return { data: JSON.parse(text), model, attempts };
+  } catch {
+    throw Object.assign(new GeminiError('the language model did not return usable JSON'), { attempts });
   }
-  throw give('the image service is busy right now - try again in a moment', 503);
 }
 
 /**

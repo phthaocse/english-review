@@ -7,10 +7,17 @@
 import { authenticate, AuthError } from './auth.js';
 import { readPhoto, GeminiError, MAX_IMAGE_BYTES, KINDS } from './gemini.js';
 import { verifyAll, lookup } from './oxford.js';
+import { dailyState, gradeDaily } from './daily.js';
 import { createItem, mergeIntoItem, findItemByTerm, getItem, listItems, countItems,
          consumeQuota, logVision, listVisionLogs } from './db.js';
 
 const VISION_CALLS_PER_DAY = 50;
+// Preparing situations and marking sentences: about four requests on an ordinary day.
+const DAILY_MODEL_CALLS_PER_DAY = 30;
+
+/** Spends one of today's model requests for the daily check, only when one is about to be made. */
+const dailyQuota = (env, user) => async () =>
+  (await consumeQuota(env.DB, user.id, 'gemini_daily', DAILY_MODEL_CALLS_PER_DAY)).allowed;
 
 /**
  * Record a read, and never let recording it be the thing that fails.
@@ -183,6 +190,16 @@ const ROUTES = {
         attempts: error.attempts || [], error: error.message });
       return json({ error: error.message, trace }, error.status);
     }
+  },
+
+  'GET /api/daily': async (_request, env, user) =>
+    json(await dailyState(env, user, { allowModelCall: dailyQuota(env, user) }), 200),
+
+  'POST /api/daily/grade': async (request, env, user) => {
+    const body = await readJson(request, 64 * 1024);
+    const allowModelCall = dailyQuota(env, user);
+    const results = await gradeDaily(env, user, body?.answers, { allowModelCall });
+    return json({ results, state: await dailyState(env, user, { allowModelCall }) }, 200);
   },
 
   'GET /api/logs': async (request, env, user) => {

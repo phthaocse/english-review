@@ -10,6 +10,7 @@ echo "── review engine ──";      node test/engine.test.mjs
 echo "── token verification ──"; node test/auth.test.mjs
 echo "── oxford lookup ──";      node test/oxford.test.mjs
 echo "── worker api ──";         node test/api.test.mjs
+echo "── daily check ──";        node test/daily.test.mjs
 
 python3 -m http.server "$PORT" >/dev/null 2>&1 &
 SERVER=$!
@@ -18,6 +19,7 @@ sleep 1
 
 echo "── site ──";    BASE="http://localhost:$PORT" node test/ui.test.mjs
 echo "── capture ──"; BASE="http://localhost:$PORT" node test/capture.test.mjs
+echo "── today ──"; BASE="http://localhost:$PORT" node test/today.test.mjs
 echo "── cards ──"; BASE="http://localhost:$PORT" node test/cards.test.mjs
 echo "── sign-in gate ──"; BASE="http://localhost:$PORT" node test/gate.test.mjs
 echo "── mobile layout ──"; BASE="http://localhost:$PORT" node test/mobile.test.mjs

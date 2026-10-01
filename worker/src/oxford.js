@@ -76,6 +76,44 @@ export async function lookup(term, { fetchImpl = fetch } = {}) {
   return null;
 }
 
+const SENSE_WINDOW_CHARS = 8_000;
+const MAX_EXAMPLES = 4;
+
+/**
+ * The sense an Oxford word-list link points at: `bit_1#bit_sng_1` is one
+ * phrase inside a long entry, so reading from the anchor keeps its definition
+ * and examples rather than the headword's first sense.
+ */
+export function parseSense(html, anchor = null) {
+  const anchored = anchor ? html.indexOf(`id="${anchor}"`) : -1;
+  const from = anchored >= 0 ? anchored : Math.max(0, html.search(/<li class="sense"|class="def"/));
+  let slice = html.slice(from, from + SENSE_WINDOW_CHARS);
+  // Stop at the next sense, so its examples are not mistaken for this one's.
+  const next = slice.slice(1).search(/<li class="sense"|class="idm-g"/);
+  if (next > 0) slice = slice.slice(0, next + 1);
+
+  const meaning = strip(slice.match(/class="def"[^>]*>(.*?)<\/span>/s)?.[1] || '') || null;
+  const examples = [...slice.matchAll(/<span class="x">(.*?)<\/span><\/li>/gs)]
+    .map((m) => strip(m[1])).filter(Boolean).slice(0, MAX_EXAMPLES);
+  const ipa = html.match(/class="phon">([^<]*)</)?.[1] || null;
+  if (!meaning) return null;
+  return { meaning, examples, ipa };
+}
+
+/** Read the sense behind a word-list path such as `/definition/english/bit_1#bit_sng_1`. */
+export async function fetchSense(path, { fetchImpl = fetch } = {}) {
+  const [page, anchor] = path.split('#');
+  const url = 'https://www.oxfordlearnersdictionaries.com' + page;
+  try {
+    const res = await fetchImpl(url, { headers: HEADERS, signal: AbortSignal.timeout(LOOKUP_TIMEOUT_MS) });
+    if (!res.ok) return null;
+    const sense = parseSense(await res.text(), anchor || null);
+    return sense ? { ...sense, url: url + (anchor ? `#${anchor}` : '') } : null;
+  } catch {
+    return null;                         // no verdict, not a wrong one
+  }
+}
+
 /**
  * Fill a batch of drafts in from Oxford, in order, keeping the model's own
  * wording only where Oxford has nothing. `verified` is what tells the reviewer

@@ -5,6 +5,7 @@
 
 import * as R from './review.js';
 import { renderCapture } from './capture.js';
+import { renderToday } from './today.js';
 import { initAuth, onAuthChange, currentUser, renderSignInButton, signOut } from './auth-client.js';
 
 const state = {
@@ -84,6 +85,7 @@ function route() {
   if (section !== 'item' && section !== 'cards') state.fromCard = false;
 
   if (section === 'capture') return renderCapture(view);
+  if (section === 'today') return renderToday(view);
   if (section === 'cards') {
     const resuming = state.fromCard;   // came back from a note; keep the place
     state.fromCard = false;
