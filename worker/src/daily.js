@@ -15,6 +15,9 @@ const OXFORD_FETCHES_PER_REQUEST = 24;
 // passed on this many separate days: about three relearning sessions is where
 // the successive-relearning studies stop finding more benefit.
 export const RELEARN_PASSES = 3;
+// A B1-B2 learner's own "I know it" is reliable only on the most frequent words;
+// further up it is usually recognition, so those still get a meaning check.
+const SELF_MARK_LEVELS = new Set(['a1', 'a2']);
 
 // Mostly the learning zone for a B1→B2 learner, one quick easy check, two stretch items.
 export const BANDS = [
@@ -272,6 +275,7 @@ async function stats(db, userId, day) {
     SELECT list,
            SUM(status = 'mastered') AS mastered,
            SUM(status = 'mastered' AND mastered_on = ?) AS mastered_today,
+           SUM(status = 'mastered' AND json_extract(last_result, '$.selfKnown') = 1) AS self_marked,
            SUM(added_on = ?) AS drawn_today
     FROM daily_card WHERE user_id = ? GROUP BY list`).bind(day, day, userId).all();
   const pool = await db.prepare('SELECT list, COUNT(*) AS n FROM oxford_entry GROUP BY list').all();
@@ -280,6 +284,7 @@ async function stats(db, userId, day) {
     const row = results.find((r) => r.list === list) || {};
     out[list] = {
       mastered: row.mastered ?? 0, masteredToday: row.mastered_today ?? 0,
+      selfMarked: row.self_marked ?? 0,
       drawnToday: row.drawn_today ?? 0, replacementsPerDay: REPLACEMENTS_PER_LIST_PER_DAY,
       pool: pool.results.find((r) => r.list === list)?.n ?? 0,
     };
@@ -357,6 +362,8 @@ natural, fixing other mistakes too. If it is already right, repeat it unchanged.
 When the target is used well, say so in the feedback even if you fixed something else.
 
 If the target is missing from the sentence, all three are false.
+If the sentence is "(not asked)", the learner only explained the meaning: judge
+understood alone, and set the other three to whatever you like; they are ignored.
 
 Answers (JSON): ${JSON.stringify(entries)}`;
 }
@@ -378,35 +385,38 @@ export async function gradeDaily(env, user, answers, { now = new Date(), allowMo
   for (const raw of Array.isArray(answers) ? answers : []) {
     const card = cards.get(Number(raw?.id));
     if (!card || card.tested_on === day) continue;     // not yours, or already counted today
+    const firstSight = card.attempts === 0;
+    const selfKnown = raw.selfKnown === true && firstSight && SELF_MARK_LEVELS.has(card.level);
+    const fastCheck = raw.fastCheck === true && firstSight && !selfKnown;
     const explanation = clip(raw.explanation, MAX_EXPLANATION);
-    const sentence = clip(raw.sentence, MAX_SENTENCE);
-    const skipped = raw.skipped === true || (!explanation && !sentence);
-    marked.push({ card, skipped, explanation, sentence });
+    const sentence = fastCheck ? '' : clip(raw.sentence, MAX_SENTENCE);
+    const skipped = !selfKnown && (raw.skipped === true || (!explanation && !sentence));
+    marked.push({ card, skipped, selfKnown, fastCheck, explanation, sentence });
   }
 
-  const toJudge = marked.filter((m) => !m.skipped);
+  const toJudge = marked.filter((m) => !m.skipped && !m.selfKnown);
   const judged = new Map();
   if (toJudge.length) {
     if (!(await allowModelCall())) throw new GeminiError('today\'s limit of marking requests is reached', 429);
-    const { data } = await askJson(gradePrompt(toJudge.map(({ card, explanation, sentence }) => ({
+    const { data } = await askJson(gradePrompt(toJudge.map(({ card, explanation, sentence, fastCheck }) => ({
       id: card.id, target: card.term, meaning: card.meaning,
       learner_explanation: explanation || '(left blank)',
       situation: card.situation_on === day ? card.situation : 'Use it in a sentence about your own life or work.',
-      sentence: sentence || '(left blank)',
+      sentence: fastCheck ? '(not asked)' : sentence || '(left blank)',
     }))), GRADE_SCHEMA, env);
     for (const row of data.items || []) judged.set(row.id, row);
   }
 
   const results = [];
-  for (const { card, skipped, explanation, sentence } of marked) {
+  for (const { card, skipped, selfKnown, fastCheck, explanation, sentence } of marked) {
     const judgement = judged.get(card.id) || null;
-    const passed = !!judgement && judgement.understood && judgement.meaning_ok
-      && judgement.grammar_ok && judgement.natural_ok;
+    const passed = selfKnown || (!!judgement && judgement.understood
+      && (fastCheck || (judgement.meaning_ok && judgement.grammar_ok && judgement.natural_ok)));
     const passes = card.passes + (passed ? 1 : 0);
     const knewIt = passed && card.attempts === 0;
     const mastered = knewIt || passes >= RELEARN_PASSES;
-    const result = { skipped, explanation: explanation || null, sentence: sentence || null, judgement,
-                     passed, passes, passesNeeded: RELEARN_PASSES, knewIt, mastered };
+    const result = { skipped, selfKnown, fastCheck, explanation: explanation || null, sentence: sentence || null,
+                     judgement, passed, passes, passesNeeded: RELEARN_PASSES, knewIt, mastered };
     await env.DB.prepare(`
       UPDATE daily_card SET tested_on = ?, attempts = attempts + 1, passes = ?, last_result = ?,
              status = ?, mastered_on = ?

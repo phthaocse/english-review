@@ -22,6 +22,8 @@ let error = null;
 let scenes = { running: false, error: null };   // situations arrive in the background
 let currentView = null;
 const MARK_BATCH = 5;     // sentences per marking request; twenty in one ran past the model's timeout
+// Mirrors the Worker: one tap is trusted only on the most frequent words.
+const SELF_MARK_LEVELS = new Set(['a1', 'a2']);
 
 // Answers survive a reload: the check can take a while and a phone can drop the page.
 function loadDraft(day) {
@@ -142,7 +144,8 @@ function renderList(list) {
   const cards = data.lists[list];
   return `
     <div class="card block">
-      <h3>${LIST_LABEL[list]} · ${cards.length} in your set · ${data.stats[list].pool - data.stats[list].mastered} left to master</h3>
+      <h3>${LIST_LABEL[list]} · ${cards.length} in your set · ${data.stats[list].pool - data.stats[list].mastered} left to master${
+        data.stats[list].selfMarked ? ` · ${data.stats[list].selfMarked} of the mastered marked as known by you` : ''}</h3>
       ${cards.length ? `<div class="results">${cards.map(renderRow).join('')}</div>`
         : '<p class="muted" style="margin:0">Nothing left to draw today.</p>'}
     </div>`;
@@ -192,7 +195,8 @@ function renderResults(list) {
       <div class="result"><div class="result-top">
         <span class="result-term">${esc(r.term)}</span>
         ${r.mastered
-          ? `<span class="pill good">${r.knewIt ? 'you already knew it' : `learnt · passed on ${r.passesNeeded} days`} · dropped and replaced</span>`
+          ? `<span class="pill good">${r.selfKnown ? 'marked as known' : r.knewIt ? 'you already knew it'
+            : `learnt · passed on ${r.passesNeeded} days`} · dropped and replaced</span>`
           : r.passed ? `<span class="pill warn">passed · ${r.passes} of ${r.passesNeeded} days</span>`
           : `<span class="pill bad">${r.skipped ? 'new to you'
             : !r.judgement?.understood ? 'meaning not right yet' : 'not used correctly yet'}</span>`}
@@ -203,6 +207,31 @@ function renderResults(list) {
 }
 
 // ------------------------------------------------------------------ check --
+
+/** Step back one screen: from "use it" to its own step 1, or from step 1 to the item before. */
+function goBack(view) {
+  const card = run.queue[run.index];
+  const answer = card && run.answers.get(card.id);
+  if (answer && answer.stage === 'use') {
+    answer.stage = 'understand';
+  } else if (run.index > 0) {
+    run.index--;
+    const prev = run.answers.get(run.queue[run.index].id);
+    if (prev) {
+      prev.done = false;
+      // A shortcut taken by accident is undone, not revisited.
+      if (prev.skipped || prev.selfKnown) {
+        Object.assign(prev, { skipped: false, selfKnown: false, explanation: undefined, stage: 'understand' });
+      } else if (prev.fastCheck) {
+        Object.assign(prev, { fastCheck: false, stage: 'understand' });
+      } else {
+        prev.stage = 'use';
+      }
+    }
+  }
+  saveDraft();
+  renderToday(view);
+}
 
 function startRun(view) {
   const queue = untested();
@@ -215,8 +244,10 @@ function startRun(view) {
 function renderStep(view) {
   const card = run.queue[run.index];
   const answer = run.answers.get(card.id) || { id: card.id };
-  const step = answer.explanation === undefined ? 'understand' : 'use';
+  const step = answer.stage || (answer.explanation === undefined ? 'understand' : 'use');
+  const atStart = run.index === 0 && step === 'understand';
   const bar = `<div class="quizbar">
+      <button class="btn secondary small" id="back" ${atStart ? 'disabled' : ''}>← Back</button>
       <div class="progressbar"><i style="width:${(run.index / run.queue.length) * 100}%"></i></div>
       <span class="quizcount">${run.index + 1} / ${run.queue.length}</span>
       <button class="btn secondary small" id="pause">Pause</button></div>`;
@@ -231,27 +262,39 @@ function renderStep(view) {
       ${c ? `<p class="prompt">${esc(c.before)}<mark>${esc(c.target)}</mark>${esc(c.after)}</p>` : ''}
       <p class="prompt-sub">What does it mean${c ? ' here' : ''}? Explain in your own words —
         English or Vietnamese, a synonym or a short example all count.</p>
-      <textarea class="answer" id="explanation" rows="2" maxlength="300"></textarea>
+      <textarea class="answer" id="explanation" rows="2" maxlength="300">${esc(answer.explanation || '')}</textarea>
       <div class="row" style="margin-top:12px">
         <button class="btn" id="next">Next →</button>
         <button class="btn secondary" id="dunno">I don't know it</button>
-      </div></div>`;
+        ${card.attempts === 0 ? (SELF_MARK_LEVELS.has(card.level)
+          ? '<button class="btn secondary" id="known">I know this well</button>'
+          : '<button class="btn secondary" id="fast">I know it — skip the sentence</button>') : ''}
+      </div>
+      ${card.attempts === 0 && !SELF_MARK_LEVELS.has(card.level)
+        ? '<p class="next-hint">Skipping the sentence still needs the meaning above.</p>' : ''}</div>`;
     const box = view.querySelector('#explanation');
     box.focus();
     view.querySelector('#next').addEventListener('click', () => {
       if (!box.value.trim()) return box.focus();
       answer.explanation = box.value.trim();
+      answer.stage = 'use';
       run.answers.set(card.id, answer);
       saveDraft();
       renderToday(view);
     });
-    // Nothing to mark for an item you have not met: it goes straight to the learning cards.
-    view.querySelector('#dunno').addEventListener('click', () => {
-      Object.assign(answer, { explanation: '', skipped: true, done: true });
+    const finishItem = (fields) => {
+      Object.assign(answer, fields, { done: true });
       run.answers.set(card.id, answer);
       saveDraft();
       run.index++;
       renderToday(view);
+    };
+    // Nothing to mark for an item you have not met: it goes straight to the learning cards.
+    view.querySelector('#dunno').addEventListener('click', () => finishItem({ explanation: '', skipped: true }));
+    view.querySelector('#known')?.addEventListener('click', () => finishItem({ explanation: '', selfKnown: true }));
+    view.querySelector('#fast')?.addEventListener('click', () => {
+      if (!box.value.trim()) return box.focus();
+      finishItem({ explanation: box.value.trim(), fastCheck: true });
     });
   } else if (!card.situation && !scenes.error && data.scenesPending > 0) {
     view.innerHTML = `${bar}<div class="card quiz" data-waiting>${mode}
@@ -285,16 +328,24 @@ function renderStep(view) {
     });
   }
   view.querySelector('#pause').addEventListener('click', () => { run = null; renderToday(view); });
+  view.querySelector('#back').addEventListener('click', () => goBack(view));
 }
 
 function renderSubmit(view) {
   const answers = [...run.answers.values()].filter((a) => a.done && run.queue.some((c) => c.id === a.id));
-  const toMark = answers.filter((a) => !a.skipped).length;
+  const toMark = answers.filter((a) => !a.skipped && !a.selfKnown).length;
   view.innerHTML = `<div class="card quiz">
     <p class="prompt">${busy === 'marking' ? 'Marking your answers…' : `All ${answers.length} answered.`}</p>
     <p class="prompt-sub">${toMark} to mark, ${MARK_BATCH} per request.</p>
     ${error ? `<p class="verdict wrong">${esc(error)} Your answers are kept — try again.</p>` : ''}
-    <button class="btn" id="mark" ${busy ? 'disabled' : ''}>${error ? 'Try again' : 'Mark them'}</button></div>`;
+    <div class="row">
+      <button class="btn secondary" id="back" ${busy ? 'disabled' : ''}>← Back</button>
+      <button class="btn" id="mark" ${busy ? 'disabled' : ''}>${error ? 'Try again' : 'Mark them'}</button>
+    </div></div>`;
+  view.querySelector('#back').addEventListener('click', () => {
+    run.index = run.queue.length;   // goBack steps from just past the last item
+    goBack(view);
+  });
   view.querySelector('#mark').addEventListener('click', async () => {
     busy = 'marking';
     error = null;

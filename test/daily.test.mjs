@@ -83,9 +83,10 @@ const idsIn = (prompt) => [...prompt.matchAll(/"id":(\d+)/g)].map((m) => Number(
 const scenes = (prompt) => reply({ items: idsIn(prompt).map((id) => ({
   id, vi: 'nghĩa', situation: `Situation ${id}. Tell your colleague.`, sample: `Sample ${id}.` })) });
 let verdictFor = () => true;
+let understoodFor = null;      // when set, understanding is judged apart from use
 const grades = (prompt) => reply({ items: idsIn(prompt).map((id) => {
   const good = verdictFor(id);
-  return { id, understood: good, meaning_ok: good, grammar_ok: good, natural_ok: true,
+  return { id, understood: understoodFor ? understoodFor(id) : good, meaning_ok: good, grammar_ok: good, natural_ok: true,
            feedback: good ? 'Good.' : 'Wrong preposition.', corrected: 'Fixed.' };
 }) });
 geminiHandler = (prompt) => (prompt.includes('examiner') ? grades(prompt) : scenes(prompt));
@@ -216,6 +217,47 @@ console.log('== an item learnt here needs three separate days ==');
   r = await statusOn(4, true);
   eq('day 5: third pass drops it', r.mastered, true);
   eq('  and says it was learnt, not already known', r.knewIt, false);
+}
+
+console.log('== shortcuts for items you already know ==');
+{
+  const env = makeEnv();
+  const { body: state } = await call(env, 'GET', '/api/daily');
+  const easy = state.lists.word.find((c) => ['a1', 'a2'].includes(c.level));
+  const hard = state.lists.word.filter((c) => ['b2', 'c1'].includes(c.level));
+  geminiCalls = [];
+  let r = await call(env, 'POST', '/api/daily/grade', { answers: [
+    { id: easy.id, selfKnown: true },
+    { id: hard[0].id, selfKnown: true },
+  ] });
+  const byId = new Map(r.body.results.map((x) => [x.id, x]));
+  eq('an A1-A2 item marked as known is dropped', byId.get(easy.id).mastered, true);
+  eq('  recorded as your own call', byId.get(easy.id).selfKnown, true);
+  eq('  without asking the model', geminiCalls.length, 0);
+  eq('a B2-C1 item cannot be dropped on your word', byId.get(hard[0].id).mastered, false);
+  eq('  it counts as not answered', byId.get(hard[0].id).skipped, true);
+  eq('the overview counts it apart', r.body.state.stats.word.selfMarked, 1);
+
+  verdictFor = () => false;                 // the sentence would fail
+  understoodFor = (id) => id === hard[1].id;
+  r = await call(env, 'POST', '/api/daily/grade', { answers: [
+    { id: hard[1].id, fastCheck: true, explanation: 'right meaning', sentence: 'ignored' },
+    { id: hard[2].id, fastCheck: true, explanation: 'wrong meaning' },
+  ] });
+  const fast = new Map(r.body.results.map((x) => [x.id, x]));
+  eq('a fast check with the right meaning drops it', fast.get(hard[1].id).mastered, true);
+  eq('  the sentence is neither sent nor kept', fast.get(hard[1].id).sentence, null);
+  ok('  the examiner is told no sentence was asked', geminiCalls[0].includes('(not asked)'), '');
+  eq('a fast check with the wrong meaning keeps it', fast.get(hard[2].id).mastered, false);
+  understoodFor = null;
+  verdictFor = () => true;
+
+  // Day 2: the item you got wrong is no longer "first sight".
+  const user = { id: 1 };
+  const tomorrow = new Date(Date.now() + 24 * 3600 * 1000);
+  const again = await gradeDaily(env, user, [{ id: hard[2].id, fastCheck: true, explanation: 'x', sentence: 'y' }],
+                                 { now: tomorrow });
+  eq('after a miss, the fast check is not honoured', again[0].fastCheck, false);
 }
 
 console.log('== a failed marking writes nothing ==');

@@ -24,7 +24,7 @@ const card = (id, list, term, extra = {}) => ({
 });
 const state = {
   day: '2026-10-01',
-  lists: { word: [card(1, 'word', 'abolish')], phrase: [card(2, 'phrase', 'a bit')] },
+  lists: { word: [card(1, 'word', 'abolish')], phrase: [card(2, 'phrase', 'a bit', { level: 'a2' })] },
   stats: { word: { mastered: 3, masteredToday: 0, pool: 5975 }, phrase: { mastered: 1, masteredToday: 0, pool: 750 } },
 };
 
@@ -93,7 +93,8 @@ s = await B.evaluate(`
   await new Promise(r => setTimeout(r, 200));
   const before = { term: document.querySelector('.prompt-serif')?.textContent,
                    context: document.querySelector('.quiz mark')?.textContent,
-                   meaningShown: document.querySelector('.quiz').textContent.includes('the meaning of item 1') };
+                   meaningShown: document.querySelector('.quiz').textContent.includes('the meaning of item 1'),
+                   fast: !!document.querySelector('#fast'), known: !!document.querySelector('#known') };
   document.querySelector('#next').click();
   await new Promise(r => setTimeout(r, 50));
   const stillHere = !!document.querySelector('#explanation');
@@ -105,6 +106,8 @@ s = await B.evaluate(`
 eq('step 1 shows the item itself', s.term, 'abolish');
 eq('  highlighted in Oxford\'s sentence', s.context, 'abolish');
 eq('  without giving the meaning away', s.meaningShown, false);
+eq('a B2 item offers the fast check', s.fast, true);
+eq('  but not the one-tap drop', s.known, false);
 eq('an empty explanation is not accepted', s.stillHere, true);
 eq('step 2 keeps the term', s.use, 'abolish');
 ok('  with the situation', s.situation.includes('Your team asks about 1'), s.situation);
@@ -118,6 +121,46 @@ s = await B.evaluate(`
   await new Promise(r => setTimeout(r, 200));
   return { prompt: document.querySelector('.prompt')?.textContent, count: document.querySelector('.quizcount')?.textContent };`);
 eq('it resumes at the second item', s.count, '2 / 2');
+
+console.log('== back ==');
+s = await B.evaluate(`
+  const q = (sel) => document.querySelector(sel);
+  const tick = () => new Promise(r => setTimeout(r, 60));
+  q('#back').click(); await tick();
+  const toPrevUse = { count: q('.quizcount').textContent, sentence: q('#sentence')?.value };
+  q('#back').click(); await tick();
+  const toPrevUnderstand = { explanation: q('#explanation')?.value, disabled: q('#back').disabled };
+  q('#next').click(); await tick();
+  q('#done').click(); await tick();
+  const forwardAgain = q('.quizcount').textContent;
+  q('#dunno').click(); await tick();
+  const onSubmit = !!q('#mark');
+  q('#back').click(); await tick();
+  return { toPrevUse, toPrevUnderstand, forwardAgain, onSubmit,
+           undone: { count: q('.quizcount')?.textContent, box: q('#explanation')?.value },
+           easyOffers: { known: !!q('#known'), fast: !!q('#fast') } };`);
+eq('back from step 1 goes to the previous item', s.toPrevUse.count, '1 / 2');
+eq('  at its step 2, sentence kept', s.toPrevUse.sentence, 'bad one');
+eq('back again reaches its step 1, explanation kept', s.toPrevUnderstand.explanation, 'to end');
+eq('  where there is nothing further back', s.toPrevUnderstand.disabled, true);
+eq('forward again keeps both answers', s.forwardAgain, '2 / 2');
+eq('"I don\'t know it" reaches the marking screen', s.onSubmit, true);
+eq('back from there returns to the last item', s.undone.count, '2 / 2');
+eq('  with the accidental "I don\'t know it" undone', s.undone.box, '');
+eq('an A2 item offers the one-tap drop', s.easyOffers.known, true);
+eq('  instead of the fast check', s.easyOffers.fast, false);
+
+console.log('== "I know this well" can be taken back ==');
+s = await B.evaluate(`
+  const q = (sel) => document.querySelector(sel);
+  const tick = () => new Promise(r => setTimeout(r, 60));
+  q('#known').click(); await tick();
+  const toMark = q('.prompt-sub')?.textContent;
+  q('#back').click(); await tick();
+  return { toMark, back: q('.quizcount')?.textContent, offered: !!q('#known') };`);
+ok('it needs no marking', /^1 to mark/.test(s.toMark || ''), s.toMark);
+eq('Back undoes it', s.back, '2 / 2');
+eq('  and offers it again', s.offered, true);
 
 console.log('== "I don\'t know" and marking ==');
 s = await B.evaluate(`
