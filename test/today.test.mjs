@@ -12,37 +12,50 @@ const fakeToken = (email, expSec) => {
 };
 const token = fakeToken('thaop@ghn.vn', Math.floor(Date.now() / 1000) + 7200);
 
-// A small stand-in for the Worker: three words, each walked through q1 → q2 → done.
+// A small stand-in for the Worker: three words, each walked through q1 → q2 → done,
+// then a retest for each word that was missed.
 await B.addInitScript(`
   sessionStorage.setItem('knowledge/idtoken', ${JSON.stringify(token)});
   window.__calls = [];
+  const OXFORD = 'https://www.oxfordlearnersdictionaries.com/definition/english/';
   const W = [
-    { id: 1, term: 'convince', pos: 'verb', level: 'b2', ready: true, stage: 'q1',
+    { id: 1, term: 'convince', pos: 'verb', level: 'b2', ready: true, stage: 'q1', lv: 0,
       q1: { id: 11, type: 'meaning_mc', stem: 'She convinced me to stay.',
             options: ['make someone agree by giving reasons', 'shout at someone', 'pay someone'] },
-      q2: { id: 12, type: 'sentence', stem: 'Your friend wants to quit her course.', instruction: 'Write one sentence with convince.' } },
-    { id: 2, term: 'cheap', pos: 'adjective', level: 'a2', ready: true, stage: 'q1',
+      q2: { id: 12, type: 'sentence', stem: 'Your friend wants to quit her course.', instruction: 'Write one sentence with convince.' },
+      re: { id: 13, type: 'pattern_mc', options: ['She convinced him to stay.', 'She convinced him stay.', 'She convinced to him stay.'] } },
+    { id: 2, term: 'cheap', pos: 'adjective', level: 'a2', ready: true, stage: 'q1', lv: 0,
       q1: { id: 21, type: 'pattern_mc', options: ['It is cheap to buy.', 'It is cheap for buy.', 'It is cheap buying.'] },
-      q2: { id: 22, type: 'fix_word', stem: 'The bus is cheap than the train.' } },
-    { id: 3, term: 'aim', pos: 'verb', level: 'b1', ready: false, stage: 'q1',
+      q2: { id: 22, type: 'sentence', stem: 'A friend asks about bus fares.', instruction: 'Write one sentence with cheap.' },
+      re: { id: 23, type: 'fix_word', stem: 'It is cheap for buy.', wrong: 'for' } },
+    { id: 3, term: 'aim', pos: 'verb', level: 'b1', ready: false, stage: 'q1', lv: 0,
       q1: { id: 31, type: 'meaning_mc', stem: 'We aim to finish by May.', options: ['plan', 'forget', 'refuse'] },
-      q2: null },
+      q2: null,
+      re: { id: 33, type: 'meaning_mc', stem: 'They aim to win.', options: ['try', 'fear', 'stop'] } },
   ];
-  const S = { pending: 0, tested: new Set(), done: 0 };
-  const card = (w) => ({ id: w.id, level: w.level, ready: w.ready, passes: 0, passesNeeded: 3,
-    ...(S.tested.has(w.id) ? { term: w.term, pos: w.pos, ipa: '/x/', senses: [{ def: 'the meaning of ' + w.term, cefr: w.level, example: 'An example.' }],
-      checklist: [{ key: 'sense:1', kind: 'sense', label: 'the meaning of ' + w.term, passed: false },
-                  { key: 'pattern:p', kind: 'pattern', label: w.term + ' somebody to do something', passed: false }],
+  const S = { pending: 0, tested: new Set() };
+  const retestable = (w) => w.stage === 'done' && w.missed && !w.retested;
+  const card = (w) => ({ id: w.id, level: w.level, ready: w.ready, stage: w.lv, passes: 0, passesNeeded: 3,
+    retest: retestable(w),
+    ...(S.tested.has(w.id) ? { term: w.term, pos: w.pos, ipa: '/x/', url: OXFORD + w.term,
+      senses: [{ def: 'the meaning of ' + w.term, cefr: w.level, example: 'An example.' }],
+      checklist: [{ key: 'sense:1', kind: 'sense', label: 'the meaning of ' + w.term, state: w.missed ? 'missed' : 'right',
+                    practised: !!w.practised },
+                  { key: 'pattern:p', kind: 'pattern', label: w.term + ' somebody to do something', state: null }],
       today: w.feedback ? [{ verdict: 'wrong', answer: 'I convinced to her.', feedback: w.feedback, corrected: 'I convinced her.' }] : [] } : {}) });
   const overview = () => ({
     day: '2026-10-06', words: W.map(card), left: W.filter((w) => w.ready && w.stage !== 'done').length,
-    waiting: W.filter((w) => !w.ready).length, pendingMarks: S.pending,
+    waiting: W.filter((w) => !w.ready).length, pendingMarks: S.pending, retestLeft: W.filter(retestable).length,
+    stages: { new: W.filter((w) => w.lv === 0).length, recognise: W.filter((w) => w.lv === 1).length, canUse: 0, secure: 4 },
     totals: { active: 3, mastered: 4, known: 2, learnt: 1, self: 1, masteredToday: 0, of: 1000 },
     byLevel: { a1: 3, b2: 1 }, features: { meaning: { right: 3, n: 4 } },
     ielts: { state: 'due', everyDays: 3 },
   });
-  const reveal = (w) => ({ correct: w.q1.options ? w.q1.options[0] : 'than', meaning: 'the meaning of ' + w.term,
-                           oxford: ['Oxford says ' + w.term + '.'] });
+  const reveal = (item, w) => ({ correct: item.options ? item.options[0] : 'to', meaning: 'the meaning of ' + w.term,
+                                 oxford: ['Oxford says ' + w.term + '.'] });
+  const asked = (w, item, slot, retest) => ({ word: { id: w.id, term: w.term, pos: w.pos, level: w.level, url: OXFORD + w.term },
+    slot, retest, item: { stem: null, instruction: null, options: null, wrong: null, ...item },
+    offers: { selfKnown: !retest && slot === 1 && w.level === 'a2' && !S.tested.has(w.id) } });
   const realFetch = window.fetch;
   window.fetch = async (url, init = {}) => {
     const href = String(url && url.url ? url.url : url);
@@ -64,37 +77,52 @@ await B.addInitScript(`
     if (path === '/api/check/next') {
       const ready = W.filter((w) => w.ready);
       const w = ready.find((x) => x.stage !== 'done');
-      const progress = { done: ready.filter((x) => x.stage === 'done').length, total: ready.length, waiting: W.length - ready.length };
-      if (!w) return reply({ done: true, progress });
-      const slot = w.stage === 'q1' ? 1 : 2;
-      const item = slot === 1 ? w.q1 : w.q2;
-      return reply({ word: { id: w.id, term: w.term, pos: w.pos, level: w.level }, slot,
-        item: { stem: null, instruction: null, options: null, ...item },
-        offers: { selfKnown: slot === 1 && w.level === 'a2' && !S.tested.has(w.id) }, progress });
+      if (w) {
+        const progress = { done: ready.filter((x) => x.stage === 'done').length, total: ready.length, waiting: W.length - ready.length };
+        const slot = w.stage === 'q1' ? 1 : 2;
+        return reply({ ...asked(w, slot === 1 ? w.q1 : w.q2, slot, false), progress });
+      }
+      const missed = W.filter((x) => x.missed);
+      const r = !S.pending && W.find(retestable);
+      if (!r) return reply({ done: true, progress: { done: ready.length, total: ready.length, waiting: 0 } });
+      return reply({ ...asked(r, r.re, 1, true), progress: { done: missed.filter((x) => x.retested).length, total: missed.length } });
     }
     if (path === '/api/check/answer') {
       const w = word(body.entry_id);
-      const close = () => { w.stage = 'done'; S.tested.add(w.id); };
-      if (body.selfKnown) { close(); return reply({ verdict: 'self', done: true, mastered: true, how: 'self', undoable: true }); }
+      if (w.stage === 'done') {
+        const right = body.choice === 0 || body.text === 'to';
+        Object.assign(w, { retested: true, practised: right });
+        return reply({ verdict: body.skipped ? 'skipped' : right ? 'right' : 'wrong', retest: true, done: true, triesLeft: 0,
+                       ...(right ? {} : reveal(w.re, w)) });
+      }
+      const close = (lv) => { w.stage = 'done'; S.tested.add(w.id); const before = w.lv; w.lv = lv; return { level: lv, levelBefore: before }; };
+      if (body.selfKnown) return reply({ verdict: 'self', done: true, mastered: true, how: 'self', undoable: true, ...close(3) });
       if (body.skipped) {
         const slot = w.stage === 'q1' ? 1 : 2;
-        close();
+        w.missed = true;
         return reply({ verdict: 'skipped', done: true, passed: false, mastered: false, passes: 0, passesNeeded: 3,
-                       ...reveal(w), undoable: slot === 1 });
+                       ...reveal(w.q1, w), undoable: slot === 1, ...close(0) });
       }
       if (body.choice != null) {
         if (body.choice === 0) {
           if (w.q2) { w.stage = 'q2'; return reply({ verdict: 'right', done: false }); }
-          close(); return reply({ verdict: 'right', done: true, passed: true, mastered: true, how: 'known', passes: 1, passesNeeded: 3 });
+          return reply({ verdict: 'right', done: true, passed: true, mastered: true, how: 'known', passes: 1, passesNeeded: 3, ...close(3) });
         }
-        close();
-        return reply({ verdict: 'wrong', done: true, passed: false, mastered: false, passes: 0, passesNeeded: 3, ...reveal(w) });
+        w.missed = true;
+        return reply({ verdict: 'wrong', done: true, passed: false, mastered: false, passes: 0, passesNeeded: 3,
+                       ...reveal(w.q1, w), ...close(0) });
       }
-      close();
+      w.stage = 'done';
+      S.tested.add(w.id);
       S.pending++;
       return reply({ verdict: 'pending', done: true });
     }
-    if (path === '/api/check/undo') { word(body.entry_id).stage = 'q1'; S.tested.delete(Number(body.entry_id)); return reply({ undone: true }); }
+    if (path === '/api/check/undo') {
+      const w = word(body.entry_id);
+      Object.assign(w, { stage: 'q1', lv: 0, missed: false });
+      S.tested.delete(w.id);
+      return reply({ undone: true });
+    }
     if (path === '/api/check/report') {
       const w = W.find((x) => x.q1.id === body.item_id);
       w.q1 = { ...w.q1, id: w.q1.id + 100, stem: 'A better question.' };
@@ -103,9 +131,10 @@ await B.addInitScript(`
     if (path === '/api/check/mark') {
       if (window.__markFail) return reply({ error: 'the language model is busy right now' }, 503);
       S.pending = 0;
-      word(1).feedback = 'You need "convince somebody", without "to".';
+      Object.assign(word(1), { feedback: 'You need "convince somebody", without "to".', missed: true, lv: 1 });
       return reply({ results: [{ entry_id: 1, term: 'convince', type: 'sentence', answer: 'I convinced to her.',
-        verdict: 'wrong', feedback: word(1).feedback, corrected: 'I convinced her.', mastered: false }], ...overview() });
+        verdict: 'wrong', feedback: word(1).feedback, corrected: 'I convinced her.', mastered: false, level: 1, levelBefore: 0 }],
+        ...overview() });
     }
     if (path === '/api/ielts/new') {
       return reply({ task: { id: 7, title: 'Cheaper buses', passage: 'The city made buses cheaper last year.',
@@ -132,18 +161,24 @@ let s = await B.evaluate(`return {
   tab: document.querySelector('.tabs a[aria-current]')?.dataset.tab,
   leaked: ['convince', 'cheap', 'aim'].some(t => document.querySelector('#view').textContent.includes(t)),
   hidden: [...document.querySelectorAll('.result-term')].filter(e => /Hidden/.test(e.textContent)).length,
+  newPills: [...document.querySelectorAll('.result .pill')].filter(e => e.textContent === '○○○ New').length,
   start: document.querySelector('#start')?.textContent,
+  summary: document.querySelector('.card.block .prompt')?.textContent,
   ielts: !!document.querySelector('#ielts-new'),
-  progress: document.querySelector('#view').textContent.includes('Precise meaning'),
+  levels: [...document.querySelectorAll('.card.block')].find(c => /Your level/.test(c.textContent))?.textContent || '',
+  points: /points/.test(document.querySelector('#view').textContent),
 };`);
 eq('Today screen', s.heading, 'Today');
 eq('its tab is current', s.tab, 'today');
 eq('no term is shown before the check', s.leaked, false);
 eq('each word is listed as hidden', s.hidden, 3);
+eq('  each at level New', s.newPills, 3);
 eq('the word without questions was prepared in the background', (await calls('/api/check/prepare')).length, 1);
 ok('  and joins the count', /3 words/.test(s.start || ''), s.start);
+eq('one line says what is left', s.summary, '3 to check');
 eq('an IELTS task is offered when due', s.ielts, true);
-eq('accuracy is shown by IELTS feature', s.progress, true);
+ok('the levels are counted', /Secure\s*4\s*of 1000/.test(s.levels) && /New\s*3/.test(s.levels), s.levels);
+eq('no "points" jargon', s.points, false);
 
 console.log('== a right check goes straight to the second question ==');
 s = await B.evaluate(`
@@ -152,7 +187,6 @@ s = await B.evaluate(`
   q('#start').click(); await tick();
   const first = { mode: q('.quiz-mode')?.textContent, stem: q('.prompt')?.textContent,
                   options: document.querySelectorAll('[data-choice]').length, known: !!q('#known'),
-                  termShown: q('.quiz').textContent.includes('convince') && !q('.prompt').textContent.includes('convince') ? 'mode' : 'stem',
                   count: q('.quizcount')?.textContent };
   document.querySelector('[data-choice="0"]').click(); await tick();
   const second = { mode: q('.quiz-mode')?.textContent, box: !!q('textarea#typed'),
@@ -161,7 +195,8 @@ s = await B.evaluate(`
   const emptyKept = !!q('textarea#typed');
   q('#typed').value = 'I convinced to her.';
   q('#submit').click(); await tick();
-  return { first, second, emptyKept, head: q('.verdict-head')?.textContent };`);
+  return { first, second, emptyKept, head: q('.verdict-head')?.textContent,
+           oxford: q('.quiz-mode a')?.getAttribute('href') };`);
 ok('the first question is a quick check', /Quick check/.test(s.first.mode), s.first.mode);
 eq('  with its sentence', s.first.stem, 'She convinced me to stay.');
 eq('  and three options', s.first.options, 3);
@@ -172,6 +207,7 @@ eq('  in a text box', s.second.box, true);
 eq('  with its instruction', s.second.instruction, 'Write one sentence with convince.');
 eq('an empty answer is not sent', s.emptyKept, true);
 eq('a sentence is saved for marking at the end', s.head, 'Saved — marked at the end');
+eq('the answer screen links to the Oxford entry', s.oxford, 'https://www.oxfordlearnersdictionaries.com/definition/english/convince');
 let sent = (await calls('/api/check/answer')).at(-1).body;
 eq('  sent with the word', sent.entry_id, 1);
 eq('  and the text', sent.text, 'I convinced to her.');
@@ -192,7 +228,8 @@ s = await B.evaluate(`
 eq('an A2 word on first sight offers the one-tap drop', s.offered, true);
 eq('a pattern question asks for the correct sentence', s.pattern, 'Choose the correct sentence:');
 eq('it is marked as known', s.head, 'Marked as known');
-ok('  and dropped', /Dropped and replaced/.test(s.body), s.body);
+ok('  leaves the list', /leaves your list/.test(s.body), s.body);
+ok('  and shows the level going to Secure', /New\s*→\s*●●● Secure/.test(s.body), s.body);
 eq('Undo returns to the same word', s.back, '2 / 3');
 eq('  and offers the drop again', s.again, true);
 eq('  after telling the Worker', (await calls('/api/check/undo')).at(-1)?.body?.entry_id, 2);
@@ -207,6 +244,7 @@ s = await B.evaluate(`
 eq('it says the word is new', s.head, 'New to you');
 eq('  with the right answer', s.solution, 'It is cheap to buy.');
 ok('  Oxford\'s meaning and example', /the meaning of cheap/.test(s.body) && /Oxford says cheap/.test(s.body), s.body);
+ok('  and the level, unchanged', /New\s*\(no change\)/.test(s.body), s.body);
 eq('  and can be undone', s.undo, true);
 
 console.log('== reporting a question ==');
@@ -233,7 +271,7 @@ eq('it says not quite', s.head, 'Not quite');
 eq('  and gives the answer', s.solution, 'plan');
 eq('  with nothing to undo', s.undo, false);
 
-console.log('== marking at the end ==');
+console.log('== marking, then retests ==');
 s = await B.evaluate(`
   const q = (sel) => document.querySelector(sel);
   const tick = () => new Promise(r => setTimeout(r, 150));
@@ -244,13 +282,48 @@ s = await B.evaluate(`
   const failed = q('.verdict.wrong')?.textContent || '';
   window.__markFail = false;
   q('#go').click(); await tick();
-  return { screen, failed, view: q('#view').textContent,
-           cards: document.querySelectorAll('details.result').length };`);
+  return { screen, failed, view: q('#view').textContent, summary: q('.card.block .prompt')?.textContent,
+           retest: q('#retest')?.textContent, cards: document.querySelectorAll('details.result').length };`);
 eq('the last word leads to marking', s.screen, '1 answer to mark.');
 ok('a failed marking keeps the answers', /answers are kept/.test(s.failed), s.failed);
 ok('the results name what to fix', s.view.includes('without "to"') && s.view.includes('I convinced her.'), '');
-ok('  and the check is done for today', s.view.includes('Done for today'), '');
+ok('  and the level it leaves the word at', /New\s*→\s*●○○ Recognise/.test(s.view), '');
+eq('then the missed words are offered for a retest', s.summary, '3 to retest');
+ok('  with a button', /Retest · 3 words/.test(s.retest || ''), s.retest);
 eq('each tested word has a learning card', s.cards, 3);
+
+s = await B.evaluate(`
+  const q = (sel) => document.querySelector(sel);
+  const tick = () => new Promise(r => setTimeout(r, 150));
+  q('#retest').click(); await tick();
+  const first = { mode: q('.quiz-mode')?.textContent, count: q('.quizcount')?.textContent, skip: q('#skip')?.textContent };
+  document.querySelector('[data-choice="0"]').click(); await tick();
+  const right = { head: q('.verdict-head')?.textContent, body: q('.verdict-body')?.textContent };
+  q('#next').click(); await tick();
+  const fix = { wrong: q('.wrongword')?.textContent, sub: q('.prompt-sub')?.textContent };
+  q('#typed').value = 'of';
+  q('#submit').click(); await tick();
+  const missed = { head: q('.verdict-head')?.textContent, solution: q('.solution')?.textContent };
+  q('#next').click(); await tick();
+  q('#skip').click(); await tick();
+  q('#next').click(); await tick();
+  return { first, right, fix, missed, summary: q('.card.block .prompt')?.textContent,
+           practised: q('#view').textContent.includes('practised today ✓'),
+           level: [...document.querySelectorAll('details.result summary')].map(e => e.textContent).find(t => t.includes('convince')) || '',
+           link: [...document.querySelectorAll('details.result a')].map(a => a.href)[0] };`);
+ok('a retest says it is practice', /Retest · practice/.test(s.first.mode) && /convince/.test(s.first.mode), s.first.mode);
+eq('  counted through the missed words', s.first.count, '1 / 3');
+eq('  with "I can\'t" to give up', s.first.skip, 'I can\'t');
+eq('a right retest is practice', s.right.head, 'Right — practised ✓');
+ok('  and does not move the level', /level moves on tomorrow/.test(s.right.body), s.right.body);
+eq('fix-the-word underlines the wrong word', s.fix.wrong, 'for');
+eq('  and says so', s.fix.sub, 'The underlined word is wrong. Type the word that should replace it.');
+eq('a missed retest says it comes back tomorrow', s.missed.head, 'Not yet — it comes back tomorrow');
+eq('  with the answer', s.missed.solution, 'to');
+eq('after the retests the day is done', s.summary, 'Done for today.');
+eq('the practised point is shown on its card', s.practised, true);
+ok('each word shows its level and next step', /●○○ Recognise/.test(s.level) && /Next: use it yourself/.test(s.level), s.level);
+eq('a tested word links to its Oxford entry', s.link, 'https://www.oxfordlearnersdictionaries.com/definition/english/convince');
 
 console.log('== the IELTS task ==');
 s = await B.evaluate(`

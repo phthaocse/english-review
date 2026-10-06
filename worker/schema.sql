@@ -222,6 +222,7 @@ CREATE TABLE IF NOT EXISTS word_state (
   passes      INTEGER NOT NULL DEFAULT 0,
   mastered_on TEXT,
   today       TEXT,               -- JSON: today's two questions and how each went
+  level       INTEGER NOT NULL DEFAULT 0,   -- 0 new, 1 recognise, 2 can use, 3 secure
   PRIMARY KEY (user_id, entry_id)
 );
 CREATE INDEX IF NOT EXISTS idx_word_state_status ON word_state(user_id, status);
@@ -242,6 +243,7 @@ CREATE TABLE IF NOT EXISTS answer_log (
   feedback  TEXT,
   corrected TEXT,
   ms        INTEGER,
+  retest    INTEGER NOT NULL DEFAULT 0,     -- practice after a miss; never moves the level
   at        TEXT NOT NULL DEFAULT (datetime('now'))
 );
 CREATE INDEX IF NOT EXISTS idx_answer_log_word ON answer_log(user_id, entry_id);

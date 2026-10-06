@@ -3,20 +3,23 @@
 // The first question is a quick check; miss it and the word stops there with
 // its learning card. Get it right and the second asks for one short piece of
 // production. Keyed answers are marked by the Worker at once; sentences and
-// rewrites are marked together at the end. Keys never reach this page.
+// rewrites are marked together at the end. Missed words then come back as
+// retests, which are practice: a word's level moves only on a day's first try.
 
 import { api, ApiError } from './auth-client.js';
 
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) =>
   ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const message = (e, fallback) => (e instanceof ApiError ? e.message : fallback);
+const plural = (n, word) => `${n} ${word}${n === 1 ? '' : 's'}`;
 
 const FEATURES = [
   ['meaning', 'Precise meaning'], ['accuracy', 'Grammar of the word'], ['collocation', 'Collocation'],
   ['paraphrase', 'Paraphrase'], ['use', 'Using it in a sentence'],
 ];
-const LEVELS = ['a1', 'a2', 'b1', 'b2', 'c1'];
-const KIND_LABEL = { sense: 'meaning', pattern: 'pattern', collocation: 'collocation', idiom: 'idiom' };
+const STAGES = ['New', 'Recognise', 'Can use', 'Secure'];
+const SECURE = 3;
+const KIND_LABEL = { sense: 'Meaning', pattern: 'Pattern', collocation: 'Collocation', idiom: 'Idiom' };
 
 let data = null;          // the overview
 let screen = 'overview';  // overview | question | feedback | marking | ielts
@@ -68,6 +71,27 @@ function draw() {
      marking: drawMarking, ielts: drawIelts })[screen]();
 }
 
+// ------------------------------------------------------- shared pieces --
+
+const dots = (stage) => '●'.repeat(stage) + '○'.repeat(SECURE - stage);
+const stagePill = (stage) =>
+  `<span class="pill ${stage === SECURE ? 'good' : stage ? 'accent' : ''}">${dots(stage)} ${STAGES[stage]}</span>`;
+
+function nextStep(w) {
+  if (w.stage === 0) return 'Next: show you know what it means';
+  if (w.stage === 1) return 'Next: use it yourself';
+  return `Next: use it again on another day · day ${w.passes} of ${w.passesNeeded}`;
+}
+
+const oxfordLink = (url) => (url
+  ? `<a href="${esc(url)}" target="_blank" rel="noopener">Open in Oxford ↗</a>` : '');
+
+function levelChange(r) {
+  if (r.level == null || r.levelBefore == null) return '';
+  if (r.level === r.levelBefore) return `<p style="margin:8px 0 0">Level: ${stagePill(r.level)} (no change)</p>`;
+  return `<p style="margin:8px 0 0">Level: ${stagePill(r.levelBefore)} → ${stagePill(r.level)}</p>`;
+}
+
 // ------------------------------------------------------- background work --
 
 /** Write questions for dealt words that have none yet, one word per request. */
@@ -90,37 +114,40 @@ async function prepareWaiting() {
 
 // --------------------------------------------------------------- overview --
 
+function drawAction() {
+  const parts = [
+    data.left && `${data.left} to check`,
+    data.pendingMarks && `${plural(data.pendingMarks, 'answer')} to mark`,
+    data.retestLeft && `${data.retestLeft} to retest`,
+  ].filter(Boolean);
+  const button = data.left ? `<button class="btn" id="start">Start · ${plural(data.left, 'word')}</button>
+      <p class="next-hint">About 45 seconds a word. Sentences are marked together at the end.</p>`
+    : data.pendingMarks ? `<button class="btn" id="mark">Mark ${plural(data.pendingMarks, 'answer')}</button>`
+    : data.retestLeft ? `<button class="btn" id="retest">Retest · ${plural(data.retestLeft, 'word')}</button>
+      <p class="next-hint">A different question on what you missed. Practice only: levels move on tomorrow's first try.</p>`
+    : '';
+  return `<div class="card block">
+    <p class="prompt" style="margin:0 0 12px">${parts.length ? parts.join(' · ') : 'Done for today.'}</p>
+    ${button}</div>`;
+}
+
 function drawOverview() {
-  const t = data.totals;
   view.innerHTML = `
     <h2 class="section">Today</h2>
-    <p class="lede">Ten words from your Oxford 1,000. A quick check, then one short thing to produce.
-      Miss the check and the word stops there for today.</p>
-
-    <div class="statgrid">
-      <div class="card stat ${data.left ? 'is-due' : ''}"><b>${data.left}</b><span>to check</span></div>
-      <div class="card stat"><b>${t.masteredToday}</b><span>mastered today</span></div>
-      <div class="card stat"><b>${t.mastered}</b><span>mastered of ${t.of}</span></div>
-      <div class="card stat"><b>${t.active}</b><span>in play</span></div>
-    </div>
+    <p class="lede">Each word has a level: ${STAGES.map((s, i) => `${dots(i)} ${s}`).join(' → ')}.
+      A right first try moves it up; a miss on a later day moves it down one step.</p>
     ${error ? `<p class="verdict wrong">${esc(error)}</p>` : ''}
-    ${data.waiting ? `<p class="verdict typo">${data.waiting} word${data.waiting === 1 ? ' is' : 's are'} still
+    ${data.waiting ? `<p class="verdict typo">${plural(data.waiting, 'word')} still
       waiting for questions${preparing.running ? ' — writing them now, about 40 seconds each' : ''}.
       ${preparing.note ? `${esc(preparing.note)}. They will be ready after tonight's run.` : ''}</p>` : ''}
-
-    <div class="card block">
-      ${data.left ? `<button class="btn" id="start">Start · ${data.left} word${data.left === 1 ? '' : 's'}</button>
-        <p class="next-hint">About 45 seconds a word. Sentences are marked together at the end.</p>`
-        : data.pendingMarks ? `<button class="btn" id="mark">Mark ${data.pendingMarks} answer${data.pendingMarks === 1 ? '' : 's'}</button>`
-        : '<p style="margin:0">Done for today. The words you missed are below with what to learn.</p>'}
-    </div>
-
+    ${drawAction()}
     ${drawIeltsCard()}
     ${marked?.length ? drawResults(marked) : ''}
     <div class="card block"><h3>Your words</h3><div class="results">${data.words.map(drawWord).join('')}</div></div>
-    ${drawProgress()}`;
+    ${drawLevels()}`;
 
   view.querySelector('#start')?.addEventListener('click', () => openQuestion());
+  view.querySelector('#retest')?.addEventListener('click', () => { marked = null; openQuestion(); });
   view.querySelector('#mark')?.addEventListener('click', () => { screen = 'marking'; draw(); });
   view.querySelector('#ielts-new')?.addEventListener('click', newIelts);
   view.querySelector('#ielts-open')?.addEventListener('click', () => { screen = 'ielts'; draw(); });
@@ -144,46 +171,53 @@ function drawWord(w) {
   const level = `<span class="pill">${w.level.toUpperCase()}</span>`;
   if (!w.term) {
     return `<div class="result"><div class="result-top"><span class="result-term muted">Hidden until you check it</span>
-      ${level}${w.ready ? '' : '<span class="pill warn">questions being written</span>'}</div></div>`;
+      ${level}${stagePill(w.stage)}${w.ready ? '' : '<span class="pill warn">questions being written</span>'}</div></div>`;
   }
-  const passed = w.checklist.filter((c) => c.passed).length;
+  const tested = w.checklist.filter((c) => c.state);
+  const untested = w.checklist.length - tested.length;
   return `<details class="result">
     <summary class="result-top"><span class="result-term">${esc(w.term)}</span>${level}
-      <span class="muted">${esc(w.pos || '')}</span>
-      <span class="pill ${passed === w.checklist.length ? 'good' : 'accent'}">${passed} of ${w.checklist.length} points</span>
-      ${w.passes ? `<span class="pill warn">passed ${w.passes} of ${w.passesNeeded} days</span>` : ''}</summary>
+      <span class="muted">${esc(w.pos || '')}</span>${stagePill(w.stage)}
+      ${w.retest ? '<span class="pill warn">retest today</span>' : ''}
+      <span class="level-next">${nextStep(w)}</span></summary>
     <div style="margin-top:10px">
-      ${w.ipa ? `<p class="result-ipa" style="margin:0">${esc(w.ipa)}</p>` : ''}
+      <p style="margin:0">${w.ipa ? `<span class="result-ipa">${esc(w.ipa)}</span> · ` : ''}${oxfordLink(w.url)}</p>
       ${w.senses.map((s) => `<p style="margin:6px 0 0">${s.cefr ? `<span class="pill">${s.cefr.toUpperCase()}</span> ` : ''}${esc(s.def)}
         ${s.example ? `<br><span class="muted">${esc(s.example)}</span>` : ''}</p>`).join('')}
-      <ul style="margin:12px 0 0; padding-left:20px">${w.checklist.map((c) =>
-        `<li>${c.passed ? '✓' : '·'} <span class="muted">${KIND_LABEL[c.kind] || c.kind}:</span> ${esc(c.label)}</li>`).join('')}</ul>
-      ${w.today.map((a) => a.feedback ? `<p style="margin:10px 0 0"><b>You wrote:</b> ${esc(a.answer)}<br>${esc(a.feedback)}
-        ${a.corrected && a.corrected !== a.answer ? `<br><span class="rightline">→ ${esc(a.corrected)}</span>` : ''}</p>` : '').join('')}
+      <p style="margin:14px 0 4px"><b>What you've shown</b></p>
+      <ul style="margin:0; padding-left:20px">${tested.map((c) => `<li>${c.state === 'right' ? '✓' : '✗'}
+        <span class="muted">${KIND_LABEL[c.kind] || c.kind}:</span> ${esc(c.label)}
+        ${c.state === 'missed' && c.practised ? '<span class="muted">— practised today ✓</span>' : ''}</li>`).join('')}</ul>
+      ${untested ? `<p class="muted" style="margin:4px 0 0">${plural(untested, 'more use')} of this word still to test.</p>` : ''}
+      ${w.today.map((a) => `<p style="margin:10px 0 0"><b>You wrote${a.retest ? ' (retest)' : ''}:</b> ${esc(a.answer)}<br>${esc(a.feedback)}
+        ${a.corrected && a.corrected !== a.answer ? `<br><span class="rightline">→ ${esc(a.corrected)}</span>` : ''}</p>`).join('')}
     </div></details>`;
 }
 
-function drawProgress() {
+function drawLevels() {
+  const s = data.stages;
   const f = data.features || {};
   const rows = FEATURES.filter(([k]) => f[k]?.n).map(([k, label]) => {
     const pct = Math.round((f[k].right / f[k].n) * 100);
     return `<li>${label}: <b>${pct}%</b> <span class="muted">(${f[k].right} of ${f[k].n})</span></li>`;
   });
-  const levels = LEVELS.map((lv) => `${lv.toUpperCase()} ${data.byLevel[lv] || 0}`).join(' · ');
-  return `<div class="card block"><h3>Progress</h3>
-    <p style="margin:0">Mastered by level: ${levels}
-      <span class="muted">— ${data.totals.known} already known, ${data.totals.learnt} learnt here, ${data.totals.self} marked by you</span></p>
-    ${rows.length ? `<p style="margin:12px 0 4px">Last 30 days, by IELTS feature:</p><ul style="margin:0; padding-left:20px">${rows.join('')}</ul>`
-      : '<p class="muted" style="margin:10px 0 0">Accuracy by IELTS feature appears after your first answers.</p>'}</div>`;
+  const line = [[SECURE, s.secure], [2, s.canUse], [1, s.recognise], [0, s.new]]
+    .map(([stage, n]) => `<li>${stagePill(stage)} <b>${n}</b>${stage === SECURE ? ` <span class="muted">of ${data.totals.of}</span>` : ''}</li>`);
+  return `<div class="card block"><h3>Your level</h3>
+    <ul style="margin:0; padding:0; list-style:none; display:grid; gap:8px">${line.join('')}</ul>
+    ${rows.length ? `<details style="margin-top:14px"><summary class="muted">By IELTS skill, last 30 days</summary>
+      <ul style="margin:8px 0 0; padding-left:20px">${rows.join('')}</ul></details>` : ''}</div>`;
 }
 
 function drawResults(list) {
   return `<div class="card block"><h3>Just marked</h3><div class="results">${list.map((r) => `
     <div class="result"><div class="result-top"><span class="result-term">${esc(r.term)}</span>
+      ${r.retest ? '<span class="muted">retest</span>' : ''}
       <span class="pill ${r.verdict === 'right' ? 'good' : 'bad'}">${r.verdict === 'right' ? 'right' : 'not yet'}</span>
-      ${r.mastered ? `<span class="pill good">${r.how === 'known' ? 'you already knew it' : 'learnt'} · dropped</span>` : ''}</div>
+      ${r.mastered ? `<span class="pill good">${r.how === 'known' ? 'you already knew it' : 'learnt'} · leaves your list</span>` : ''}</div>
       <p class="result-gloss">${esc(r.feedback)}</p>
       ${r.corrected && r.corrected !== r.answer ? `<p class="rightline" style="margin:4px 0 0">→ ${esc(r.corrected)}</p>` : ''}
+      ${r.retest ? '' : levelChange(r)}
     </div>`).join('')}</div></div>`;
 }
 
@@ -208,11 +242,22 @@ async function openQuestion() {
   draw();
 }
 
+/** The sentence with its wrong word underlined, or as it is if the word is not found in it. */
+function withWrongWord(stem, wrong) {
+  const at = wrong ? stem.toLowerCase().indexOf(wrong.toLowerCase()) : -1;
+  if (at < 0) return esc(stem);
+  return `${esc(stem.slice(0, at))}<u class="wrongword">${esc(stem.slice(at, at + wrong.length))}</u>${esc(stem.slice(at + wrong.length))}`;
+}
+
 const STEMS = {
   meaning_mc: (q) => `<p class="prompt">${esc(q.item.stem)}</p><p class="prompt-sub">Here <b>${esc(q.word.term)}</b> means:</p>`,
   pattern_mc: () => '<p class="prompt-sub">Choose the correct sentence:</p>',
-  fix_word: (q) => `<p class="prompt">${esc(q.item.stem)}</p>
-    <p class="prompt-sub">One word is wrong. Type the word that should replace it.</p>`,
+  fix_word: (q) => {
+    const found = q.item.wrong && q.item.stem.toLowerCase().includes(q.item.wrong.toLowerCase());
+    return `<p class="prompt">${withWrongWord(q.item.stem, q.item.wrong)}</p>
+      <p class="prompt-sub">${found ? 'The underlined word is wrong.' : q.item.wrong ? `“${esc(q.item.wrong)}” is wrong.`
+        : 'One word is wrong.'} Type the word that should replace it.</p>`;
+  },
   rewrite: (q) => `<p class="prompt">${esc(q.item.stem)}</p><p class="prompt-sub">${esc(q.item.instruction)}</p>`,
   sentence: (q) => `<p class="prompt">${esc(q.item.stem)}</p><p class="prompt-sub">${esc(q.item.instruction)}</p>`,
 };
@@ -222,21 +267,22 @@ function drawQuestion() {
   const typed = q.item.options ? '' : q.item.type === 'fix_word'
     ? '<input class="answer" id="typed" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="the right word">'
     : '<textarea class="answer" id="typed" rows="3" maxlength="400"></textarea>';
+  const mode = q.retest ? 'Retest · practice' : q.slot === 1 ? 'Quick check' : 'Now use it';
   view.innerHTML = `
     <div class="quizbar">
       <div class="progressbar"><i style="width:${q.progress.total ? (q.progress.done / q.progress.total) * 100 : 0}%"></i></div>
       <span class="quizcount">${q.progress.done + 1} / ${q.progress.total}</span>
       <button class="btn secondary small" id="pause">Pause</button></div>
     <div class="card quiz">
-      <div class="quiz-mode"><span>${q.slot === 1 ? 'Quick check' : 'Now use it'}</span>
-        <span class="pill">${q.word.level.toUpperCase()}</span>${q.slot === 2 ? `<span>${esc(q.word.term)}</span>` : ''}</div>
+      <div class="quiz-mode"><span>${mode}</span>
+        <span class="pill">${q.word.level.toUpperCase()}</span>${q.slot === 2 || q.retest ? `<span>${esc(q.word.term)}</span>` : ''}</div>
       ${STEMS[q.item.type](q)}
       ${q.item.options ? `<div class="options">${q.item.options.map((o, i) =>
         `<button class="option" data-choice="${i}">${esc(o)}</button>`).join('')}</div>` : typed}
       ${error ? `<p class="verdict wrong">${esc(error)}</p>` : ''}
       <div class="row" style="margin-top:12px">
         ${q.item.options ? '' : '<button class="btn" id="submit">Next →</button>'}
-        <button class="btn secondary" id="skip">${q.slot === 1 ? 'I don\'t know it' : 'I can\'t'}</button>
+        <button class="btn secondary" id="skip">${q.slot === 1 && !q.retest ? 'I don\'t know it' : 'I can\'t'}</button>
         ${q.offers.selfKnown ? '<button class="btn secondary" id="known">I know this well</button>' : ''}
       </div>
       <button class="override" id="report">Report this question</button>
@@ -289,25 +335,33 @@ async function reportQuestion() {
   openQuestion();
 }
 
-function drawFeedback() {
-  const f = feedback;
-  const q = f.question;
-  const head = {
+function feedbackHead(f, q) {
+  if (f.retest) {
+    return { right: 'Right — practised ✓', pending: 'Saved — marked at the end' }[f.verdict]
+      || (f.triesLeft ? 'Not yet — it comes back once more' : 'Not yet — it comes back tomorrow');
+  }
+  return {
     right: 'Right', wrong: 'Not quite', skipped: q.slot === 1 ? 'New to you' : 'Counted as a miss',
     self: 'Marked as known', pending: 'Saved — marked at the end',
   }[f.verdict];
+}
+
+function drawFeedback() {
+  const f = feedback;
+  const q = f.question;
   const tone = { right: 'exact', self: 'exact', pending: 'typo' }[f.verdict] || 'wrong';
   view.innerHTML = `<div class="card quiz">
-    <div class="quiz-mode"><span>${esc(q.word.term)}</span><span class="pill">${q.word.level.toUpperCase()}</span></div>
+    <div class="quiz-mode"><span>${esc(q.word.term)}</span><span class="pill">${q.word.level.toUpperCase()}</span>
+      <span style="text-transform:none; letter-spacing:0">${oxfordLink(q.word.url)}</span></div>
     <div class="verdict ${tone}">
-      <div class="verdict-head">${head}</div>
+      <div class="verdict-head">${feedbackHead(f, q)}</div>
       <div class="verdict-body">
         ${f.correct && f.verdict !== 'right' ? `<p style="margin:0 0 6px">Answer: <b class="solution">${esc(f.correct)}</b></p>` : ''}
         ${f.meaning ? `<p style="margin:0">${esc(f.meaning)}</p>` : ''}
         ${(f.oxford || []).map((x) => `<p class="muted" style="margin:4px 0 0">${esc(x)}</p>`).join('')}
-        ${f.mastered ? `<p style="margin:8px 0 0">${f.how === 'known' ? 'You already knew it — dropped and replaced.'
-          : f.how === 'self' ? 'Dropped and replaced.' : 'Learnt — dropped and replaced.'}</p>` : ''}
-        ${f.passed && !f.mastered ? `<p style="margin:8px 0 0">Passed ${f.passes} of ${f.passesNeeded} days.</p>` : ''}
+        ${f.mastered ? `<p style="margin:8px 0 0">${f.how === 'known' ? 'You already knew it — it leaves your list.'
+          : f.how === 'self' ? 'It leaves your list.' : 'Learnt — it leaves your list.'}</p>` : ''}
+        ${f.retest ? '<p class="muted" style="margin:8px 0 0">Retests are practice; the level moves on tomorrow\'s first try.</p>' : levelChange(f)}
       </div>
       <div class="row" style="margin-top:12px">
         <button class="btn" id="next">Next →</button>
@@ -330,7 +384,7 @@ function drawFeedback() {
 
 function drawMarking() {
   view.innerHTML = `<div class="card quiz">
-    <p class="prompt">${busy === 'marking' ? 'Marking your answers…' : `${data.pendingMarks} answer${data.pendingMarks === 1 ? '' : 's'} to mark.`}</p>
+    <p class="prompt">${busy === 'marking' ? 'Marking your answers…' : `${plural(data.pendingMarks, 'answer')} to mark.`}</p>
     <p class="prompt-sub">Five per request, about 20 seconds each.</p>
     ${error ? `<p class="verdict wrong">${esc(error)} Your answers are kept — try again.</p>` : ''}
     <div class="row"><button class="btn" id="go" ${busy ? 'disabled' : ''}>${error ? 'Try again' : 'Mark them'}</button>

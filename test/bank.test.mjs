@@ -50,8 +50,11 @@ console.log('== the checklist ==');
   eq('  then its patterns', keys.slice(1, 3).join(' | '), 'pattern:plan to do something | pattern:plan on doing something');
   eq('  then its collocations', keys[3], 'colloc:planned carefully');
   eq('  then other levelled meanings', keys[4], 'sense:2');
-  ok('meanings with no level and idioms come last', keys.indexOf('sense:3') > keys.indexOf('sense:2')
-     && keys.at(-1) === 'idiom:plan ahead', keys.join(' | '));
+  eq('a meaning with no level is left out when others have one', keys.includes('sense:3'), false);
+  eq('idioms come last', keys.at(-1), 'idiom:plan ahead');
+  const unlevelled = parseProfile(page);
+  unlevelled.senses.forEach((x) => { x.cefr = null; });
+  ok('  but kept when no meaning has a level', pointsFrom(unlevelled).some((x) => x.key === 'sense:3'));
   ok('mastery counts the first eight', CHECKLIST_SIZE === 8);
 }
 

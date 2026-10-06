@@ -1,5 +1,6 @@
 import worker from '../worker/src/index.js';
-import { pickItems, fixMatches, permutation, featureOf, answer, nextQuestion, markPending, RELEARN_PASSES }
+import { pickItems, pickRetest, levelAfter, fixMatches, permutation, featureOf, answer, nextQuestion, markPending,
+         overview, RELEARN_PASSES, MAX_RETESTS }
   from '../worker/src/check.js';
 import { keepAgreed } from '../worker/src/ielts.js';
 import { makeD1, addUser } from './d1.mjs';
@@ -270,6 +271,135 @@ console.log('== a word learnt here needs three separate days ==');
     if (n < RELEARN_PASSES) eq(`  pass ${n} keeps it`, r.mastered, false);
   }
   eq(`the pass on day ${RELEARN_PASSES + 1} drops it as learnt`, r.how, 'learnt');
+}
+
+console.log('== levels and retests ==');
+{
+  ok('a pass on both questions means "can use"', levelAfter(1, { r1: 'right', r2: 'right' }) === 2);
+  ok('  a right check alone means "recognise", even from "can use"', levelAfter(2, { r1: 'right', r2: 'wrong' }) === 1);
+  ok('  a missed check drops one step', levelAfter(2, { r1: 'wrong' }) === 1 && levelAfter(0, { r1: 'skipped' }) === 0);
+  const items = [{ id: 1, point_key: 'p', type: 'fix_word' }, { id: 2, point_key: 'p', type: 'pattern_mc' },
+                 { id: 3, point_key: 'p', type: 'rewrite' }, { id: 4, point_key: 'q', type: 'fix_word' }];
+  eq('a retest prefers another question of the same kind', pickRetest(items, items[0], new Set([1])).id, 3);
+  eq('  then any other on the same point', pickRetest(items, items[0], new Set([1, 3])).id, 2);
+  eq('  then the missed one again', pickRetest(items, items[0], new Set([1, 2, 3])).id, 1);
+
+  const env = makeEnv(5);
+  const user = { id: 1, email: 'me@x.com' };
+  const at = (n) => new Date(Date.UTC(2026, 9, 20 + n, 3));
+  const stage = (id) => env.DB._raw.prepare('SELECT level FROM word_state WHERE entry_id = ?').get(id).level;
+  const next = () => nextQuestion(env, user, { now: at(0) });
+  const reply = (q, body) => answer(env, user, { entry_id: q.word.id, ...body }, { now: at(0) });
+
+  let q = await next();
+  eq('the word links to its Oxford entry', q.word.url, `https://www.oxfordlearnersdictionaries.com/w/${q.word.id}`);
+  await reply(q, { choice: rightChoice(q) });
+  q = await next();
+  eq('fix-the-word names the wrong word', q.item.wrong, 'of');
+  let a = await reply(q, { text: 'on' });
+  eq('a word known on first sight is secure', a.level, 3);
+  eq('  coming from new', a.levelBefore, 0);
+
+  q = await next();
+  const two = q.word.id;
+  await reply(q, { choice: rightChoice(q) });
+  q = await next();
+  await reply(q, { text: 'My answer.' });
+  q = await next();
+  const three = q.word.id;
+  await reply(q, { choice: rightChoice(q) });
+  q = await next();
+  eq('  (a typed fix that is not on the key waits for marking)', (await reply(q, { text: 'xx' })).verdict, 'pending');
+  q = await next();
+  const four = q.word.id;
+  a = await reply(q, { choice: wrongChoice(q) });
+  eq('a missed check keeps a new word at new', a.level, 0);
+  eq('retests wait until the sentences are marked', (await next()).done, true);
+
+  markOk = () => false;
+  modelCalls = [];
+  const marked = await markPending(env, user, { now: at(0) });
+  ok('the marker is told which word a fix replaces', modelCalls.some((p) => p.includes('"replaces":"of"')), modelCalls[0]?.slice(-300));
+  eq('a right check with a missed sentence means "recognise"', marked.find((m) => m.entry_id === two).level, 1);
+
+  q = await next();
+  eq('then the missed words come back as retests', q.retest, true);
+  eq('  starting with the first', q.word.id, two);
+  eq('  asking about the missed point in another way', q.item.type, 'pattern_mc');
+  a = await reply(q, { choice: rightChoice(q) });
+  ok('  a right retest is practice', a.retest && a.verdict === 'right', JSON.stringify(a));
+  eq('  and does not move the level', stage(two), 1);
+
+  q = await next();
+  eq('the next missed word', q.word.id, three);
+  a = await reply(q, { choice: wrongChoice(q) });
+  eq('a missed retest shows the answer', a.correct, 'ok sentence');
+  eq('  and allows one more try', a.triesLeft, MAX_RETESTS - 1);
+  q = await next();
+  eq('which comes straight back', q.word.id, three);
+  eq('  as the question first missed, all others used', q.item.type, 'fix_word');
+  eq('  and is right', (await reply(q, { text: 'on' })).verdict, 'right');
+
+  q = await next();
+  eq('a missed check is retested', q.word.id, four);
+  await reply(q, { choice: wrongChoice(q) });
+  q = await next();
+  a = await reply(q, { skipped: true });
+  eq('two retests at most', a.triesLeft, 0);
+  eq('then the day is done', (await next()).done, true);
+  eq('retests never move the level', stage(four), 0);
+  const undone = await call(env, 'POST', '/api/check/undo', { entry_id: four });
+  eq('a retest cannot be undone', undone.status, 409);
+
+  const view = await overview(env, user, { now: at(0) });
+  eq('nothing is left to retest', view.retestLeft, 0);
+  eq('the levels are counted', JSON.stringify(view.stages), JSON.stringify({ new: 2, recognise: 2, canUse: 0, secure: 1 }));
+  const card = view.words.find((w) => w.id === two);
+  const point = card.checklist.find((c) => c.key === 'pattern:p');
+  eq('the missed point shows as missed', point.state, 'missed');
+  eq('  and as practised today', point.practised, true);
+  eq('the card links to Oxford', card.url, `https://www.oxfordlearnersdictionaries.com/w/${two}`);
+  eq('IELTS accuracy counts first tries only', Object.values(view.features).reduce((n, f) => n + f.n, 0), 7);
+
+  markOk = () => true;
+  const day = (n) => ({ next: () => nextQuestion(env, user, { now: at(n) }),
+                        reply: (q, body) => answer(env, user, { entry_id: q.word.id, ...body }, { now: at(n) }) });
+  let d = day(1);
+  q = await d.next();
+  eq('the next day starts with the same word', q.word.id, two);
+  await d.reply(q, { choice: rightChoice(q) });
+  q = await d.next();
+  await d.reply(q, { text: 'Good.' });
+  const day1 = (await markPending(env, user, { now: at(1) })).find((m) => m.entry_id === two);
+  eq('using it on a later day means "can use"', day1.level, 2);
+  eq('  day 1 of 3', day1.passes, 1);
+  d = day(2);
+  q = await d.next();
+  a = await d.reply(q, { choice: wrongChoice(q) });
+  eq('a miss on a later day drops one step', a.level, 1);
+}
+
+console.log('== a miss on a point that left the checklist ==');
+{
+  const env = makeEnv(2);
+  let q = (await call(env, 'GET', '/api/check/next')).body;
+  await call(env, 'POST', '/api/check/answer', { entry_id: q.word.id, choice: wrongChoice(q) });
+  env.DB._raw.prepare('UPDATE word_profile SET points = ? WHERE entry_id = ?')
+    .run(JSON.stringify([{ key: 'pattern:p', kind: 'pattern', pattern: 'p', def: 'd', examples: [] }]), q.word.id);
+  eq('is not retested', (await call(env, 'GET', '/api/check')).body.retestLeft, 0);
+  eq('  and the day is done', (await call(env, 'GET', '/api/check/next')).body.done, true);
+}
+
+console.log('== reporting a retest ==');
+{
+  const env = makeEnv(2);
+  const user = { id: 1, email: 'me@x.com' };
+  let q = (await call(env, 'GET', '/api/check/next')).body;
+  await call(env, 'POST', '/api/check/answer', { entry_id: q.word.id, choice: wrongChoice(q) });
+  q = (await call(env, 'GET', '/api/check/next')).body;
+  eq('the retest is served', q.retest, true);
+  eq('it can be reported', (await call(env, 'POST', '/api/check/report', { item_id: q.item.id })).status, 200);
+  eq('  and the miss it tested no longer asks for one', (await call(env, 'GET', '/api/check')).body.retestLeft, 0);
 }
 
 console.log('== preparing a word with no questions ==');

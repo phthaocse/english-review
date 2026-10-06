@@ -1,5 +1,6 @@
 // The daily check on the word bank: ten words in play, two short questions per
-// word per day, stopping at a missed first question. Keys never leave the Worker.
+// word per day, stopping at a missed first question, then a retest of what was
+// missed. Keys never leave the Worker.
 
 import { askJson, GeminiError } from './gemini.js';
 import { CHECKLIST_SIZE } from './profile.js';
@@ -9,6 +10,10 @@ import { today } from './daily.js';
 export const SET_SIZE = 10;
 export const REPLACEMENTS_PER_DAY = 10;
 export const RELEARN_PASSES = 3;
+export const MAX_RETESTS = 2;
+// A word's level: what the day's first try showed it can do. Retests never move it.
+export const LEVEL = { NEW: 0, RECOGNISE: 1, CAN_USE: 2, SECURE: 3 };
+const OXFORD_SITE = 'https://www.oxfordlearnersdictionaries.com';
 const COLLECTION = 'core-1000';
 const SELF_MARK_LEVELS = new Set(['a1', 'a2']);
 const CHECK_TYPES = ['meaning_mc', 'pattern_mc'];
@@ -45,7 +50,7 @@ export function permutation(n, rand = Math.random) {
  */
 export function pickItems(points, items, history) {
   const checklist = points.slice(0, CHECKLIST_SIZE).map((p) => p.key);
-  const passed = new Set(history.filter((h) => h.verdict === 'right').map((h) => h.point_key));
+  const passed = new Set(history.filter((h) => h.verdict === 'right' && !h.retest).map((h) => h.point_key));
   const lastSeen = new Map();
   const seenItems = new Map();
   for (const h of history) {
@@ -70,6 +75,20 @@ export function pickItems(points, items, history) {
   return { q1, q2 };
 }
 
+/** A retest asks about the missed point again, in a version not shown today if there is one. */
+export function pickRetest(items, missed, shownIds) {
+  const family = CHECK_TYPES.includes(missed.type) ? CHECK_TYPES : PRODUCE_TYPES;
+  const unseen = items.filter((i) => i.point_key === missed.point_key && !shownIds.has(i.id));
+  return unseen.find((i) => family.includes(i.type)) || unseen[0] || missed;
+}
+
+/** The level a day's first try leaves a word at: up on a pass, down one step on a miss. */
+export function levelAfter(level, occ) {
+  if (occ.r1 === 'right' && occ.r2 === 'right') return LEVEL.CAN_USE;
+  if (occ.r1 === 'right') return LEVEL.RECOGNISE;
+  return Math.max(LEVEL.NEW, level - 1);
+}
+
 // ------------------------------------------------------------------ store --
 
 const parse = (s, fallback) => { try { return s ? JSON.parse(s) : fallback; } catch { return fallback; } };
@@ -77,12 +96,12 @@ const parse = (s, fallback) => { try { return s ? JSON.parse(s) : fallback; } ca
 async function activeWords(db, userId) {
   const { results } = await db.prepare(`
     SELECT w.entry_id AS id, w.status, w.how, w.dealt_on, w.tested_on, w.occasions, w.passes, w.today,
-           e.term, e.pos, e.level, p.points, p.profile, s.position,
+           w.level AS stage, e.term, e.pos, e.level, e.path, p.points, p.profile, s.position,
            EXISTS (SELECT 1 FROM quiz_item q WHERE q.entry_id = w.entry_id AND q.status = 'verified') AS ready
     FROM word_state w JOIN oxford_entry e ON e.id = w.entry_id
     JOIN word_profile p ON p.entry_id = w.entry_id JOIN study_word s ON s.entry_id = w.entry_id
     WHERE w.user_id = ? AND w.status = 'active' ORDER BY s.position`).bind(userId).all();
-  return results.map((r) => ({ ...r, ready: !!r.ready, today: parse(r.today, null),
+  return results.map((r) => ({ ...r, user_id: userId, ready: !!r.ready, today: parse(r.today, null),
                                points: parse(r.points, []), profile: parse(r.profile, null) }));
 }
 
@@ -114,7 +133,7 @@ async function itemsFor(db, entryId) {
 
 async function historyFor(db, userId, entryId) {
   const { results } = await db.prepare(
-    "SELECT item_id, point_key, verdict, at FROM answer_log WHERE user_id = ? AND entry_id = ? AND verdict != 'reported'",
+    "SELECT item_id, point_key, verdict, retest, at FROM answer_log WHERE user_id = ? AND entry_id = ? AND verdict != 'reported'",
   ).bind(userId, entryId).all();
   return results;
 }
@@ -139,14 +158,67 @@ async function occasionFor(db, userId, word, day) {
   return occ;
 }
 
+// The wrong word of a fix_word is shown, so the question tests the right word, not proofreading.
 const shown = (item, perm) => ({
   id: item.id, type: item.type, stem: item.body.stem || null, instruction: item.body.instruction || null,
   options: item.body.options ? perm.map((i) => item.body.options[i]) : null,
+  wrong: item.type === 'fix_word' ? item.answer.wrong_word || null : null,
 });
 
 const firstSight = (word) => word.occasions === 0 && !word.tested_on;
+const oxfordUrl = (word) => (word.path ? `${OXFORD_SITE}${word.path}` : null);
+const publicWord = (w) => ({ id: w.id, term: w.term, pos: w.pos, level: w.level, url: oxfordUrl(w) });
 
-/** The next question to answer today, or `done`. Words still waiting for questions are counted. */
+/** The question of a closed day that was missed: the check, or else the production. */
+function missedRef(occ) {
+  if (occ.r1 === 'wrong' || occ.r1 === 'skipped') return occ.q1;
+  return occ.r2 === 'wrong' ? occ.q2 : null;
+}
+
+/** A word missed today that still has a retest to give. */
+function retestable(word, day) {
+  const occ = word.today;
+  if (occ?.day !== day || !occ.done || !missedRef(occ)) return false;
+  const r = occ.retest || {};
+  return !['passed', 'pending', 'void'].includes(r.state) && (r.tries || 0) < MAX_RETESTS;
+}
+
+/** The retest on screen, picked once and kept until it is answered. */
+async function retestFor(db, word) {
+  const occ = word.today;
+  if (occ.retest?.state === 'open' && occ.retest.item_id) return occ.retest;
+  const items = await itemsFor(db, word.id);
+  const missed = items.find((i) => i.id === missedRef(occ).item_id);
+  if (!missed) return null;
+  const shownIds = new Set([occ.q1?.item_id, occ.q2?.item_id, ...(occ.retest?.shown || [])]);
+  const pick = pickRetest(items, missed, shownIds);
+  occ.retest = { tries: 0, shown: [], ...occ.retest, state: 'open', item_id: pick.id,
+                 perm: pick.body.options ? permutation(pick.body.options.length) : null };
+  occ.retest.shown = [...occ.retest.shown, pick.id];
+  await saveToday(db, word.user_id, word.id, occ);
+  return occ.retest;
+}
+
+/** A miss on a point no longer on the word's checklist, or on a question since removed, is not retested. */
+async function dropStaleRetests(db, words, day) {
+  for (const word of words.filter((w) => retestable(w, day))) {
+    const checklist = new Set(word.points.slice(0, CHECKLIST_SIZE).map((p) => p.key));
+    const missed = (await itemsFor(db, word.id)).find((i) => i.id === missedRef(word.today).item_id);
+    if (missed && checklist.has(missed.point_key)) continue;
+    word.today.retest = { ...word.today.retest, state: 'void' };
+    await saveToday(db, word.user_id, word.id, word.today);
+  }
+}
+
+async function pendingCount(db, userId, day, retest) {
+  return db.prepare("SELECT COUNT(*) AS n FROM answer_log WHERE user_id = ? AND day = ? AND verdict = 'pending' AND retest = ?")
+    .bind(userId, day, retest ? 1 : 0).first('n');
+}
+
+/**
+ * The next question to answer today, or `done`. First tries come first; once they
+ * are all answered and marked, the words that were missed come back as retests.
+ */
 export async function nextQuestion(env, user, { now = new Date() } = {}) {
   const day = today(now);
   await refill(env.DB, user.id, day);
@@ -164,13 +236,30 @@ export async function nextQuestion(env, user, { now = new Date() } = {}) {
     const item = (await itemsFor(env.DB, word.id)).find((i) => i.id === ref.item_id);
     if (!item) continue;
     return {
-      word: { id: word.id, term: word.term, pos: word.pos, level: word.level },
-      slot, item: shown(item, ref.perm || []),
+      word: publicWord(word), slot, retest: false, item: shown(item, ref.perm || []),
       offers: { selfKnown: slot === 1 && firstSight(word) && SELF_MARK_LEVELS.has(word.level) },
       progress: { done, total: words.length - waiting, waiting },
     };
   }
-  return { done: true, progress: { done, total: words.length - waiting, waiting } };
+  const finished = { done: true, progress: { done, total: words.length - waiting, waiting } };
+  // Retests wait for the marking, which decides which sentences were missed.
+  if (await pendingCount(env.DB, user.id, day, false)) return finished;
+
+  await dropStaleRetests(env.DB, words, day);
+  const missed = words.filter((w) => w.today?.day === day && w.today.done && missedRef(w.today)
+                                     && w.today.retest?.state !== 'void');
+  const open = missed.filter((w) => retestable(w, day));
+  for (const word of open) {
+    const ref = await retestFor(env.DB, word);
+    const item = ref && (await itemsFor(env.DB, word.id)).find((i) => i.id === ref.item_id);
+    if (!item) continue;
+    return {
+      word: publicWord(word), slot: word.today.q1 === missedRef(word.today) ? 1 : 2, retest: true,
+      item: shown(item, ref.perm || []), offers: { selfKnown: false },
+      progress: { done: missed.length - open.length, total: missed.length, waiting: 0 },
+    };
+  }
+  return finished;
 }
 
 // ---------------------------------------------------------------- marking --
@@ -201,10 +290,10 @@ export function fixMatches(typed, fixes) {
 }
 
 async function log(db, entry) {
-  await db.prepare(`INSERT INTO answer_log (user_id, entry_id, item_id, point_key, feature, day, slot, answer, verdict, ms)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
+  await db.prepare(`INSERT INTO answer_log (user_id, entry_id, item_id, point_key, feature, day, slot, answer, verdict, ms, retest)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
     .bind(entry.userId, entry.entryId, entry.itemId, entry.pointKey, entry.feature, entry.day, entry.slot,
-          entry.answer ?? null, entry.verdict, entry.ms ?? null).run();
+          entry.answer ?? null, entry.verdict, entry.ms ?? null, entry.retest ? 1 : 0).run();
 }
 
 const pointKind = (word, key) => word.points.find((p) => p.key === key)?.kind || 'sense';
@@ -216,12 +305,30 @@ async function settle(db, userId, word, occ, day) {
   const passes = word.passes + (passed ? 1 : 0);
   const knewIt = passed && word.occasions === 0;
   const mastered = knewIt || passes >= RELEARN_PASSES;
+  const level = mastered ? LEVEL.SECURE : levelAfter(word.stage, occ);
   occ.done = true;
-  await db.prepare(`UPDATE word_state SET tested_on = ?, occasions = ?, passes = ?, today = ?,
+  occ.levelBefore = word.stage;
+  await db.prepare(`UPDATE word_state SET tested_on = ?, occasions = ?, passes = ?, today = ?, level = ?,
                       status = ?, how = ?, mastered_on = ? WHERE user_id = ? AND entry_id = ?`)
-    .bind(day, occasions, passes, JSON.stringify(occ), mastered ? 'mastered' : 'active',
+    .bind(day, occasions, passes, JSON.stringify(occ), level, mastered ? 'mastered' : 'active',
           mastered ? (knewIt ? 'known' : 'learnt') : null, mastered ? day : null, userId, word.id).run();
-  return { passed, mastered, how: mastered ? (knewIt ? 'known' : 'learnt') : null, passes, passesNeeded: RELEARN_PASSES };
+  return { passed, mastered, how: mastered ? (knewIt ? 'known' : 'learnt') : null, passes, passesNeeded: RELEARN_PASSES,
+           level, levelBefore: word.stage };
+}
+
+/** Mark one answer to a question, the same way for a first try and a retest. */
+function judge(item, ref, body) {
+  if (CHECK_TYPES.includes(item.type)) {
+    const chosen = ref.perm?.[Number(body.choice)];
+    return { verdict: chosen === item.answer.index ? 'right' : 'wrong', answer: item.body.options[chosen] ?? null };
+  }
+  if (item.type === 'fix_word') {
+    const typed = String(body.text ?? '').slice(0, 60);
+    return { verdict: fixMatches(typed, item.answer.fixes) ? 'right' : 'pending', answer: typed };
+  }
+  const typed = String(body.text ?? '').trim().slice(0, 400);
+  if (!typed) throw new GeminiError('write an answer first', 400);
+  return { verdict: 'pending', answer: typed };
 }
 
 /** What the page shows after a miss: the right answer, and Oxford's meaning to learn from. */
@@ -243,7 +350,8 @@ function reveal(item, word) {
 export async function answer(env, user, body, { now = new Date() } = {}) {
   const day = today(now);
   const word = (await activeWords(env.DB, user.id)).find((w) => w.id === Number(body?.entry_id));
-  if (!word || word.today?.day !== day || word.today.done) throw new GeminiError('that word has no open question today', 409);
+  if (!word || word.today?.day !== day) throw new GeminiError('that word has no open question today', 409);
+  if (word.today.done) return answerRetest(env, user, word, body, day);
   const occ = word.today;
   const slot = !occ.r1 ? 1 : 2;
   const ref = slot === 1 ? occ.q1 : occ.q2;
@@ -258,12 +366,12 @@ export async function answer(env, user, body, { now = new Date() } = {}) {
   }
   if (body.selfKnown) {
     await log(env.DB, { ...base, verdict: 'self' });
-    occ.r1 = 'self';
-    occ.done = true;
+    Object.assign(occ, { r1: 'self', done: true, levelBefore: word.stage });
     await env.DB.prepare(`UPDATE word_state SET status = 'mastered', how = 'self', mastered_on = ?, tested_on = ?,
-                            today = ? WHERE user_id = ? AND entry_id = ?`)
-      .bind(day, day, JSON.stringify(occ), user.id, word.id).run();
-    return { verdict: 'self', done: true, mastered: true, how: 'self', undoable: true };
+                            level = ?, today = ? WHERE user_id = ? AND entry_id = ?`)
+      .bind(day, day, LEVEL.SECURE, JSON.stringify(occ), user.id, word.id).run();
+    return { verdict: 'self', done: true, mastered: true, how: 'self', undoable: true,
+             level: LEVEL.SECURE, levelBefore: word.stage };
   }
 
   if (body.skipped) {
@@ -273,21 +381,8 @@ export async function answer(env, user, body, { now = new Date() } = {}) {
     return { verdict: 'skipped', done: true, ...result, ...reveal(item, word), undoable: slot === 1 };
   }
 
-  let verdict;
-  if (CHECK_TYPES.includes(item.type)) {
-    const chosen = ref.perm?.[Number(body.choice)];
-    verdict = chosen === item.answer.index ? 'right' : 'wrong';
-    await log(env.DB, { ...base, answer: item.body.options[chosen] ?? null, verdict });
-  } else if (item.type === 'fix_word') {
-    const typed = String(body.text ?? '').slice(0, 60);
-    verdict = fixMatches(typed, item.answer.fixes) ? 'right' : 'pending';
-    await log(env.DB, { ...base, answer: typed, verdict });
-  } else {
-    const typed = String(body.text ?? '').trim().slice(0, 400);
-    if (!typed) throw new GeminiError('write an answer first', 400);
-    verdict = 'pending';
-    await log(env.DB, { ...base, answer: typed, verdict });
-  }
+  const { verdict, answer: given } = judge(item, ref, body);
+  await log(env.DB, { ...base, answer: given, verdict });
 
   if (slot === 1) occ.r1 = verdict; else occ.r2 = verdict;
   const finished = verdict === 'wrong' || slot === 2 || !occ.q2;
@@ -298,6 +393,25 @@ export async function answer(env, user, body, { now = new Date() } = {}) {
   }
   await saveToday(env.DB, user.id, word.id, occ);
   return { verdict, done: finished };
+}
+
+/** A retest answer: marked like a first try, but it only says whether today's miss is fixed. */
+async function answerRetest(env, user, word, body, day) {
+  const occ = word.today;
+  const r = occ.retest;
+  if (!retestable(word, day) || r?.state !== 'open') throw new GeminiError('that word has no open question today', 409);
+  const item = (await itemsFor(env.DB, word.id)).find((i) => i.id === r.item_id);
+  if (!item) throw new GeminiError('that question is no longer in the bank', 409);
+  const { verdict, answer: given } = body.skipped ? { verdict: 'skipped', answer: null } : judge(item, r, body);
+  await log(env.DB, { userId: user.id, entryId: word.id, itemId: item.id, pointKey: item.point_key, day,
+                      slot: occ.q1 === missedRef(occ) ? 1 : 2, retest: true, answer: given, verdict,
+                      feature: featureOf(item.type, pointKind(word, item.point_key)), ms: Number(body.ms) || null });
+  r.tries += 1;
+  r.state = verdict === 'right' ? 'passed' : verdict === 'pending' ? 'pending' : 'failed';
+  await saveToday(env.DB, user.id, word.id, occ);
+  const missedIt = verdict === 'wrong' || verdict === 'skipped';
+  return { verdict, retest: true, done: true, triesLeft: r.state === 'failed' ? MAX_RETESTS - r.tries : 0,
+           ...(missedIt ? reveal(item, word) : {}) };
 }
 
 const MARK_SCHEMA = {
@@ -330,7 +444,8 @@ and the learner's answer. Judge only how the TARGET is handled, strictly but fai
   say in that situation. Small mistakes elsewhere in the sentence do not matter.
 - rewrite: ok if the rewrite keeps the meaning of the original AND uses the required
   pattern correctly. Other small slips do not matter.
-- fix_word: ok if the learner's replacement word makes the sentence correct and natural.
+- fix_word: ok if the learner's word, put in place of the word in "replaces", makes the
+  sentence correct and natural.
 
 feedback: one or two short sentences in simple English to the learner ("You..."):
 what was wrong, or what was good. corrected: the learner's answer with the smallest
@@ -343,7 +458,7 @@ Answers (JSON): ${JSON.stringify(entries)}`;
 export async function markPending(env, user, { now = new Date(), allowModelCall = async () => true } = {}) {
   const day = today(now);
   const { results: pending } = await env.DB.prepare(`
-    SELECT l.id, l.entry_id, l.item_id, l.answer, q.type, q.point_key, q.body, q.answer AS key, e.term
+    SELECT l.id, l.entry_id, l.item_id, l.answer, l.retest, q.type, q.point_key, q.body, q.answer AS key, e.term
     FROM answer_log l JOIN quiz_item q ON q.id = l.item_id JOIN oxford_entry e ON e.id = l.entry_id
     WHERE l.user_id = ? AND l.day = ? AND l.verdict = 'pending' ORDER BY l.id`).bind(user.id, day).all();
   const words = new Map((await activeWords(env.DB, user.id)).map((w) => [w.id, w]));
@@ -356,9 +471,11 @@ export async function markPending(env, user, { now = new Date(), allowModelCall 
       const word = words.get(r.entry_id);
       const point = word?.points.find((p) => p.key === r.point_key);
       const body = parse(r.body, {});
+      const key = parse(r.key, {});
       return { ref, type: r.type, target: r.term, tests: point?.pattern || point?.collocation || point?.def,
                task: [body.stem, body.instruction].filter(Boolean).join(' '),
-               model_answer: parse(r.key, {}).model_answers?.[0] || parse(r.key, {}).fixes?.[0] || null,
+               ...(r.type === 'fix_word' ? { replaces: key.wrong_word || null } : {}),
+               model_answer: key.model_answers?.[0] || key.fixes?.[0] || null,
                learner_answer: r.answer };
     })), MARK_SCHEMA, env);
     const byRef = new Map((data.items || []).map((v) => [v.ref, v]));
@@ -369,6 +486,15 @@ export async function markPending(env, user, { now = new Date(), allowModelCall 
       await env.DB.prepare('UPDATE answer_log SET verdict = ?, feedback = ?, corrected = ? WHERE id = ?')
         .bind(verdict, v.feedback || null, v.corrected || null, r.id).run();
       const word = words.get(r.entry_id);
+      if (r.retest) {
+        if (word?.today?.day === day && word.today.retest) {
+          word.today.retest.state = verdict === 'right' ? 'passed' : 'failed';
+          await saveToday(env.DB, user.id, word.id, word.today);
+        }
+        outcomes.push({ entry_id: r.entry_id, term: r.term, type: r.type, answer: r.answer, verdict, retest: true,
+                        feedback: v.feedback, corrected: v.corrected });
+        continue;
+      }
       if (!word || word.today?.day !== day) continue;
       const occ = word.today;
       if (occ.q1?.item_id === r.item_id) occ.r1 = verdict; else occ.r2 = verdict;
@@ -389,21 +515,24 @@ export async function markPending(env, user, { now = new Date(), allowModelCall 
 export async function undo(env, user, body, { now = new Date() } = {}) {
   const day = today(now);
   const entryId = Number(body?.entry_id);
-  const last = await env.DB.prepare(`SELECT id, verdict FROM answer_log WHERE user_id = ? AND entry_id = ? AND day = ?
+  const last = await env.DB.prepare(`SELECT id, verdict, retest FROM answer_log WHERE user_id = ? AND entry_id = ? AND day = ?
                                       ORDER BY id DESC LIMIT 1`).bind(user.id, entryId, day).first();
-  if (!last || !['skipped', 'self'].includes(last.verdict)) {
+  if (!last || last.retest || !['skipped', 'self'].includes(last.verdict)) {
     throw new GeminiError('only "I don\'t know it" and "I know this well" can be taken back', 409);
   }
   const row = await env.DB.prepare('SELECT occasions, passes, today FROM word_state WHERE user_id = ? AND entry_id = ?')
     .bind(user.id, entryId).first();
   const occ = parse(row.today, {});
+  const level = occ.levelBefore ?? LEVEL.NEW;
   Object.assign(occ, { r1: null, r2: null, done: false });
+  delete occ.retest;
+  delete occ.levelBefore;
   const counted = last.verdict === 'skipped' ? 1 : 0;
   await env.DB.prepare('DELETE FROM answer_log WHERE id = ?').bind(last.id).run();
-  await env.DB.prepare(`UPDATE word_state SET status = 'active', how = NULL, mastered_on = NULL, today = ?,
+  await env.DB.prepare(`UPDATE word_state SET status = 'active', how = NULL, mastered_on = NULL, today = ?, level = ?,
                           occasions = ?, tested_on = CASE WHEN ? = 1 THEN NULL ELSE tested_on END
                         WHERE user_id = ? AND entry_id = ?`)
-    .bind(JSON.stringify(occ), row.occasions - counted, row.occasions - counted === 0 ? 1 : 0, user.id, entryId).run();
+    .bind(JSON.stringify(occ), level, row.occasions - counted, row.occasions - counted === 0 ? 1 : 0, user.id, entryId).run();
   return { undone: true };
 }
 
@@ -418,7 +547,7 @@ export async function report(env, user, body, { now = new Date() } = {}) {
     .bind(user.id, item.entry_id).first();
   const occ = parse(row?.today, null);
   // The bank is shared, so only a question this user was given today can be pulled from it.
-  if (occ?.day !== day || (occ.q1?.item_id !== itemId && occ.q2?.item_id !== itemId)) {
+  if (occ?.day !== day || ![occ.q1?.item_id, occ.q2?.item_id, occ.retest?.item_id].includes(itemId)) {
     throw new GeminiError('only a question you were given today can be reported', 409);
   }
   await env.DB.prepare("UPDATE quiz_item SET status = 'rejected', verify_note = ? WHERE id = ?")
@@ -429,8 +558,12 @@ export async function report(env, user, body, { now = new Date() } = {}) {
     // The slot is picked again with another question; what was answered before it stands.
     if (occ.q1?.item_id === itemId) Object.assign(occ, { q1: null, r1: null, q2: null, r2: null });
     if (occ.q2?.item_id === itemId) Object.assign(occ, { q2: null, r2: null });
-    await saveToday(env.DB, user.id, item.entry_id, occ);
+  } else if (missedRef(occ)?.item_id === itemId) {
+    occ.retest = { ...occ.retest, state: 'void' };      // the miss itself no longer counts
+  } else if (occ.retest?.item_id === itemId) {
+    occ.retest.item_id = null;
   }
+  await saveToday(env.DB, user.id, item.entry_id, occ);
   return { reported: true };
 }
 
@@ -443,32 +576,39 @@ export async function prepare(env, user) {
 
 // ---------------------------------------------------------------- progress --
 
-/** The overview: words in play with their checklist ticks, totals, and IELTS-feature accuracy. */
+/** The overview: words in play with their level and what each has shown, totals, and IELTS-feature accuracy. */
 export async function overview(env, user, { now = new Date() } = {}) {
   const day = today(now);
   await refill(env.DB, user.id, day);
   const words = await activeWords(env.DB, user.id);
+  await dropStaleRetests(env.DB, words, day);
   const { results: logs } = await env.DB.prepare(`
-    SELECT entry_id, point_key, verdict, feedback, corrected, answer, item_id, day FROM answer_log
-    WHERE user_id = ? AND verdict IN ('right', 'wrong') AND entry_id IN (SELECT entry_id FROM word_state
+    SELECT entry_id, point_key, verdict, retest, feedback, corrected, answer, item_id, day FROM answer_log
+    WHERE user_id = ? AND verdict IN ('right', 'wrong', 'skipped') AND entry_id IN (SELECT entry_id FROM word_state
           WHERE user_id = ? AND status = 'active')`).bind(user.id, user.id).all();
 
   const cards = words.map((w) => {
     const mine = logs.filter((l) => l.entry_id === w.id);
+    const cold = mine.filter((l) => !l.retest);
     const testedToday = w.today?.day === day && w.today.done;
-    const checklist = w.points.slice(0, CHECKLIST_SIZE).map((p) => ({
-      key: p.key, kind: p.kind, label: p.pattern || p.collocation || p.phrase || p.def,
-      passed: mine.some((l) => l.point_key === p.key && l.verdict === 'right'),
-    }));
-    const todays = mine.filter((l) => l.day === day);
+    const checklist = w.points.slice(0, CHECKLIST_SIZE).map((p) => {
+      const tries = cold.filter((l) => l.point_key === p.key);
+      return {
+        key: p.key, kind: p.kind, label: p.pattern || p.collocation || p.phrase || p.def,
+        state: tries.some((l) => l.verdict === 'right') ? 'right' : tries.length ? 'missed' : null,
+        practised: mine.some((l) => l.retest && l.day === day && l.point_key === p.key && l.verdict === 'right'),
+      };
+    });
     // Untested words stay hidden, so the check meets them cold.
     return {
-      id: w.id, level: w.level, ready: w.ready, testedToday, passes: w.passes, passesNeeded: RELEARN_PASSES,
+      id: w.id, level: w.level, ready: w.ready, testedToday, stage: w.stage, passes: w.passes,
+      passesNeeded: RELEARN_PASSES, retest: retestable(w, day),
       ...(w.tested_on || testedToday ? {
-        term: w.term, pos: w.pos, ipa: w.profile?.ipa || null, checklist,
+        term: w.term, pos: w.pos, ipa: w.profile?.ipa || null, url: oxfordUrl(w), checklist,
         senses: (w.profile?.senses || []).slice(0, 3).map((s) => ({ def: s.def, cefr: s.cefr,
           example: s.examples?.[0]?.text || null })),
-        today: todays.map((l) => ({ verdict: l.verdict, answer: l.answer, feedback: l.feedback, corrected: l.corrected })),
+        today: mine.filter((l) => l.day === day && l.feedback).map((l) => ({ verdict: l.verdict, retest: !!l.retest,
+          answer: l.answer, feedback: l.feedback, corrected: l.corrected })),
       } : {}),
     };
   });
@@ -484,14 +624,18 @@ export async function overview(env, user, { now = new Date() } = {}) {
   const since = new Date(now.getTime() - FEATURE_WINDOW_DAYS * 86400000).toISOString().slice(0, 10);
   const { results: features } = await env.DB.prepare(`
     SELECT feature, SUM(verdict = 'right') AS right, COUNT(*) AS n FROM answer_log
-    WHERE user_id = ? AND day >= ? AND verdict IN ('right', 'wrong') GROUP BY feature`).bind(user.id, since).all();
+    WHERE user_id = ? AND day >= ? AND retest = 0 AND verdict IN ('right', 'wrong') GROUP BY feature`).bind(user.id, since).all();
   const pendingMarks = await env.DB.prepare(
     "SELECT COUNT(*) AS n FROM answer_log WHERE user_id = ? AND day = ? AND verdict = 'pending'").bind(user.id, day).first('n');
   const awaitingMark = (w) => w.today?.day === day && w.today.r2 === 'pending';
   const left = words.filter((w) => w.ready && !(w.today?.day === day && w.today.done) && !awaitingMark(w)).length;
+  const stageCount = (stage) => words.filter((w) => w.stage === stage).length;
 
   return {
     day, words: cards, left, waiting: words.filter((w) => !w.ready).length, pendingMarks,
+    retestLeft: words.filter((w) => retestable(w, day)).length,
+    stages: { new: stageCount(LEVEL.NEW), recognise: stageCount(LEVEL.RECOGNISE), canUse: stageCount(LEVEL.CAN_USE),
+              secure: totals?.mastered || 0 },
     totals: { active: totals?.active || 0, mastered: totals?.mastered || 0, known: totals?.known || 0,
               learnt: totals?.learnt || 0, self: totals?.self || 0, masteredToday: totals?.mastered_today || 0,
               of: await env.DB.prepare('SELECT COUNT(*) AS n FROM study_word WHERE collection = ?').bind(COLLECTION).first('n') },

@@ -100,8 +100,12 @@ export function pointsFrom(profile) {
     seen.add(point.key);
     points.push({ rank, ...point });
   };
+  // A sense Oxford gives no level is usually a rare one ("info" → "infopack"), so it is
+  // left out unless the word has no levelled sense at all.
+  const levelled = profile.senses.some((s) => s.cefr);
   for (const s of profile.senses) {
     const core = s.n === 1;
+    if (!core && !s.cefr && levelled) continue;
     add(core ? 0 : s.cefr ? 3 : 5, {
       key: `sense:${s.n}`, kind: 'sense', sense: s.n, cefr: s.cefr, def: s.def,
       ...(s.phrase ? { phrase: s.phrase } : {}),
