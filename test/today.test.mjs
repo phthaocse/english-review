@@ -1,5 +1,3 @@
-// Drives the Today screen in a real browser with the API stubbed: hidden items,
-// the two steps, the draft surviving a reload, and the marking round trip.
 import { launch } from './cdp.mjs';
 
 const BASE = process.env.BASE || 'http://localhost:8731';
@@ -14,197 +12,282 @@ const fakeToken = (email, expSec) => {
 };
 const token = fakeToken('thaop@ghn.vn', Math.floor(Date.now() / 1000) + 7200);
 
-const card = (id, list, term, extra = {}) => ({
-  id, list, term, pos: list === 'word' ? 'verb' : null, level: 'b2',
-  meaning: `the meaning of item ${id}`, vi: 'nghĩa', ipa: '/x/', examples: [`They ${term} it.`],
-  url: `https://www.oxfordlearnersdictionaries.com/definition/english/${term}`,
-  situation: `Your team asks about ${id}. Answer them.`, sample: `A sample with ${term}.`,
-  context: { before: 'They ', target: term, after: ' it.' },
-  testedToday: false, attempts: 0, addedOn: '2026-10-01', lastResult: null, ...extra,
-});
-const state = {
-  day: '2026-10-01',
-  lists: { word: [card(1, 'word', 'abolish')], phrase: [card(2, 'phrase', 'a bit', { level: 'a2' })] },
-  stats: { word: { mastered: 3, masteredToday: 0, pool: 5975 }, phrase: { mastered: 1, masteredToday: 0, pool: 750 } },
-};
-
+// A small stand-in for the Worker: three words, each walked through q1 → q2 → done.
 await B.addInitScript(`
   sessionStorage.setItem('knowledge/idtoken', ${JSON.stringify(token)});
   window.__calls = [];
+  const W = [
+    { id: 1, term: 'convince', pos: 'verb', level: 'b2', ready: true, stage: 'q1',
+      q1: { id: 11, type: 'meaning_mc', stem: 'She convinced me to stay.',
+            options: ['make someone agree by giving reasons', 'shout at someone', 'pay someone'] },
+      q2: { id: 12, type: 'sentence', stem: 'Your friend wants to quit her course.', instruction: 'Write one sentence with convince.' } },
+    { id: 2, term: 'cheap', pos: 'adjective', level: 'a2', ready: true, stage: 'q1',
+      q1: { id: 21, type: 'pattern_mc', options: ['It is cheap to buy.', 'It is cheap for buy.', 'It is cheap buying.'] },
+      q2: { id: 22, type: 'fix_word', stem: 'The bus is cheap than the train.' } },
+    { id: 3, term: 'aim', pos: 'verb', level: 'b1', ready: false, stage: 'q1',
+      q1: { id: 31, type: 'meaning_mc', stem: 'We aim to finish by May.', options: ['plan', 'forget', 'refuse'] },
+      q2: null },
+  ];
+  const S = { pending: 0, tested: new Set(), done: 0 };
+  const card = (w) => ({ id: w.id, level: w.level, ready: w.ready, passes: 0, passesNeeded: 3,
+    ...(S.tested.has(w.id) ? { term: w.term, pos: w.pos, ipa: '/x/', senses: [{ def: 'the meaning of ' + w.term, cefr: w.level, example: 'An example.' }],
+      checklist: [{ key: 'sense:1', kind: 'sense', label: 'the meaning of ' + w.term, passed: false },
+                  { key: 'pattern:p', kind: 'pattern', label: w.term + ' somebody to do something', passed: false }],
+      today: w.feedback ? [{ verdict: 'wrong', answer: 'I convinced to her.', feedback: w.feedback, corrected: 'I convinced her.' }] : [] } : {}) });
+  const overview = () => ({
+    day: '2026-10-06', words: W.map(card), left: W.filter((w) => w.ready && w.stage !== 'done').length,
+    waiting: W.filter((w) => !w.ready).length, pendingMarks: S.pending,
+    totals: { active: 3, mastered: 4, known: 2, learnt: 1, self: 1, masteredToday: 0, of: 1000 },
+    byLevel: { a1: 3, b2: 1 }, features: { meaning: { right: 3, n: 4 } },
+    ielts: { state: 'due', everyDays: 3 },
+  });
+  const reveal = (w) => ({ correct: w.q1.options ? w.q1.options[0] : 'than', meaning: 'the meaning of ' + w.term,
+                           oxford: ['Oxford says ' + w.term + '.'] });
   const realFetch = window.fetch;
   window.fetch = async (url, init = {}) => {
     const href = String(url && url.url ? url.url : url);
     if (!href.includes('workers.dev')) return realFetch(url, init);
     const body = init.body ? JSON.parse(init.body) : null;
-    window.__calls.push({ href, method: init.method || 'GET', body });
+    const path = new URL(href).pathname;
+    window.__calls.push({ path, method: init.method || 'GET', body });
     const reply = (obj, status = 200) =>
       new Response(JSON.stringify(obj), { status, headers: { 'Content-Type': 'application/json' } });
-    const state = ${JSON.stringify(state)};
-    if (localStorage.getItem('slow-scenes')) {
-      const bare = (c) => ({ ...c, situation: null, sample: null });
-      if (href.endsWith('/api/daily')) {
-        return reply({ ...state, scenesPending: 2,
-          lists: { word: state.lists.word.map(bare), phrase: state.lists.phrase.map(bare) } });
-      }
-      if (href.endsWith('/api/daily/scenes')) {
-        await new Promise((r) => setTimeout(r, 2500));
-        return reply({ cards: [...state.lists.word, ...state.lists.phrase], remaining: 0 });
-      }
+    const word = (id) => W.find((w) => w.id === Number(id));
+
+    if (path === '/api/check') return reply(overview());
+    if (path === '/api/check/prepare') {
+      if (localStorage.getItem('slow-prepare')) await new Promise((r) => setTimeout(r, 3000));
+      const w = W.find((x) => !x.ready);
+      if (w) w.ready = true;
+      return reply({ prepared: w ? { entry_id: w.id, verified: 4 } : null });
     }
-    if (href.endsWith('/api/daily')) return reply({ ...state, scenesPending: 0 });
-    if (href.endsWith('/api/daily/scenes')) return reply({ cards: [], remaining: 0 });
-    if (href.endsWith('/api/daily/grade')) {
-      if (window.__gradeFail) return reply({ error: 'the language model is busy right now' }, 503);
-      const word = { ...state.lists.word[0], testedToday: true,
-        lastResult: { explanation: 'to end', sentence: 'bad one',
-                      judgement: { feedback: 'Wrong object.', corrected: 'Good one.' } } };
-      return reply({
-        results: [
-          { id: 1, term: 'abolish', list: 'word', mastered: false, skipped: false, explanation: 'to end',
-            judgement: { understood: true, feedback: 'Wrong object.', corrected: 'Good one.' } },
-          { id: 2, term: 'a bit', list: 'phrase', mastered: false, skipped: true, judgement: null },
-        ],
-        state: { ...state, lists: { word: [word], phrase: [{ ...state.lists.phrase[0], testedToday: true }] } },
-      });
+    if (path === '/api/check/next') {
+      const ready = W.filter((w) => w.ready);
+      const w = ready.find((x) => x.stage !== 'done');
+      const progress = { done: ready.filter((x) => x.stage === 'done').length, total: ready.length, waiting: W.length - ready.length };
+      if (!w) return reply({ done: true, progress });
+      const slot = w.stage === 'q1' ? 1 : 2;
+      const item = slot === 1 ? w.q1 : w.q2;
+      return reply({ word: { id: w.id, term: w.term, pos: w.pos, level: w.level }, slot,
+        item: { stem: null, instruction: null, options: null, ...item },
+        offers: { selfKnown: slot === 1 && w.level === 'a2' && !S.tested.has(w.id) }, progress });
+    }
+    if (path === '/api/check/answer') {
+      const w = word(body.entry_id);
+      const close = () => { w.stage = 'done'; S.tested.add(w.id); };
+      if (body.selfKnown) { close(); return reply({ verdict: 'self', done: true, mastered: true, how: 'self', undoable: true }); }
+      if (body.skipped) {
+        const slot = w.stage === 'q1' ? 1 : 2;
+        close();
+        return reply({ verdict: 'skipped', done: true, passed: false, mastered: false, passes: 0, passesNeeded: 3,
+                       ...reveal(w), undoable: slot === 1 });
+      }
+      if (body.choice != null) {
+        if (body.choice === 0) {
+          if (w.q2) { w.stage = 'q2'; return reply({ verdict: 'right', done: false }); }
+          close(); return reply({ verdict: 'right', done: true, passed: true, mastered: true, how: 'known', passes: 1, passesNeeded: 3 });
+        }
+        close();
+        return reply({ verdict: 'wrong', done: true, passed: false, mastered: false, passes: 0, passesNeeded: 3, ...reveal(w) });
+      }
+      close();
+      S.pending++;
+      return reply({ verdict: 'pending', done: true });
+    }
+    if (path === '/api/check/undo') { word(body.entry_id).stage = 'q1'; S.tested.delete(Number(body.entry_id)); return reply({ undone: true }); }
+    if (path === '/api/check/report') {
+      const w = W.find((x) => x.q1.id === body.item_id);
+      w.q1 = { ...w.q1, id: w.q1.id + 100, stem: 'A better question.' };
+      return reply({ reported: true });
+    }
+    if (path === '/api/check/mark') {
+      if (window.__markFail) return reply({ error: 'the language model is busy right now' }, 503);
+      S.pending = 0;
+      word(1).feedback = 'You need "convince somebody", without "to".';
+      return reply({ results: [{ entry_id: 1, term: 'convince', type: 'sentence', answer: 'I convinced to her.',
+        verdict: 'wrong', feedback: word(1).feedback, corrected: 'I convinced her.', mastered: false }], ...overview() });
+    }
+    if (path === '/api/ielts/new') {
+      return reply({ task: { id: 7, title: 'Cheaper buses', passage: 'The city made buses cheaper last year.',
+        questions: [{ kind: 'mc', text: 'The city wanted to', options: ['save money', 'convince people to take buses', 'build roads', 'close schools'] },
+                    { kind: 'tfng', text: 'Bus fares were raised.', options: ['TRUE', 'FALSE', 'NOT GIVEN'] }] } });
+    }
+    if (path === '/api/ielts/answer') {
+      return reply({ score: 1, of: 2, results: [
+        { given: body.answers[0], answer: 'B', right: body.answers[0] === 'B', explanation: 'The first line.' },
+        { given: body.answers[1], answer: 'FALSE', right: body.answers[1] === 'FALSE', explanation: 'Fares went down.' }] });
     }
     return reply({ error: 'unexpected' }, 404);
   };
 `);
 
 const wait = (ms = 300) => B.evaluate(`await new Promise(r => setTimeout(r, ${ms}));`);
+const calls = (path) => B.evaluate(`return window.__calls.filter(c => c.path === ${JSON.stringify(path)});`);
 await B.goto(`${BASE}/#/today`);
-await wait(700);
+await wait(800);
 
 console.log('== the overview hides what is untested ==');
 let s = await B.evaluate(`return {
   heading: document.querySelector('.section')?.textContent,
   tab: document.querySelector('.tabs a[aria-current]')?.dataset.tab,
-  leaked: document.querySelector('#view').textContent.includes('abolish'),
+  leaked: ['convince', 'cheap', 'aim'].some(t => document.querySelector('#view').textContent.includes(t)),
+  hidden: [...document.querySelectorAll('.result-term')].filter(e => /Hidden/.test(e.textContent)).length,
   start: document.querySelector('#start')?.textContent,
+  ielts: !!document.querySelector('#ielts-new'),
+  progress: document.querySelector('#view').textContent.includes('Precise meaning'),
 };`);
 eq('Today screen', s.heading, 'Today');
 eq('its tab is current', s.tab, 'today');
-eq('the term is not shown before the check', s.leaked, false);
-ok('a start button counts the items', /2 items/.test(s.start || ''), s.start);
+eq('no term is shown before the check', s.leaked, false);
+eq('each word is listed as hidden', s.hidden, 3);
+eq('the word without questions was prepared in the background', (await calls('/api/check/prepare')).length, 1);
+ok('  and joins the count', /3 words/.test(s.start || ''), s.start);
+eq('an IELTS task is offered when due', s.ielts, true);
+eq('accuracy is shown by IELTS feature', s.progress, true);
 
-console.log('== step 1 then step 2 ==');
-s = await B.evaluate(`
-  document.querySelector('#start').click();
-  await new Promise(r => setTimeout(r, 200));
-  const before = { term: document.querySelector('.prompt-serif')?.textContent,
-                   context: document.querySelector('.quiz mark')?.textContent,
-                   meaningShown: document.querySelector('.quiz').textContent.includes('the meaning of item 1'),
-                   fast: !!document.querySelector('#fast'), known: !!document.querySelector('#known') };
-  document.querySelector('#next').click();
-  await new Promise(r => setTimeout(r, 50));
-  const stillHere = !!document.querySelector('#explanation');
-  document.querySelector('#explanation').value = 'to end';
-  document.querySelector('#next').click();
-  await new Promise(r => setTimeout(r, 100));
-  return { ...before, stillHere, use: document.querySelector('.prompt-serif')?.textContent,
-           situation: [...document.querySelectorAll('.prompt')].map(p => p.textContent).join('|') };`);
-eq('step 1 shows the item itself', s.term, 'abolish');
-eq('  highlighted in Oxford\'s sentence', s.context, 'abolish');
-eq('  without giving the meaning away', s.meaningShown, false);
-eq('a B2 item offers the fast check', s.fast, true);
-eq('  but not the one-tap drop', s.known, false);
-eq('an empty explanation is not accepted', s.stillHere, true);
-eq('step 2 keeps the term', s.use, 'abolish');
-ok('  with the situation', s.situation.includes('Your team asks about 1'), s.situation);
-
-console.log('== the draft survives a reload ==');
-await B.evaluate(`document.querySelector('#sentence').value = 'bad one'; document.querySelector('#done').click();`);
-await B.goto(`${BASE}/?reload=1#/today`);
-await wait(700);
-s = await B.evaluate(`
-  document.querySelector('#start').click();
-  await new Promise(r => setTimeout(r, 200));
-  return { prompt: document.querySelector('.prompt')?.textContent, count: document.querySelector('.quizcount')?.textContent };`);
-eq('it resumes at the second item', s.count, '2 / 2');
-
-console.log('== back ==');
+console.log('== a right check goes straight to the second question ==');
 s = await B.evaluate(`
   const q = (sel) => document.querySelector(sel);
-  const tick = () => new Promise(r => setTimeout(r, 60));
-  q('#back').click(); await tick();
-  const toPrevUse = { count: q('.quizcount').textContent, sentence: q('#sentence')?.value };
-  q('#back').click(); await tick();
-  const toPrevUnderstand = { explanation: q('#explanation')?.value, disabled: q('#back').disabled };
+  const tick = () => new Promise(r => setTimeout(r, 120));
+  q('#start').click(); await tick();
+  const first = { mode: q('.quiz-mode')?.textContent, stem: q('.prompt')?.textContent,
+                  options: document.querySelectorAll('[data-choice]').length, known: !!q('#known'),
+                  termShown: q('.quiz').textContent.includes('convince') && !q('.prompt').textContent.includes('convince') ? 'mode' : 'stem',
+                  count: q('.quizcount')?.textContent };
+  document.querySelector('[data-choice="0"]').click(); await tick();
+  const second = { mode: q('.quiz-mode')?.textContent, box: !!q('textarea#typed'),
+                   instruction: q('.prompt-sub')?.textContent };
+  q('#submit').click(); await tick();
+  const emptyKept = !!q('textarea#typed');
+  q('#typed').value = 'I convinced to her.';
+  q('#submit').click(); await tick();
+  return { first, second, emptyKept, head: q('.verdict-head')?.textContent };`);
+ok('the first question is a quick check', /Quick check/.test(s.first.mode), s.first.mode);
+eq('  with its sentence', s.first.stem, 'She convinced me to stay.');
+eq('  and three options', s.first.options, 3);
+eq('  no one-tap drop for a B2 word', s.first.known, false);
+eq('  counted as 1 of 3', s.first.count, '1 / 3');
+ok('the second asks for production', /Now use it/.test(s.second.mode) && /convince/.test(s.second.mode), s.second.mode);
+eq('  in a text box', s.second.box, true);
+eq('  with its instruction', s.second.instruction, 'Write one sentence with convince.');
+eq('an empty answer is not sent', s.emptyKept, true);
+eq('a sentence is saved for marking at the end', s.head, 'Saved — marked at the end');
+let sent = (await calls('/api/check/answer')).at(-1).body;
+eq('  sent with the word', sent.entry_id, 1);
+eq('  and the text', sent.text, 'I convinced to her.');
+ok('  and the time taken', typeof sent.ms === 'number' && sent.ms >= 0, JSON.stringify(sent));
+
+console.log('== "I know this well" and its undo ==');
+s = await B.evaluate(`
+  const q = (sel) => document.querySelector(sel);
+  const tick = () => new Promise(r => setTimeout(r, 120));
   q('#next').click(); await tick();
-  q('#done').click(); await tick();
-  const forwardAgain = q('.quizcount').textContent;
-  q('#dunno').click(); await tick();
-  const onSubmit = !!q('#mark');
-  q('#back').click(); await tick();
-  return { toPrevUse, toPrevUnderstand, forwardAgain, onSubmit,
-           undone: { count: q('.quizcount')?.textContent, box: q('#explanation')?.value },
-           easyOffers: { known: !!q('#known'), fast: !!q('#fast') } };`);
-eq('back from step 1 goes to the previous item', s.toPrevUse.count, '1 / 2');
-eq('  at its step 2, sentence kept', s.toPrevUse.sentence, 'bad one');
-eq('back again reaches its step 1, explanation kept', s.toPrevUnderstand.explanation, 'to end');
-eq('  where there is nothing further back', s.toPrevUnderstand.disabled, true);
-eq('forward again keeps both answers', s.forwardAgain, '2 / 2');
-eq('"I don\'t know it" reaches the marking screen', s.onSubmit, true);
-eq('back from there returns to the last item', s.undone.count, '2 / 2');
-eq('  with the accidental "I don\'t know it" undone', s.undone.box, '');
-eq('an A2 item offers the one-tap drop', s.easyOffers.known, true);
-eq('  instead of the fast check', s.easyOffers.fast, false);
+  const offered = !!q('#known');
+  const pattern = q('.prompt-sub')?.textContent;
+  q('#known').click(); await tick();
+  const head = q('.verdict-head')?.textContent;
+  const body = q('.verdict-body')?.textContent;
+  q('#undo').click(); await tick();
+  return { offered, pattern, head, body, back: q('.quizcount')?.textContent, again: !!q('#known') };`);
+eq('an A2 word on first sight offers the one-tap drop', s.offered, true);
+eq('a pattern question asks for the correct sentence', s.pattern, 'Choose the correct sentence:');
+eq('it is marked as known', s.head, 'Marked as known');
+ok('  and dropped', /Dropped and replaced/.test(s.body), s.body);
+eq('Undo returns to the same word', s.back, '2 / 3');
+eq('  and offers the drop again', s.again, true);
+eq('  after telling the Worker', (await calls('/api/check/undo')).at(-1)?.body?.entry_id, 2);
 
-console.log('== "I know this well" can be taken back ==');
+console.log('== "I don\'t know it" shows what to learn ==');
 s = await B.evaluate(`
   const q = (sel) => document.querySelector(sel);
-  const tick = () => new Promise(r => setTimeout(r, 60));
-  q('#known').click(); await tick();
-  const toMark = q('.prompt-sub')?.textContent;
-  q('#back').click(); await tick();
-  return { toMark, back: q('.quizcount')?.textContent, offered: !!q('#known') };`);
-ok('it needs no marking', /^1 to mark/.test(s.toMark || ''), s.toMark);
-eq('Back undoes it', s.back, '2 / 2');
-eq('  and offers it again', s.offered, true);
+  const tick = () => new Promise(r => setTimeout(r, 120));
+  q('#skip').click(); await tick();
+  return { head: q('.verdict-head')?.textContent, solution: q('.solution')?.textContent,
+           body: q('.verdict-body')?.textContent, undo: !!q('#undo') };`);
+eq('it says the word is new', s.head, 'New to you');
+eq('  with the right answer', s.solution, 'It is cheap to buy.');
+ok('  Oxford\'s meaning and example', /the meaning of cheap/.test(s.body) && /Oxford says cheap/.test(s.body), s.body);
+eq('  and can be undone', s.undo, true);
 
-console.log('== "I don\'t know" and marking ==');
+console.log('== reporting a question ==');
 s = await B.evaluate(`
-  document.querySelector('#dunno').click();
-  await new Promise(r => setTimeout(r, 100));
-  const head = document.querySelector('#mark') ? 'straight to marking' : 'stuck';
-  window.__gradeFail = true;
-  document.querySelector('#mark').click();
-  await new Promise(r => setTimeout(r, 300));
-  const failed = document.querySelector('.verdict.wrong')?.textContent || '';
-  window.__gradeFail = false;
-  document.querySelector('#mark').click();
-  await new Promise(r => setTimeout(r, 300));
-  const post = window.__calls.filter(c => c.href.endsWith('/grade')).pop();
-  return { head, failed, answers: post?.body?.answers,
-           results: document.querySelector('#view').textContent,
-           details: document.querySelectorAll('details.result').length };`);
-eq('"I don\'t know it" skips step 2', s.head, 'straight to marking');
+  const q = (sel) => document.querySelector(sel);
+  const tick = () => new Promise(r => setTimeout(r, 120));
+  q('#next').click(); await tick();
+  const before = q('.prompt')?.textContent;
+  window.prompt = () => 'two options fit';
+  q('#report').click(); await tick();
+  return { before, after: q('.prompt')?.textContent };`);
+sent = (await calls('/api/check/report')).at(-1)?.body;
+eq('the report names the question', sent?.item_id, 31);
+eq('  with the note', sent?.note, 'two options fit');
+eq('a new question replaces it', s.after, 'A better question.');
+
+console.log('== a wrong check stops the word ==');
+s = await B.evaluate(`
+  const q = (sel) => document.querySelector(sel);
+  const tick = () => new Promise(r => setTimeout(r, 120));
+  document.querySelector('[data-choice="2"]').click(); await tick();
+  return { head: q('.verdict-head')?.textContent, solution: q('.solution')?.textContent, undo: !!q('#undo') };`);
+eq('it says not quite', s.head, 'Not quite');
+eq('  and gives the answer', s.solution, 'plan');
+eq('  with nothing to undo', s.undo, false);
+
+console.log('== marking at the end ==');
+s = await B.evaluate(`
+  const q = (sel) => document.querySelector(sel);
+  const tick = () => new Promise(r => setTimeout(r, 150));
+  q('#next').click(); await tick();
+  const screen = q('.prompt')?.textContent;
+  window.__markFail = true;
+  q('#go').click(); await tick();
+  const failed = q('.verdict.wrong')?.textContent || '';
+  window.__markFail = false;
+  q('#go').click(); await tick();
+  return { screen, failed, view: q('#view').textContent,
+           cards: document.querySelectorAll('details.result').length };`);
+eq('the last word leads to marking', s.screen, '1 answer to mark.');
 ok('a failed marking keeps the answers', /answers are kept/.test(s.failed), s.failed);
-eq('both answers were sent', s.answers?.length, 2);
-ok('  the recalled one with its sentence',
-   s.answers?.some((a) => a.id === 1 && a.explanation === 'to end' && a.sentence === 'bad one'), JSON.stringify(s.answers));
-ok('  the skipped one marked as skipped', s.answers?.some((a) => a.id === 2 && a.skipped), JSON.stringify(s.answers));
-ok('the results name what to fix', s.results.includes('Wrong object.'), '');
-eq('each kept item has a learning card', s.details, 2);
-ok('  and the check is done for today', s.results.includes('Done for today'), '');
+ok('the results name what to fix', s.view.includes('without "to"') && s.view.includes('I convinced her.'), '');
+ok('  and the check is done for today', s.view.includes('Done for today'), '');
+eq('each tested word has a learning card', s.cards, 3);
 
-console.log('== step 2 waits for a situation still being prepared ==');
-await B.evaluate(`localStorage.clear(); localStorage.setItem('slow-scenes', '1');`);
-await B.goto(`${BASE}/?again=1#/today`);
-await wait(500);
+console.log('== the IELTS task ==');
 s = await B.evaluate(`
-  document.querySelector('#start').click();
-  await new Promise(r => setTimeout(r, 100));
-  document.querySelector('#explanation').value = 'to end';
-  document.querySelector('#next').click();
-  await new Promise(r => setTimeout(r, 50));
-  const waiting = !!document.querySelector('[data-waiting]');
-  await new Promise(r => setTimeout(r, 3000));
-  return { waiting, after: [...document.querySelectorAll('.prompt')].map(p => p.textContent).join('|'),
-           box: !!document.querySelector('#sentence') };`);
-eq('it shows that the situation is coming', s.waiting, true);
-ok('  then the situation itself, without a reload', s.after.includes('Your team asks about 1'), s.after);
-eq('  ready for the sentence', s.box, true);
+  const q = (sel) => document.querySelector(sel);
+  const tick = () => new Promise(r => setTimeout(r, 150));
+  q('#ielts-new').click(); await tick();
+  const passage = q('.quiz').textContent.includes('made buses cheaper');
+  const tfng = [...document.querySelectorAll('[data-q="1"]')].map(b => b.dataset.v).join(',');
+  q('[data-q="0"][data-v="B"]').click();
+  q('[data-q="1"][data-v="TRUE"]').click();
+  const pressed = document.querySelectorAll('[aria-pressed="true"]').length;
+  q('#submit').click(); await tick();
+  return { passage, tfng, pressed, score: q('.quiz').textContent.includes('1 of 2'),
+           right: q('[data-q="0"][data-v="B"]')?.dataset.state,
+           wrong: q('[data-q="1"][data-v="TRUE"]')?.dataset.state,
+           key: q('[data-q="1"][data-v="FALSE"]')?.dataset.state,
+           why: q('.quiz').textContent.includes('Fares went down.') };`);
+eq('the passage is shown', s.passage, true);
+eq('TRUE/FALSE/NOT GIVEN has its three choices', s.tfng, 'TRUE,FALSE,NOT GIVEN');
+eq('one choice per question is held', s.pressed, 2);
+eq('the answers were sent by letter and label', JSON.stringify((await calls('/api/ielts/answer')).at(-1)?.body?.answers),
+   JSON.stringify(['B', 'TRUE']));
+eq('the score is shown', s.score, true);
+eq('  a right choice is marked right', s.right, 'right');
+eq('  a wrong one wrong', s.wrong, 'wrong');
+eq('  with the key shown', s.key, 'right');
+eq('  and why', s.why, true);
+
+console.log('== words still waiting for questions ==');
+await B.evaluate(`localStorage.setItem('slow-prepare', '1');`);
+await B.goto(`${BASE}/?again=1#/today`);   // goto itself waits 1.5 s
+s = await B.evaluate(`return document.querySelector('.verdict.typo')?.textContent || '';`);
+ok('the page says a word is being written', /waiting for questions/.test(s) && /writing them now/.test(s), s);
+await wait(2000);
+s = await B.evaluate(`return { note: !!document.querySelector('.verdict.typo'), start: document.querySelector('#start')?.textContent };`);
+eq('  the note goes once it is ready', s.note, false);
+ok('  without a reload', /3 words/.test(s.start || ''), s.start);
 await B.evaluate(`localStorage.clear();`);
 
 await B.close();

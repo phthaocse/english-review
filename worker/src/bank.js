@@ -251,6 +251,17 @@ export async function fillNext(env, { limit = 1, collection = 'core-1000' } = {}
   return built;
 }
 
+/** Build the bank for one word, when a dealt word has none yet. */
+export async function buildFor(env, entryId) {
+  const row = await env.DB.prepare(`
+    SELECT e.id, e.term, e.pos, p.points FROM oxford_entry e JOIN word_profile p ON p.entry_id = e.id
+    WHERE e.id = ?`).bind(entryId).first();
+  if (!row) return null;
+  const bank = await buildBank([{ id: row.id, term: row.term, pos: row.pos, points: JSON.parse(row.points) }], env);
+  await saveBank(env.DB, bank.items, bank.model);
+  return { term: row.term, verified: bank.items.filter((i) => i.status === 'verified').length };
+}
+
 export async function bankStats(db, collection = 'core-1000') {
   const row = await db.prepare(`
     SELECT COUNT(*) AS words,

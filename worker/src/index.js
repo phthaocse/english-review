@@ -9,6 +9,8 @@ import { readPhoto, GeminiError, MAX_IMAGE_BYTES, KINDS } from './gemini.js';
 import { verifyAll, lookup } from './oxford.js';
 import { dailyState, gradeDaily, prepareScenes } from './daily.js';
 import { fillNext, bankStats } from './bank.js';
+import { overview, nextQuestion, answer, markPending, undo, report, prepare } from './check.js';
+import { ieltsStatus, createTask, answerTask } from './ielts.js';
 import { createItem, mergeIntoItem, findItemByTerm, getItem, listItems, countItems,
          consumeQuota, logVision, listVisionLogs } from './db.js';
 
@@ -206,6 +208,41 @@ const ROUTES = {
     const results = await gradeDaily(env, user, body?.answers, { allowModelCall });
     return json({ results, state: await dailyState(env, user) }, 200);
   },
+
+  'GET /api/check': async (_request, env, user) =>
+    json({ ...(await overview(env, user)), ielts: await ieltsStatus(env, user) }, 200),
+
+  'GET /api/check/next': async (_request, env, user) => json(await nextQuestion(env, user), 200),
+
+  'POST /api/check/answer': async (request, env, user) =>
+    json(await answer(env, user, await readJson(request, 16 * 1024)), 200),
+
+  'POST /api/check/mark': async (_request, env, user) => {
+    const results = await markPending(env, user, { allowModelCall: dailyQuota(env, user) });
+    return json({ results, ...(await overview(env, user)) }, 200);
+  },
+
+  'POST /api/check/undo': async (request, env, user) =>
+    json(await undo(env, user, await readJson(request, 4 * 1024)), 200),
+
+  'POST /api/check/report': async (request, env, user) =>
+    json(await report(env, user, await readJson(request, 4 * 1024)), 200),
+
+  // Writing a word's questions costs two requests: one to write, one to check.
+  'POST /api/check/prepare': async (_request, env, user) => {
+    const allow = dailyQuota(env, user);
+    if (!(await allow()) || !(await allow())) return json({ error: 'today\'s limit of model requests is reached' }, 429);
+    return json(await prepare(env, user), 200);
+  },
+
+  'POST /api/ielts/new': async (_request, env, user) => {
+    const allow = dailyQuota(env, user);
+    if (!(await allow()) || !(await allow())) return json({ error: 'today\'s limit of model requests is reached' }, 429);
+    return json({ task: await createTask(env, user) }, 200);
+  },
+
+  'POST /api/ielts/answer': async (request, env, user) =>
+    json(await answerTask(env, user, await readJson(request, 8 * 1024)), 200),
 
   'GET /api/bank': async (_request, env) => json(await bankStats(env.DB), 200),
 
