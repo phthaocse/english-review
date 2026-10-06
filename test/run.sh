@@ -11,6 +11,7 @@ echo "── token verification ──"; node test/auth.test.mjs
 echo "── oxford lookup ──";      node test/oxford.test.mjs
 echo "── worker api ──";         node test/api.test.mjs
 echo "── daily check ──";        node test/daily.test.mjs
+echo "── word bank ──";          node test/bank.test.mjs
 
 python3 -m http.server "$PORT" >/dev/null 2>&1 &
 SERVER=$!

@@ -8,6 +8,7 @@ import { authenticate, AuthError } from './auth.js';
 import { readPhoto, GeminiError, MAX_IMAGE_BYTES, KINDS } from './gemini.js';
 import { verifyAll, lookup } from './oxford.js';
 import { dailyState, gradeDaily, prepareScenes } from './daily.js';
+import { fillNext, bankStats } from './bank.js';
 import { createItem, mergeIntoItem, findItemByTerm, getItem, listItems, countItems,
          consumeQuota, logVision, listVisionLogs } from './db.js';
 
@@ -206,13 +207,34 @@ const ROUTES = {
     return json({ results, state: await dailyState(env, user) }, 200);
   },
 
+  'GET /api/bank': async (_request, env) => json(await bankStats(env.DB), 200),
+
+  // Writing questions spends model quota, so only the owner can ask for it by hand.
+  'POST /api/bank/fill': async (_request, env, user) => {
+    if (user.role !== 'owner') throw new AuthError('only the owner can fill the bank', 403);
+    return json({ built: await fillNext(env, { limit: 1 }), stats: await bankStats(env.DB) }, 200);
+  },
+
   'GET /api/logs': async (request, env, user) => {
     const limit = new URL(request.url).searchParams.get('limit');
     return json({ logs: await listVisionLogs(env.DB, user.id, limit) }, 200);
   },
 };
 
+// Words whose questions are written each night, ahead of being dealt.
+const NIGHTLY_FILL = 4;
+
 export default {
+  async scheduled(_controller, env) {
+    try {
+      const built = await fillNext(env, { limit: Number(env.NIGHTLY_FILL) || NIGHTLY_FILL });
+      console.log(JSON.stringify({ event: 'bank-fill', built }));
+    } catch (error) {
+      // Quota or an outage: tomorrow night picks up where this one stopped.
+      console.error(JSON.stringify({ event: 'bank-fill', error: error?.message }));
+    }
+  },
+
   async fetch(request, env) {
     const headers = cors(env, request);
     if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers });

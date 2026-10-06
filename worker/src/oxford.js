@@ -35,7 +35,7 @@ export function slugsFor(term) {
   return [base, `${base}_1`, `${base}_2`, `${base}_3`];
 }
 
-const strip = (html) => html
+export const strip = (html) => html
   .replace(/<[^>]+>/g, '')
   .replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>')
   .replace(/&#39;|&rsquo;/g, "'").replace(/&quot;/g, '"').replace(/&nbsp;/g, ' ')

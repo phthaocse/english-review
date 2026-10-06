@@ -24,6 +24,10 @@ ALLOWED_ORIGINS  = "https://phthaocse.github.io,http://localhost:8731"
 # Leave unset to use the built-in chain (3.5 -> 3.7 -> 3.8).
 # GEMINI_MODEL   = "gemini-3.5-flash"
 
+# Writes tomorrow's questions at 02:00 in Hanoi (19:00 UTC), away from the day's own use.
+[triggers]
+crons = ["0 19 * * *"]
+
 # Pins the call to Google to a region it serves; see src/region.js.
 [[durable_objects.bindings]]
 name       = "REGION"

@@ -122,10 +122,12 @@ s = await B.evaluate(`
   await new Promise(r => setTimeout(r, 150));
   const term = document.querySelector('.flash-term')?.textContent;
   return { type: m.state.byId.get(m.state.deck.ids[m.state.deck.index])?.type,
+           rules: m.state.items.filter((i) => i.type === 'pronunciation-rule').length,
            count: document.querySelector('.deck-line p')?.textContent.replace(/\s+/g, ' ').trim() };
 `);
 eq('choosing pronunciation shows a pronunciation card', s.type, 'pronunciation-rule');
-ok('and it is dealt from that set', /Pronunciation · \d+ of 4/.test((s.count || '').trim()), s.count);
+// Counted from the data: the vault grows, and a fixed number broke when a rule was added.
+ok('and it is dealt from that set', new RegExp(`Pronunciation · \\d+ of ${s.rules}$`).test((s.count || '').trim()), s.count);
 
 console.log('== the deck is the whole group, not a sample ==');
 s = await B.evaluate(`
