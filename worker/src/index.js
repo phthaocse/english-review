@@ -17,6 +17,8 @@ import { createItem, mergeIntoItem, findItemByTerm, getItem, listItems, countIte
 const VISION_CALLS_PER_DAY = 50;
 // Situations four at a time plus the marking: about eight requests on an ordinary day.
 const DAILY_MODEL_CALLS_PER_DAY = 40;
+// A report pulls a question from the bank every user shares, so one account cannot empty it.
+export const REPORTS_PER_DAY = 10;
 
 /** Spends one of today's model requests for the daily check, only when one is about to be made. */
 const dailyQuota = (env, user) => async () =>
@@ -226,8 +228,12 @@ const ROUTES = {
   'POST /api/check/undo': async (request, env, user) =>
     json(await undo(env, user, await readJson(request, 4 * 1024)), 200),
 
-  'POST /api/check/report': async (request, env, user) =>
-    json(await report(env, user, await readJson(request, 4 * 1024)), 200),
+  'POST /api/check/report': async (request, env, user) => {
+    if (!(await consumeQuota(env.DB, user.id, 'report', REPORTS_PER_DAY)).allowed) {
+      return json({ error: `daily limit of ${REPORTS_PER_DAY} question reports reached` }, 429);
+    }
+    return json(await report(env, user, await readJson(request, 4 * 1024)), 200);
+  },
 
   // Writing a word's questions costs two requests: one to write, one to check.
   'POST /api/check/prepare': async (_request, env, user) => {

@@ -1,4 +1,4 @@
-import worker from '../worker/src/index.js';
+import worker, { REPORTS_PER_DAY } from '../worker/src/index.js';
 import { pickItems, pickRetest, pickPractice, levelAfter, fixMatches, permutation, featureOf, answer, nextQuestion,
          markPending, overview, report, RELEARN_PASSES, MAX_RETESTS }
   from '../worker/src/check.js';
@@ -400,6 +400,17 @@ console.log('== reporting a retest ==');
   eq('the retest is served', q.retest, true);
   eq('it can be reported', (await call(env, 'POST', '/api/check/report', { item_id: q.item.id })).status, 200);
   eq('  and the miss it tested no longer asks for one', (await call(env, 'GET', '/api/check')).body.retestLeft, 0);
+}
+
+console.log('== reports are capped per day ==');
+{
+  const env = makeEnv(2);
+  const q = (await call(env, 'GET', '/api/check/next')).body;
+  env.DB._raw.prepare("INSERT INTO usage_counter (user_id, day, kind, count) VALUES (1, ?, 'report', ?)")
+    .run(new Date().toISOString().slice(0, 10), REPORTS_PER_DAY);
+  eq('a report past the daily limit is refused', (await call(env, 'POST', '/api/check/report', { item_id: q.item.id })).status, 429);
+  eq('  and the question stays in the shared bank',
+     env.DB._raw.prepare('SELECT status FROM quiz_item WHERE id = ?').get(q.item.id).status, 'verified');
 }
 
 console.log('== picking a practice question ==');
