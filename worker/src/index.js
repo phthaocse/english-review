@@ -212,7 +212,8 @@ const ROUTES = {
   'GET /api/check': async (_request, env, user) =>
     json({ ...(await overview(env, user)), ielts: await ieltsStatus(env, user) }, 200),
 
-  'GET /api/check/next': async (_request, env, user) => json(await nextQuestion(env, user), 200),
+  'GET /api/check/next': async (request, env, user) =>
+    json(await nextQuestion(env, user, { only: Number(new URL(request.url).searchParams.get('word')) || null }), 200),
 
   'POST /api/check/answer': async (request, env, user) =>
     json(await answer(env, user, await readJson(request, 16 * 1024)), 200),

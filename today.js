@@ -31,6 +31,7 @@ let busy = null;
 let error = null;
 let preparing = { running: false, note: null };
 let shownAt = 0;
+let focus = null;         // the word whose own Retest button started this question
 let view = null;
 
 const here = () => location.hash.startsWith('#/today');
@@ -146,8 +147,14 @@ function drawOverview() {
     <div class="card block"><h3>Your words</h3><div class="results">${data.words.map(drawWord).join('')}</div></div>
     ${drawLevels()}`;
 
-  view.querySelector('#start')?.addEventListener('click', () => openQuestion());
-  view.querySelector('#retest')?.addEventListener('click', () => { marked = null; openQuestion(); });
+  view.querySelector('#start')?.addEventListener('click', () => { focus = null; openQuestion(); });
+  view.querySelector('#retest')?.addEventListener('click', () => { marked = null; focus = null; openQuestion(); });
+  view.querySelectorAll('[data-retest]').forEach((b) => b.addEventListener('click', (e) => {
+    e.preventDefault();      // the button sits in the row's summary, which a click would otherwise open
+    marked = null;
+    focus = Number(b.dataset.retest);
+    openQuestion();
+  }));
   view.querySelector('#mark')?.addEventListener('click', () => { screen = 'marking'; draw(); });
   view.querySelector('#ielts-new')?.addEventListener('click', newIelts);
   view.querySelector('#ielts-open')?.addEventListener('click', () => { screen = 'ielts'; draw(); });
@@ -179,6 +186,7 @@ function drawWord(w) {
     <summary class="result-top"><span class="result-term">${esc(w.term)}</span>${level}
       <span class="muted">${esc(w.pos || '')}</span>${stagePill(w.stage)}
       ${w.retest ? '<span class="pill warn">retest today</span>' : ''}
+      ${w.ready ? `<button class="btn secondary small retest-word" data-retest="${w.id}">Retest</button>` : ''}
       <span class="level-next">${nextStep(w)}</span></summary>
     <div style="margin-top:10px">
       <p style="margin:0">${w.ipa ? `<span class="result-ipa">${esc(w.ipa)}</span> · ` : ''}${oxfordLink(w.url)}</p>
@@ -225,8 +233,9 @@ function drawResults(list) {
 
 async function openQuestion() {
   try {
-    const next = await api('/api/check/next');
+    const next = await api(focus ? `/api/check/next?word=${focus}` : '/api/check/next');
     if (next.done) {
+      focus = null;
       await load();
       screen = data.pendingMarks ? 'marking' : 'overview';
     } else {
@@ -369,7 +378,7 @@ function drawFeedback() {
       </div>
     </div></div>`;
   view.querySelector('#next').focus();
-  view.querySelector('#next').addEventListener('click', openQuestion);
+  view.querySelector('#next').addEventListener('click', focus && f.done ? backToList : openQuestion);
   view.querySelector('#undo')?.addEventListener('click', async () => {
     try {
       await api('/api/check/undo', { method: 'POST', body: { entry_id: q.word.id } });
@@ -378,6 +387,14 @@ function drawFeedback() {
     }
     openQuestion();
   });
+}
+
+/** After a word's own Retest, Next returns to the list rather than starting another word. */
+async function backToList() {
+  focus = null;
+  await load();
+  screen = 'overview';
+  draw();
 }
 
 // ---------------------------------------------------------------- marking --

@@ -82,6 +82,22 @@ export function pickRetest(items, missed, shownIds) {
   return unseen.find((i) => family.includes(i.type)) || unseen[0] || missed;
 }
 
+/** Practice on a word already checked today: unshown questions first, then the one answered longest ago. */
+export function pickPractice(points, items, history, shownToday) {
+  const checklist = points.slice(0, CHECKLIST_SIZE).map((p) => p.key);
+  const last = new Map();
+  // History is in answer order, so a tie on the timestamp goes to the later answer.
+  history.forEach((h, i) => { if (!last.has(h.item_id) || h.at >= last.get(h.item_id).at) last.set(h.item_id, { at: h.at, i }); });
+  const rank = (it) => [shownToday.has(it.id) ? 1 : 0, last.get(it.id)?.at || '', last.get(it.id)?.i ?? -1,
+                        checklist.indexOf(it.point_key), it.id];
+  const before = (a, b) => {
+    const x = rank(a), y = rank(b);
+    const k = x.findIndex((v, n) => v !== y[n]);
+    return k < 0 ? 0 : x[k] < y[k] ? -1 : 1;
+  };
+  return items.filter((it) => checklist.includes(it.point_key)).sort(before)[0] || null;
+}
+
 /** The level a day's first try leaves a word at: up on a pass, down one step on a miss. */
 export function levelAfter(level, occ) {
   if (occ.r1 === 'right' && occ.r2 === 'right') return LEVEL.CAN_USE;
@@ -133,7 +149,8 @@ async function itemsFor(db, entryId) {
 
 async function historyFor(db, userId, entryId) {
   const { results } = await db.prepare(
-    "SELECT item_id, point_key, verdict, retest, at FROM answer_log WHERE user_id = ? AND entry_id = ? AND verdict != 'reported'",
+    `SELECT item_id, point_key, verdict, retest, at FROM answer_log WHERE user_id = ? AND entry_id = ? AND verdict != 'reported'
+     ORDER BY id`,
   ).bind(userId, entryId).all();
   return results;
 }
@@ -199,6 +216,19 @@ async function retestFor(db, word) {
   return occ.retest;
 }
 
+/** A practice question for a word already checked today, kept until it is answered. */
+async function practiceFor(db, userId, word) {
+  const occ = word.today;
+  if (occ.practice?.state === 'open' && occ.practice.item_id) return occ.practice;
+  const shownToday = new Set([occ.q1?.item_id, occ.q2?.item_id, ...(occ.retest?.shown || []), ...(occ.practice?.shown || [])]);
+  const pick = pickPractice(word.points, await itemsFor(db, word.id), await historyFor(db, userId, word.id), shownToday);
+  if (!pick) return null;
+  occ.practice = { shown: [...(occ.practice?.shown || []), pick.id], state: 'open', item_id: pick.id,
+                   perm: pick.body.options ? permutation(pick.body.options.length) : null };
+  await saveToday(db, userId, word.id, occ);
+  return occ.practice;
+}
+
 /** A miss on a point no longer on the word's checklist, or on a question since removed, is not retested. */
 async function dropStaleRetests(db, words, day) {
   for (const word of words.filter((w) => retestable(w, day))) {
@@ -215,31 +245,50 @@ async function pendingCount(db, userId, day, retest) {
     .bind(userId, day, retest ? 1 : 0).first('n');
 }
 
+/** The first-try question a word is on today, or null when it has none to ask now. */
+async function firstTry(db, userId, word, day, progress) {
+  const occ = await occasionFor(db, userId, word, day);
+  const slot = !occ.r1 ? 1 : occ.r1 === 'right' && !occ.r2 && occ.q2 ? 2 : null;
+  const ref = slot === 1 ? occ.q1 : slot === 2 ? occ.q2 : null;
+  const item = ref && (await itemsFor(db, word.id)).find((i) => i.id === ref.item_id);
+  if (!item) return null;
+  return {
+    word: publicWord(word), slot, retest: false, item: shown(item, ref.perm || []),
+    offers: { selfKnown: slot === 1 && firstSight(word) && SELF_MARK_LEVELS.has(word.level) },
+    progress,
+  };
+}
+
+/** Behind a word's own Retest button: its check while that is due today, then its retest, then practice. */
+async function nextFor(db, userId, word, day) {
+  const progress = { done: 0, total: 1, waiting: 0 };
+  const finished = { done: true, progress };
+  if (!word?.ready) return finished;
+  if (!(word.today?.day === day && word.today.done)) return (await firstTry(db, userId, word, day, progress)) || finished;
+  await dropStaleRetests(db, [word], day);
+  const ref = (retestable(word, day) && await retestFor(db, word)) || await practiceFor(db, userId, word);
+  const item = ref && (await itemsFor(db, word.id)).find((i) => i.id === ref.item_id);
+  if (!item) return finished;
+  return { word: publicWord(word), slot: CHECK_TYPES.includes(item.type) ? 1 : 2, retest: true,
+           item: shown(item, ref.perm || []), offers: { selfKnown: false }, progress };
+}
+
 /**
  * The next question to answer today, or `done`. First tries come first; once they
  * are all answered and marked, the words that were missed come back as retests.
  */
-export async function nextQuestion(env, user, { now = new Date() } = {}) {
+export async function nextQuestion(env, user, { now = new Date(), only = null } = {}) {
   const day = today(now);
   await refill(env.DB, user.id, day);
   const words = await activeWords(env.DB, user.id);
+  if (only != null) return nextFor(env.DB, user.id, words.find((w) => w.id === Number(only)), day);
   const waiting = words.filter((w) => !w.ready).length;
   const queue = words.filter((w) => w.ready && !(w.today?.day === day && w.today.done));
   const done = words.filter((w) => w.today?.day === day && w.today.done).length;
 
   for (const word of queue) {
-    const occ = await occasionFor(env.DB, user.id, word, day);
-    const slot = !occ.r1 ? 1 : occ.r1 === 'right' && !occ.r2 && occ.q2 ? 2 : null;
-    if (!slot) continue;
-    const ref = slot === 1 ? occ.q1 : occ.q2;
-    if (!ref) continue;
-    const item = (await itemsFor(env.DB, word.id)).find((i) => i.id === ref.item_id);
-    if (!item) continue;
-    return {
-      word: publicWord(word), slot, retest: false, item: shown(item, ref.perm || []),
-      offers: { selfKnown: slot === 1 && firstSight(word) && SELF_MARK_LEVELS.has(word.level) },
-      progress: { done, total: words.length - waiting, waiting },
-    };
+    const question = await firstTry(env.DB, user.id, word, day, { done, total: words.length - waiting, waiting });
+    if (question) return question;
   }
   const finished = { done: true, progress: { done, total: words.length - waiting, waiting } };
   // Retests wait for the marking, which decides which sentences were missed.
@@ -395,22 +444,24 @@ export async function answer(env, user, body, { now = new Date() } = {}) {
   return { verdict, done: finished };
 }
 
-/** A retest answer: marked like a first try, but it only says whether today's miss is fixed. */
+/** A retest or practice answer: marked like a first try, but it never moves the level. */
 async function answerRetest(env, user, word, body, day) {
   const occ = word.today;
-  const r = occ.retest;
-  if (!retestable(word, day) || r?.state !== 'open') throw new GeminiError('that word has no open question today', 409);
+  const isRetest = retestable(word, day) && occ.retest?.state === 'open';
+  const r = isRetest ? occ.retest : occ.practice?.state === 'open' ? occ.practice : null;
+  if (!r) throw new GeminiError('that word has no open question today', 409);
   const item = (await itemsFor(env.DB, word.id)).find((i) => i.id === r.item_id);
   if (!item) throw new GeminiError('that question is no longer in the bank', 409);
   const { verdict, answer: given } = body.skipped ? { verdict: 'skipped', answer: null } : judge(item, r, body);
+  const slot = isRetest ? (occ.q1 === missedRef(occ) ? 1 : 2) : CHECK_TYPES.includes(item.type) ? 1 : 2;
   await log(env.DB, { userId: user.id, entryId: word.id, itemId: item.id, pointKey: item.point_key, day,
-                      slot: occ.q1 === missedRef(occ) ? 1 : 2, retest: true, answer: given, verdict,
+                      slot, retest: true, answer: given, verdict,
                       feature: featureOf(item.type, pointKind(word, item.point_key)), ms: Number(body.ms) || null });
-  r.tries += 1;
+  if (isRetest) r.tries += 1;
   r.state = verdict === 'right' ? 'passed' : verdict === 'pending' ? 'pending' : 'failed';
   await saveToday(env.DB, user.id, word.id, occ);
   const missedIt = verdict === 'wrong' || verdict === 'skipped';
-  return { verdict, retest: true, done: true, triesLeft: r.state === 'failed' ? MAX_RETESTS - r.tries : 0,
+  return { verdict, retest: true, done: true, triesLeft: isRetest && r.state === 'failed' ? MAX_RETESTS - r.tries : 0,
            ...(missedIt ? reveal(item, word) : {}) };
 }
 
@@ -487,8 +538,10 @@ export async function markPending(env, user, { now = new Date(), allowModelCall 
         .bind(verdict, v.feedback || null, v.corrected || null, r.id).run();
       const word = words.get(r.entry_id);
       if (r.retest) {
-        if (word?.today?.day === day && word.today.retest) {
-          word.today.retest.state = verdict === 'right' ? 'passed' : 'failed';
+        // A practice answer is marked here too, but only the retest's own answer settles the retest.
+        const retest = word?.today?.day === day ? word.today.retest : null;
+        if (retest?.item_id === r.item_id && retest.state === 'pending') {
+          retest.state = verdict === 'right' ? 'passed' : 'failed';
           await saveToday(env.DB, user.id, word.id, word.today);
         }
         outcomes.push({ entry_id: r.entry_id, term: r.term, type: r.type, answer: r.answer, verdict, retest: true,
@@ -547,7 +600,7 @@ export async function report(env, user, body, { now = new Date() } = {}) {
     .bind(user.id, item.entry_id).first();
   const occ = parse(row?.today, null);
   // The bank is shared, so only a question this user was given today can be pulled from it.
-  if (occ?.day !== day || ![occ.q1?.item_id, occ.q2?.item_id, occ.retest?.item_id].includes(itemId)) {
+  if (occ?.day !== day || ![occ.q1?.item_id, occ.q2?.item_id, occ.retest?.item_id, occ.practice?.item_id].includes(itemId)) {
     throw new GeminiError('only a question you were given today can be reported', 409);
   }
   await env.DB.prepare("UPDATE quiz_item SET status = 'rejected', verify_note = ? WHERE id = ?")
@@ -563,6 +616,7 @@ export async function report(env, user, body, { now = new Date() } = {}) {
   } else if (occ.retest?.item_id === itemId) {
     occ.retest.item_id = null;
   }
+  if (occ.practice?.item_id === itemId) occ.practice.item_id = null;
   await saveToday(env.DB, user.id, item.entry_id, occ);
   return { reported: true };
 }

@@ -34,6 +34,7 @@ await B.addInitScript(`
       re: { id: 33, type: 'meaning_mc', stem: 'They aim to win.', options: ['try', 'fear', 'stop'] } },
   ];
   const S = { pending: 0, tested: new Set() };
+  window.__W = W;
   const retestable = (w) => w.stage === 'done' && w.missed && !w.retested;
   const card = (w) => ({ id: w.id, level: w.level, ready: w.ready, stage: w.lv, passes: 0, passesNeeded: 3,
     retest: retestable(w),
@@ -62,7 +63,7 @@ await B.addInitScript(`
     if (!href.includes('workers.dev')) return realFetch(url, init);
     const body = init.body ? JSON.parse(init.body) : null;
     const path = new URL(href).pathname;
-    window.__calls.push({ path, method: init.method || 'GET', body });
+    window.__calls.push({ path, method: init.method || 'GET', body, search: new URL(href).search });
     const reply = (obj, status = 200) =>
       new Response(JSON.stringify(obj), { status, headers: { 'Content-Type': 'application/json' } });
     const word = (id) => W.find((w) => w.id === Number(id));
@@ -75,6 +76,13 @@ await B.addInitScript(`
       return reply({ prepared: w ? { entry_id: w.id, verified: 4 } : null });
     }
     if (path === '/api/check/next') {
+      const only = word(new URL(href).searchParams.get('word'));
+      if (only) {
+        const progress = { done: 0, total: 1, waiting: 0 };
+        if (only.stage === 'done') return reply({ ...asked(only, only.re, 1, true), progress });
+        const slot = only.stage === 'q1' ? 1 : 2;
+        return reply({ ...asked(only, slot === 1 ? only.q1 : only.q2, slot, false), progress });
+      }
       const ready = W.filter((w) => w.ready);
       const w = ready.find((x) => x.stage !== 'done');
       if (w) {
@@ -167,6 +175,7 @@ let s = await B.evaluate(`return {
   ielts: !!document.querySelector('#ielts-new'),
   levels: [...document.querySelectorAll('.card.block')].find(c => /Your level/.test(c.textContent))?.textContent || '',
   points: /points/.test(document.querySelector('#view').textContent),
+  retestButtons: document.querySelectorAll('[data-retest]').length,
 };`);
 eq('Today screen', s.heading, 'Today');
 eq('its tab is current', s.tab, 'today');
@@ -179,6 +188,7 @@ eq('one line says what is left', s.summary, '3 to check');
 eq('an IELTS task is offered when due', s.ielts, true);
 ok('the levels are counted', /Secure\s*4\s*of 1000/.test(s.levels) && /New\s*3/.test(s.levels), s.levels);
 eq('no "points" jargon', s.points, false);
+eq('a word not seen yet has no Retest button', s.retestButtons, 0);
 
 console.log('== a right check goes straight to the second question ==');
 s = await B.evaluate(`
@@ -324,6 +334,59 @@ eq('after the retests the day is done', s.summary, 'Done for today.');
 eq('the practised point is shown on its card', s.practised, true);
 ok('each word shows its level and next step', /●○○ Recognise/.test(s.level) && /Next: use it yourself/.test(s.level), s.level);
 eq('a tested word links to its Oxford entry', s.link, 'https://www.oxfordlearnersdictionaries.com/definition/english/convince');
+
+console.log('== every word you have seen has its own Retest ==');
+s = await B.evaluate(`
+  const q = (sel) => document.querySelector(sel);
+  const tick = () => new Promise(r => setTimeout(r, 150));
+  const nexts = () => window.__calls.filter(c => c.path === '/api/check/next');
+  const buttons = [...document.querySelectorAll('details.result [data-retest]')].map(b => b.dataset.retest);
+  const label = document.querySelector('[data-retest="2"]')?.textContent;
+  document.querySelector('[data-retest="2"]').click(); await tick();
+  const first = { mode: q('.quiz-mode')?.textContent, count: q('.quizcount')?.textContent, asked: nexts().at(-1)?.search };
+  q('#typed').value = 'to';
+  q('#submit').click(); await tick();
+  const head = q('.verdict-head')?.textContent;
+  const before = nexts().length;
+  q('#next').click(); await tick();
+  const back = { heading: q('.section')?.textContent, summary: q('.card.block .prompt')?.textContent,
+                 asked: nexts().length - before };
+  document.querySelector('[data-retest="2"]').click(); await tick();
+  const again = q('.quiz-mode')?.textContent;
+  q('#pause').click(); await tick();
+  return { buttons, label, first, head, back, again };`);
+eq('each word you have seen has a Retest button', s.buttons.join(), '1,2,3');
+eq('  labelled Retest', s.label, 'Retest');
+ok('it asks about that word only', /Retest · practice/.test(s.first.mode) && /cheap/.test(s.first.mode), s.first.mode);
+eq('  by naming it to the Worker', s.first.asked, '?word=2');
+eq('  as one question', s.first.count, '1 / 1');
+eq('a right answer is practice', s.head, 'Right — practised ✓');
+eq('Next goes back to your words', s.back.heading, 'Today');
+eq('  without starting another word', s.back.asked, 0);
+eq('  and the day stays done', s.back.summary, 'Done for today.');
+ok('the button can be pressed again', /Retest · practice/.test(s.again || ''), s.again);
+
+console.log('== a seen word that is due again runs its real check ==');
+s = await B.evaluate(`
+  const q = (sel) => document.querySelector(sel);
+  const tick = () => new Promise(r => setTimeout(r, 150));
+  window.__W[0].stage = 'q1';
+  document.querySelector('[data-retest="1"]').click(); await tick();
+  const first = q('.quiz-mode')?.textContent;
+  document.querySelector('[data-choice="0"]').click(); await tick();
+  const second = { mode: q('.quiz-mode')?.textContent,
+                   asked: window.__calls.filter(c => c.path === '/api/check/next').at(-1)?.search };
+  q('#typed').value = 'She convinced me to stay.';
+  q('#submit').click(); await tick();
+  const head = q('.verdict-head')?.textContent;
+  q('#next').click(); await tick();
+  return { first, second, head, heading: q('.section')?.textContent, mark: q('#mark')?.textContent };`);
+ok('it starts with the quick check', /Quick check/.test(s.first || ''), s.first);
+ok('  then asks to use the same word', /Now use it/.test(s.second.mode) && /convince/.test(s.second.mode), s.second.mode);
+eq('  still for that word', s.second.asked, '?word=1');
+eq('the sentence waits for marking', s.head, 'Saved — marked at the end');
+eq('Next goes back to your words', s.heading, 'Today');
+eq('  where the answer is ready to mark', s.mark, 'Mark 1 answer');
 
 console.log('== the IELTS task ==');
 s = await B.evaluate(`

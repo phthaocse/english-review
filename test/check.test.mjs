@@ -1,6 +1,6 @@
 import worker from '../worker/src/index.js';
-import { pickItems, pickRetest, levelAfter, fixMatches, permutation, featureOf, answer, nextQuestion, markPending,
-         overview, RELEARN_PASSES, MAX_RETESTS }
+import { pickItems, pickRetest, pickPractice, levelAfter, fixMatches, permutation, featureOf, answer, nextQuestion,
+         markPending, overview, report, RELEARN_PASSES, MAX_RETESTS }
   from '../worker/src/check.js';
 import { keepAgreed } from '../worker/src/ielts.js';
 import { makeD1, addUser } from './d1.mjs';
@@ -400,6 +400,95 @@ console.log('== reporting a retest ==');
   eq('the retest is served', q.retest, true);
   eq('it can be reported', (await call(env, 'POST', '/api/check/report', { item_id: q.item.id })).status, 200);
   eq('  and the miss it tested no longer asks for one', (await call(env, 'GET', '/api/check')).body.retestLeft, 0);
+}
+
+console.log('== picking a practice question ==');
+{
+  const points = [{ key: 'sense:1' }, { key: 'pattern:p' }];
+  const items = [{ id: 1, point_key: 'sense:1', type: 'meaning_mc' }, { id: 2, point_key: 'pattern:p', type: 'pattern_mc' },
+                 { id: 3, point_key: 'pattern:p', type: 'fix_word' }, { id: 4, point_key: 'off:list', type: 'meaning_mc' }];
+  const seen = (pairs) => pairs.map(([item_id, at]) => ({ item_id, at }));
+  eq('practice prefers a question not shown today', pickPractice(points, items, [], new Set([1, 2]))?.id, 3);
+  eq('  then one never answered', pickPractice(points, items, seen([[1, '2026-10-01'], [2, '2026-10-02']]),
+    new Set([1, 2, 3]))?.id, 3);
+  eq('  then the one answered longest ago', pickPractice(points, items,
+    seen([[1, '2026-10-03'], [2, '2026-10-01'], [3, '2026-10-02']]), new Set([1, 2, 3]))?.id, 2);
+  eq('  and only from the checklist', pickPractice([{ key: 'sense:1' }], [items[3]], [], new Set()), null);
+}
+
+console.log('== a word\'s own retest ==');
+{
+  const env = makeEnv(5);
+  const user = { id: 1, email: 'me@x.com' };
+  const at = (n) => new Date(Date.UTC(2026, 9, 20 + n, 3));
+  const only = (id, n = 0) => nextQuestion(env, user, { now: at(n), only: id });
+  const reply = (q, body, n = 0) => answer(env, user, { entry_id: q.word.id, ...body }, { now: at(n) });
+  const stage = (id) => env.DB._raw.prepare('SELECT level FROM word_state WHERE entry_id = ?').get(id).level;
+
+  let q = await only(3);
+  eq('a word still due today gets its real check, ahead of its turn', q.word.id, 3);
+  eq('  not practice', q.retest, false);
+  eq('  starting at the quick check', q.slot, 1);
+  eq('  counted as one of one', q.progress.total, 1);
+  await reply(q, { choice: rightChoice(q) });
+  q = await only(3);
+  eq('then its second question', [q.word.id, q.slot].join(), '3,2');
+  eq('  (a fix not on the key waits for marking)', (await reply(q, { text: 'xx' })).verdict, 'pending');
+  eq('a word waiting for marking has nothing to ask', (await only(3)).done, true);
+  q = await nextQuestion(env, user, { now: at(0) });
+  eq('Start goes on with the others', q.word.id, 1);
+  const missedQ1 = q.item.id;
+  await reply(q, { choice: wrongChoice(q) });
+
+  markOk = () => false;
+  await markPending(env, user, { now: at(0) });
+  eq('once marked, the word is at "recognise"', stage(3), 1);
+
+  q = await only(3);
+  eq('a word missed today gets its retest first', q.retest, true);
+  eq('  on the missed point', q.item.type, 'pattern_mc');
+  const first = q.item.id;
+  eq('a reload shows the same question', (await only(3)).item.id, first);
+  let a = await reply(q, { choice: rightChoice(q) });
+  eq('a right answer is practice', [a.verdict, a.retest, a.done].join(), 'right,true,true');
+  eq('  and does not move the level', stage(3), 1);
+
+  q = await only(3);
+  ok('after that the button keeps giving practice', q.retest && !q.done, JSON.stringify(q));
+  ok('  on another question', q.item.id !== first, `${q.item.id}`);
+  a = await reply(q, { choice: wrongChoice(q) });
+  eq('a missed practice shows the answer', a.correct, 'right one');
+  eq('  and leaves the level alone', stage(3), 1);
+  q = await only(3);
+  const reported = q.item.id;
+  eq('a practice question can be reported', (await report(env, user, { item_id: reported }, { now: at(0) })).reported, true);
+  ok('  and another takes its place', (await only(3)).item.id !== reported, '');
+
+  q = await only(1);
+  eq('a missed check comes back first', [q.retest, q.item.id].join(), `true,${missedQ1}`);
+  a = await reply(q, { choice: rightChoice(q) });
+  eq('  which passes', a.verdict, 'right');
+  q = await only(1);
+  ok('then practice', q.retest && q.item.id !== missedQ1, JSON.stringify(q.item));
+  await reply(q, { choice: rightChoice(q) });
+  q = await only(1);
+  eq('a practice sentence can come up', q.item.type, 'fix_word');
+  eq('  and waits for marking', (await reply(q, { text: 'xx' })).verdict, 'pending');
+  const out = await markPending(env, user, { now: at(0) });
+  eq('marking it is practice too', out.find((o) => o.entry_id === 1)?.retest, true);
+  eq('  and does not reopen the passed retest', (await overview(env, user, { now: at(0) })).retestLeft, 0);
+  eq('practice never moves a level', [stage(1), stage(3)].join(), '0,1');
+  const view = await overview(env, user, { now: at(0) });
+  eq('IELTS accuracy counts first tries only, less the reported one', Object.values(view.features).reduce((n, f) => n + f.n, 0), 2);
+
+  eq('a word not in play has nothing to ask', (await only(99)).done, true);
+  q = await only(3, 1);
+  eq('the next day the button starts that day\'s check', [q.retest, q.slot].join(), 'false,1');
+  markOk = () => true;
+
+  const fresh = makeEnv(5);
+  q = (await call(fresh, 'GET', '/api/check/next?word=4')).body;
+  eq('the page asks for one word with ?word=', q.word.id, 4);
 }
 
 console.log('== preparing a word with no questions ==');
