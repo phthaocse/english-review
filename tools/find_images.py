@@ -65,6 +65,8 @@ QUERIES = {
     'regulator':    ['regulatory authority office sign', 'inspector clipboard regulation'],
     'resign':       ['resignation letter desk', 'empty office desk chair'],
     'levy':         ['tax collection coins hand', 'customs duty stamp'],
+    'farmland':     ['farmland fields aerial view', 'agricultural fields patchwork countryside', 'crop fields farmland landscape'],
+    'campus':       ['university campus quad students', 'college campus buildings lawn', 'stanford main quad'],
 }
 
 

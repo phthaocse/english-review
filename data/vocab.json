@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-06 11:28",
+ "generated": "2026-10-07 16:36",
  "items": [
   {
    "id": "I mean",
@@ -179,6 +179,48 @@
      "html": "<p>Sorry, <strong>I'm not following</strong> — could you go back a step?</p>",
      "gaps": [
       "I'm not following"
+     ]
+    }
+   ],
+   "senses": []
+  },
+  {
+   "id": "Valley of Heart's Delight",
+   "term": "the Valley of Heart's Delight",
+   "kind": "vocab",
+   "type": "idiom",
+   "vi": "biệt danh cũ của thung lũng Santa Clara (nay là Thung lũng Silicon), thời còn là vùng vườn cây ăn trái",
+   "cefr": "",
+   "added": "2026-10-07",
+   "session": "2026-10-07 Silicon Valley from orchards to chips",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/idiom",
+    "theme/silicon-valley"
+   ],
+   "notesHtml": "<p>Wikipedia: until the 1960s it was the largest fruit-producing and packing region in the world, with 39 canneries. The name came from its mild climate and thousands of acres of blooming fruit trees.</p><p>Writing it: capital V, H and D because it is a name; <em>the</em> stays lowercase mid-sentence; keep the apostrophe in <em>Heart's</em>.</p><p><em>Delight</em> (Oxford, B2) has two senses worth having:</p><p>- [uncountable] great pleasure — <em>squealed <strong>with</strong> delight</em>, <em>to the delight of all her fans</em> - [countable] something that gives great pleasure — <em>This guitar is <strong>a delight</strong> to play.</em></p>",
+   "seeAlso": [
+    "prune trees",
+    "farmland",
+    "geologic trough"
+   ],
+   "ipa": "delight /dɪˈlaɪt/",
+   "pos": [
+    "proper noun"
+   ],
+   "meaning": "the old nickname of California's Santa Clara Valley, famous for its blossoming fruit orchards before it became Silicon Valley",
+   "register": "neutral",
+   "pattern": "",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "Before the chip makers arrived, Santa Clara was known as **the Valley of Heart's Delight**.",
+     "text": "Before the chip makers arrived, Santa Clara was known as the Valley of Heart's Delight.",
+     "html": "<p>Before the chip makers arrived, Santa Clara was known as <strong>the Valley of Heart's Delight</strong>.</p>",
+     "gaps": [
+      "the Valley of Heart's Delight"
      ]
     }
    ],
@@ -1607,6 +1649,56 @@
      "html": "<p>Rotating on-call duty is the cheapest <strong>burnout</strong> prevention there is.</p>",
      "gaps": [
       "burnout"
+     ]
+    }
+   ],
+   "senses": []
+  },
+  {
+   "id": "campus",
+   "term": "campus",
+   "kind": "vocab",
+   "type": "word",
+   "vi": "khuôn viên (trường đại học)",
+   "cefr": "b1",
+   "added": "2026-10-07",
+   "session": "2026-10-07 Silicon Valley from orchards to chips",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/word",
+    "cefr/b1",
+    "theme/silicon-valley"
+   ],
+   "notesHtml": "<p><em>On campus</em> and <em>off campus</em> take no article: <em>She lives on campus</em>, not <em>on the campus</em>. Plural <em>campuses</em>.</p><p>⚠️ In Silicon Valley the word stretched to company sites — <em>Google's campus</em>, *a corporate campus*. Oxford Learner's keeps only the university sense, so treat the company use as informal tech-industry English.</p>",
+   "seeAlso": [
+    "proximity",
+    "intellectual capital"
+   ],
+   "ipa": "/ˈkæmpəs/",
+   "pos": [
+    "noun"
+   ],
+   "meaning": "the buildings of a university or college and the land around them",
+   "register": "neutral",
+   "pattern": "",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "Silicon Valley grew up around the Stanford University **campus**.",
+     "text": "Silicon Valley grew up around the Stanford University campus.",
+     "html": "<p>Silicon Valley grew up around the Stanford University <strong>campus</strong>.</p>",
+     "gaps": [
+      "campus"
+     ]
+    },
+    {
+     "md": "Most first-year students live **on campus**.",
+     "text": "Most first-year students live on campus.",
+     "html": "<p>Most first-year students live <strong>on campus</strong>.</p>",
+     "gaps": [
+      "on campus"
      ]
     }
    ],
@@ -4560,6 +4652,58 @@
    "senses": []
   },
   {
+   "id": "farmland",
+   "term": "farmland",
+   "kind": "vocab",
+   "type": "word",
+   "vi": "đất nông nghiệp, đất canh tác",
+   "cefr": "b1",
+   "added": "2026-10-07",
+   "session": "2026-10-07 Silicon Valley from orchards to chips",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/word",
+    "cefr/b1",
+    "theme/silicon-valley"
+   ],
+   "notesHtml": "<p>Uncountable in everyday use: <em>250 acres of farmland</em>, never <em>a farmland</em>. Oxford also allows a plural for large regions in descriptive writing: <em>the prosperous farmlands of Picardy</em>.</p><p>The first example is Wikipedia's sentence about the Santa Clara Valley, and a pattern worth stealing: <em>transform X <strong>from</strong> A <strong>to</strong> B</em>.</p>",
+   "seeAlso": [
+    "prune trees",
+    "Valley of Heart's Delight",
+    "residential",
+    "industrial"
+   ],
+   "ipa": "/ˈfɑːmlænd/",
+   "pos": [
+    "noun"
+   ],
+   "meaning": "land that is used for farming",
+   "register": "neutral",
+   "pattern": "",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "The high-tech industry transformed the valley from **farmland** to densely populated cities.",
+     "text": "The high-tech industry transformed the valley from farmland to densely populated cities.",
+     "html": "<p>The high-tech industry transformed the valley from <strong>farmland</strong> to densely populated cities.</p>",
+     "gaps": [
+      "farmland"
+     ]
+    },
+    {
+     "md": "The United States loses over 4,000 acres of **farmland** every day.",
+     "text": "The United States loses over 4,000 acres of farmland every day.",
+     "html": "<p>The United States loses over 4,000 acres of <strong>farmland</strong> every day.</p>",
+     "gaps": [
+      "farmland"
+     ]
+    }
+   ],
+   "senses": []
+  },
+  {
    "id": "favour",
    "term": "favour",
    "kind": "vocab",
@@ -5243,6 +5387,48 @@
      "html": "<p>These instructions make <strong>fuck all</strong> sense to me.</p>",
      "gaps": [
       "fuck all"
+     ]
+    }
+   ],
+   "senses": []
+  },
+  {
+   "id": "geologic trough",
+   "term": "geologic trough",
+   "kind": "vocab",
+   "type": "collocation",
+   "vi": "vùng trũng địa chất, thung lũng dạng máng",
+   "cefr": "",
+   "added": "2026-10-07",
+   "session": "2026-10-07 Silicon Valley from orchards to chips",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/collocation",
+    "theme/silicon-valley"
+   ],
+   "notesHtml": "<p><strong>Pronunciation trap:</strong> <em>trough</em> is /trɒf/ and rhymes with <em>off</em>. Not <em>through</em>, not <em>tough</em>. The <em>-ough</em> spelling never tells you the sound.</p><p><em>Geologic</em> is mostly American; British English says <em>geological</em> (Oxford lists <em>geologic</em> as the alternative). ⚠️ The phrase itself is not an Oxford entry. The <em>trough</em> sense meant here is Oxford's 'a low area between two waves in the sea, or two hills'.</p><p><em>Trough</em> has two more senses worth knowing (Oxford):</p><p>- a long open container that animals eat or drink from — the original meaning - a low point in the economy: <em>peaks and troughs</em>, <em>fell 48% from peak to trough</em> — the   opposite of a <a class=\"xref\" data-term=\"semiconductor boom\">semiconductor boom</a></p>",
+   "seeAlso": [
+    "semiconductor boom",
+    "Valley of Heart's Delight",
+    "farmland"
+   ],
+   "ipa": "geologic /ˌdʒiːəˈlɒdʒɪk/ · trough /trɒf/",
+   "pos": [
+    "noun phrase"
+   ],
+   "meaning": "a long, low area of land lying between two ranges of hills or mountains",
+   "register": "formal",
+   "pattern": "",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "The Santa Clara Valley is a **geologic trough** that runs south from San Francisco between two mountain ranges.",
+     "text": "The Santa Clara Valley is a geologic trough that runs south from San Francisco between two mountain ranges.",
+     "html": "<p>The Santa Clara Valley is a <strong>geologic trough</strong> that runs south from San Francisco between two mountain ranges.</p>",
+     "gaps": [
+      "geologic trough"
      ]
     }
    ],
@@ -6669,6 +6855,58 @@
    "senses": []
   },
   {
+   "id": "industrial",
+   "term": "industrial",
+   "kind": "vocab",
+   "type": "word",
+   "vi": "(thuộc) công nghiệp",
+   "cefr": "b2",
+   "added": "2026-10-07",
+   "session": "2026-10-07 Silicon Valley from orchards to chips",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/word",
+    "cefr/b2",
+    "theme/silicon-valley",
+    "theme/economics"
+   ],
+   "notesHtml": "<p><strong>Stress shift:</strong> <strong>IN</strong>-dus-try /ˈɪndəstri/ → in-<strong>DUS</strong>-tri-al /ɪnˈdʌstriəl/. Same pattern as other <em>-ial</em> words: the stress lands on the syllable before the suffix.</p><p><strong>Trap:</strong> <em>industrial</em> ≠ <em>industrious</em>. Oxford: <em>industrious</em> /ɪnˈdʌstriəs/ = 'working hard; busy' — <em>an industrious student</em>. Same stress, one letter apart, unrelated meanings.</p><p>Oxford collocations: <em>an industrial accident</em>, <em>industrial production</em>, *a large industrial sector<em>, </em>the world's leading industrial nations<em>, </em>post-industrial*.</p>",
+   "seeAlso": [
+    "residential",
+    "semiconductor boom",
+    "manpower"
+   ],
+   "ipa": "/ɪnˈdʌstriəl/",
+   "pos": [
+    "adjective"
+   ],
+   "meaning": "relating to industry; having many industries",
+   "register": "neutral",
+   "pattern": "",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "Wartime production opened **industrial** and cannery jobs to women.",
+     "text": "Wartime production opened industrial and cannery jobs to women.",
+     "html": "<p>Wartime production opened <strong>industrial</strong> and cannery jobs to women.</p>",
+     "gaps": [
+      "industrial"
+     ]
+    },
+    {
+     "md": "San Jose grew from a farming town into an **industrial** city.",
+     "text": "San Jose grew from a farming town into an industrial city.",
+     "html": "<p>San Jose grew from a farming town into an <strong>industrial</strong> city.</p>",
+     "gaps": [
+      "industrial"
+     ]
+    }
+   ],
+   "senses": []
+  },
+  {
    "id": "infeasible",
    "term": "infeasible",
    "kind": "vocab",
@@ -6712,6 +6950,49 @@
      "html": "<p>It's just not <strong>feasible</strong> to manage the business on a part-time basis.</p>",
      "gaps": [
       "feasible"
+     ]
+    }
+   ],
+   "senses": []
+  },
+  {
+   "id": "intellectual capital",
+   "term": "intellectual capital",
+   "kind": "vocab",
+   "type": "collocation",
+   "vi": "vốn trí tuệ",
+   "cefr": "",
+   "added": "2026-10-07",
+   "session": "2026-10-07 Silicon Valley from orchards to chips",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/collocation",
+    "theme/silicon-valley",
+    "theme/economics"
+   ],
+   "notesHtml": "<p><strong>Spelling:</strong> double <em>l</em> — intel<strong>l</strong>ectual (you wrote <em>intelectual</em>). Stress on <em>-lec-</em>: in-tel-<strong>LEC</strong>-tu-al.</p><p>⚠️ Not an Oxford Learner's entry; the meaning is the business term (Wikipedia: 'the sum of everything everybody in a company knows that gives it a competitive edge'). Uncountable, like <em>capital</em> in its money sense.</p><p>Keep the neighbours apart:</p><p>- <em>intellectual capital</em> — the whole pool of know-how - <em>human capital</em> — the people's skills, one part of it - <em>intellectual property (IP)</em> — the patents and copyrights that legally protect some of it</p>",
+   "seeAlso": [
+    "manpower",
+    "campus",
+    "pioneer spirit"
+   ],
+   "ipa": "intellectual /ˌɪntəˈlektʃuəl/",
+   "pos": [
+    "noun phrase"
+   ],
+   "meaning": "the knowledge, skills and ideas that the people in a company or region have, seen as a valuable asset",
+   "register": "formal",
+   "pattern": "",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "Stanford gave the valley its **intellectual capital**: a steady flow of engineers, researchers and ideas.",
+     "text": "Stanford gave the valley its intellectual capital: a steady flow of engineers, researchers and ideas.",
+     "html": "<p>Stanford gave the valley its <strong>intellectual capital</strong>: a steady flow of engineers, researchers and ideas.</p>",
+     "gaps": [
+      "intellectual capital"
      ]
     }
    ],
@@ -7839,6 +8120,57 @@
      "html": "<p>Single <strong>malt</strong> whisky comes from one distillery only.</p>",
      "gaps": [
       "malt"
+     ]
+    }
+   ],
+   "senses": []
+  },
+  {
+   "id": "manpower",
+   "term": "manpower",
+   "kind": "vocab",
+   "type": "word",
+   "vi": "nhân lực, sức người (số lao động)",
+   "cefr": "",
+   "added": "2026-10-07",
+   "session": "2026-10-07 Silicon Valley from orchards to chips",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/word",
+    "theme/silicon-valley",
+    "theme/workplace"
+   ],
+   "notesHtml": "<p>Uncountable: <em>skilled manpower</em>, never <em>manpowers</em>. Common partners (ozdic): *skilled / trained / qualified manpower<em>, </em>a manpower shortage<em>, </em>cut / reduce manpower*.</p><p>Oxford's own usage note: many people now prefer a gender-neutral word — <em>staff</em> or <em>labour</em>: <em>a staff shortage</em>, <em>skilled labour</em>. In a work email, <em>staff</em> or <em>headcount</em> reads more current.</p><p><strong>Trap:</strong> Vietnamese <em>nhân lực</em> also names the HR department (<em>phòng nhân sự</em>, *nguồn nhân lực<em>). That is <strong>human resources (HR)</strong>, not </em>manpower*.</p><p>Not in the Oxford 3000/5000, so the level is left blank.</p>",
+   "seeAlso": [
+    "intellectual capital",
+    "industrial",
+    "welfare"
+   ],
+   "ipa": "/ˈmænpaʊə(r)/",
+   "pos": [
+    "noun"
+   ],
+   "meaning": "the number of workers needed or available to do a particular job",
+   "register": "neutral",
+   "pattern": "",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "The new factories had the machines but not the **manpower** to run them.",
+     "text": "The new factories had the machines but not the manpower to run them.",
+     "html": "<p>The new factories had the machines but not the <strong>manpower</strong> to run them.</p>",
+     "gaps": [
+      "manpower"
+     ]
+    },
+    {
+     "md": "There is a need for trained **manpower**.",
+     "text": "There is a need for trained manpower.",
+     "html": "<p>There is a need for trained <strong>manpower</strong>.</p>",
+     "gaps": [
+      "manpower"
      ]
     }
    ],
@@ -9352,6 +9684,48 @@
    "senses": []
   },
   {
+   "id": "pioneer spirit",
+   "term": "the pioneer spirit",
+   "kind": "vocab",
+   "type": "collocation",
+   "vi": "tinh thần tiên phong, tinh thần khai phá",
+   "cefr": "",
+   "added": "2026-10-07",
+   "session": "2026-10-07 Silicon Valley from orchards to chips",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/collocation",
+    "theme/silicon-valley"
+   ],
+   "notesHtml": "<p><strong>Spelling:</strong> pi-o-neer — you wrote <em>piorneer</em>; there is no <em>r</em> after the <em>o</em>.</p><p><strong>Stress is on the last syllable</strong> (Oxford): pi-o-<strong>NEER</strong>, like en-gi-<strong>NEER</strong> /ˌendʒɪˈnɪə(r)/.</p><p>ozdic lists <em>pioneer</em> and <em>pioneering</em> among the adjectives for <em>spirit</em> in its 'courage' sense, so <em>the pioneering spirit</em> is equally correct. That sense of <em>spirit</em> (Oxford, uncountable) is 'courage, energy or determination' — the same one as in <em>fighting spirit</em>.</p><p><em>Pioneer</em> (Oxford, C1) works as a noun — <em>a computer pioneer</em>, synonym <em>trailblazer</em> — and as a verb: <em>a new technique pioneered by surgeons in a London hospital</em>.</p>",
+   "seeAlso": [
+    "vigorous",
+    "intellectual capital",
+    "semiconductor boom"
+   ],
+   "ipa": "pioneer /ˌpaɪəˈnɪə(r)/",
+   "pos": [
+    "noun phrase"
+   ],
+   "meaning": "the courage and energy to try something new and face hardship, like the first people to explore or settle a place",
+   "register": "neutral",
+   "pattern": "",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "The early chip founders had **the pioneer spirit**: they quit safe jobs to build something new.",
+     "text": "The early chip founders had the pioneer spirit: they quit safe jobs to build something new.",
+     "html": "<p>The early chip founders had <strong>the pioneer spirit</strong>: they quit safe jobs to build something new.</p>",
+     "gaps": [
+      "the pioneer spirit"
+     ]
+    }
+   ],
+   "senses": []
+  },
+  {
    "id": "plateau",
    "term": "plateau",
    "kind": "vocab",
@@ -9800,6 +10174,132 @@
     }
    ],
    "senses": []
+  },
+  {
+   "id": "proximity",
+   "term": "proximity",
+   "kind": "vocab",
+   "type": "word",
+   "vi": "sự gần kề, vị trí gần (về khoảng cách hoặc thời gian)",
+   "cefr": "",
+   "added": "2026-10-07",
+   "session": "2026-10-07 Silicon Valley from orchards to chips",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/word",
+    "theme/silicon-valley"
+   ],
+   "notesHtml": "<p>Three Oxford patterns cover almost every use:</p><p>- <em>the proximity <strong>of</strong> A <strong>to</strong> B</em> - <em>in close proximity <strong>to</strong> something</em> - <em>in the proximity <strong>of</strong> something</em> (= near)</p><p>Uncountable. Stress: prox-<strong>IM</strong>-i-ty. In speech, <em>being close to</em> is more natural; <em>proximity</em> belongs in writing.</p><p>Not in the Oxford 3000/5000, so the level is left blank.</p>",
+   "seeAlso": [
+    "campus",
+    "semiconductor boom"
+   ],
+   "ipa": "/prɒkˈsɪməti/",
+   "pos": [
+    "noun"
+   ],
+   "meaning": "the state of being near somebody/something in distance or time",
+   "register": "neutral",
+   "pattern": "",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "The **proximity** of Stanford to the new chip firms gave them a steady supply of engineers.",
+     "text": "The proximity of Stanford to the new chip firms gave them a steady supply of engineers.",
+     "html": "<p>The <strong>proximity</strong> of Stanford to the new chip firms gave them a steady supply of engineers.</p>",
+     "gaps": [
+      "proximity"
+     ]
+    },
+    {
+     "md": "The area has a number of schools in close **proximity** to each other.",
+     "text": "The area has a number of schools in close proximity to each other.",
+     "html": "<p>The area has a number of schools in close <strong>proximity</strong> to each other.</p>",
+     "gaps": [
+      "proximity"
+     ]
+    }
+   ],
+   "senses": []
+  },
+  {
+   "id": "prune trees",
+   "term": "prune trees",
+   "kind": "vocab",
+   "type": "collocation",
+   "vi": "tuỳ nghĩa (xem bên dưới)",
+   "cefr": "c2",
+   "added": "2026-10-07",
+   "session": "2026-10-07 Silicon Valley from orchards to chips",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/collocation",
+    "cefr/c2",
+    "theme/silicon-valley"
+   ],
+   "notesHtml": "<p><strong>Which one did your text mean?</strong> In a passage about the Valley of Heart's Delight, probably sense 2. Oxford: <em>prune</em> (noun) = 'a dried plum', and by 1900 the valley grew most of California's prunes (Wikipedia). Rule of thumb: after <em>orchards of</em> it is the noun; after a subject (<em>farmers prune trees</em>) it is the verb. ⚠️ <em>prune tree</em> is not an Oxford entry; it composes like <em>apple tree</em>.</p><p><strong>For an engineer:</strong> the verb has a second Oxford sense, 'to make something smaller by removing parts' — <em>Staff numbers have been pruned back to 175.</em> That is the metaphor behind <code>git remote prune origin</code> and <em>pruning stale branches</em>.</p><p>Both senses of <em>prune</em> are C2 in Oxford.</p>",
+   "seeAlso": [
+    "vigorous",
+    "farmland",
+    "Valley of Heart's Delight"
+   ],
+   "ipa": "prune /pruːn/",
+   "pos": [
+    "verb phrase",
+    "noun phrase"
+   ],
+   "meaning": "two readings — see below",
+   "register": "neutral",
+   "pattern": "",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "**Prune** the trees hard in the winter.",
+     "text": "Prune the trees hard in the winter.",
+     "html": "<p><strong>Prune</strong> the trees hard in the winter.</p>",
+     "gaps": [
+      "Prune"
+     ]
+    },
+    {
+     "md": "Before the chip factories came, the valley was one big orchard of **prune trees**.",
+     "text": "Before the chip factories came, the valley was one big orchard of prune trees.",
+     "html": "<p>Before the chip factories came, the valley was one big orchard of <strong>prune trees</strong>.</p>",
+     "gaps": [
+      "prune trees"
+     ]
+    }
+   ],
+   "senses": [
+    {
+     "gloss": "(verb) to cut off some of the branches from a tree so that it will grow better and stronger",
+     "vi": "tỉa cành cây",
+     "example": {
+      "md": "**Prune** the trees hard in the winter.",
+      "text": "Prune the trees hard in the winter.",
+      "html": "<p><strong>Prune</strong> the trees hard in the winter.</p>",
+      "gaps": [
+       "Prune"
+      ]
+     }
+    },
+    {
+     "gloss": "(noun) plum trees grown for prunes, the dried plums the valley was famous for",
+     "vi": "cây mận trồng để làm mận khô",
+     "example": {
+      "md": "Before the chip factories came, the valley was one big orchard of **prune trees**.",
+      "text": "Before the chip factories came, the valley was one big orchard of prune trees.",
+      "html": "<p>Before the chip factories came, the valley was one big orchard of <strong>prune trees</strong>.</p>",
+      "gaps": [
+       "prune trees"
+      ]
+     }
+    }
+   ]
   },
   {
    "id": "put in place",
@@ -10521,6 +11021,58 @@
    "senses": []
   },
   {
+   "id": "residential",
+   "term": "residential",
+   "kind": "vocab",
+   "type": "word",
+   "vi": "(thuộc) khu dân cư, để ở",
+   "cefr": "c1",
+   "added": "2026-10-07",
+   "session": "2026-10-07 Silicon Valley from orchards to chips",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/word",
+    "cefr/c1",
+    "theme/silicon-valley",
+    "theme/city"
+   ],
+   "notesHtml": "<p><strong>Spelling:</strong> you wrote <em>redential</em>. The word is built on <em>resident</em> /ˈrezɪdənt/ — keep the <strong>-sid-</strong>: resi-dential. The stress moves: <strong>RES</strong>-i-dent → res-i-<strong>DEN</strong>-tial.</p><p>Oxford gives a second sense the card leaves out: a job or course that requires you to live there — <em>a residential language course</em>, <em>a residential home for older adults</em>.</p><p>Zoning words come as a set: <em>residential</em> (homes), <a class=\"xref\" data-term=\"industrial\">industrial</a> (factories), <em>commercial</em> (shops and offices).</p>",
+   "seeAlso": [
+    "industrial",
+    "farmland",
+    "amenity"
+   ],
+   "ipa": "/ˌrezɪˈdenʃl/",
+   "pos": [
+    "adjective"
+   ],
+   "meaning": "(of an area of a town) suitable for living in; consisting of houses rather than factories or offices",
+   "register": "neutral",
+   "pattern": "",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "As the chip firms grew, the orchards gave way to **residential** areas.",
+     "text": "As the chip firms grew, the orchards gave way to residential areas.",
+     "html": "<p>As the chip firms grew, the orchards gave way to <strong>residential</strong> areas.</p>",
+     "gaps": [
+      "residential"
+     ]
+    },
+    {
+     "md": "We live in a quiet **residential** area.",
+     "text": "We live in a quiet residential area.",
+     "html": "<p>We live in a quiet <strong>residential</strong> area.</p>",
+     "gaps": [
+      "residential"
+     ]
+    }
+   ],
+   "senses": []
+  },
+  {
    "id": "resign",
    "term": "resign",
    "kind": "vocab",
@@ -11059,6 +11611,49 @@
      "html": "<p>'Roger stole the money.' 'I thought <strong>as much</strong>.'</p>",
      "gaps": [
       "as much"
+     ]
+    }
+   ],
+   "senses": []
+  },
+  {
+   "id": "semiconductor boom",
+   "term": "semiconductor boom",
+   "kind": "vocab",
+   "type": "collocation",
+   "vi": "sự bùng nổ ngành bán dẫn (chip)",
+   "cefr": "",
+   "added": "2026-10-07",
+   "session": "2026-10-07 Silicon Valley from orchards to chips",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/collocation",
+    "theme/silicon-valley",
+    "theme/economics"
+   ],
+   "notesHtml": "<p>Oxford: <em>boom</em> (C1) = 'a sudden increase in trade and economic activity; a period of wealth and success'. <em>Semiconductor</em> is C2. ⚠️ The pair itself is not listed — ozdic gives <em>economic, investment, housing, property, oil</em> + <em>boom</em> — but that slot takes any industry, so it composes like <em>oil boom</em>.</p><p>Grammar: <em>a boom <strong>in</strong> something</em> (<em>a boom in car sales</em>); the opposite is a <em>slump</em>; the whole cycle is <em>boom and bust</em>.</p><p><strong>Stress differs by accent</strong> (Oxford): British semi-con-<strong>DUC</strong>-tor, American <strong>SEM</strong>-i-conductor.</p><p>Silicon Valley is named after silicon, the most common semiconductor used in microchips.</p>",
+   "seeAlso": [
+    "geologic trough",
+    "industrial",
+    "intellectual capital"
+   ],
+   "ipa": "semiconductor /ˌsemikənˈdʌktə(r)/ · boom /buːm/",
+   "pos": [
+    "noun phrase"
+   ],
+   "meaning": "a period when the chip industry suddenly grows fast and makes a lot of money",
+   "register": "neutral",
+   "pattern": "",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "The **semiconductor boom** of the 1960s turned the valley's orchards into factories.",
+     "text": "The semiconductor boom of the 1960s turned the valley's orchards into factories.",
+     "html": "<p>The <strong>semiconductor boom</strong> of the 1960s turned the valley's orchards into factories.</p>",
+     "gaps": [
+      "semiconductor boom"
      ]
     }
    ],
@@ -13764,6 +14359,81 @@
    "senses": []
   },
   {
+   "id": "vigorous",
+   "term": "vigorous",
+   "kind": "vocab",
+   "type": "word",
+   "vi": "tuỳ nghĩa (xem bên dưới)",
+   "cefr": "c2",
+   "added": "2026-10-07",
+   "session": "2026-10-07 Silicon Valley from orchards to chips",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/word",
+    "cefr/c2",
+    "theme/silicon-valley"
+   ],
+   "notesHtml": "<p>Oxford collocations: <em>vigorous exercise</em>, <em>a vigorous campaign</em>, *a vigorous opponent of the government<em>. Adverb: </em>vigorously<em> — </em>she defended her position vigorously*.</p><p>Spelling: the noun is <em>vigour</em> (British) / <em>vigor</em> (American), but the adjective is <em>vigorous</em> in both, with no <em>u</em>. Three syllables: <strong>VIG</strong>-or-ous.</p><p>Sense 2 ties back to <a class=\"xref\" data-term=\"prune trees\">prune trees</a>: Oxford defines <em>prune</em> as cutting branches 'so that it will grow better and stronger' — pruning keeps a tree vigorous.</p>",
+   "seeAlso": [
+    "pioneer spirit",
+    "prune trees"
+   ],
+   "ipa": "/ˈvɪɡərəs/",
+   "pos": [
+    "adjective"
+   ],
+   "meaning": "two senses — see below",
+   "register": "neutral",
+   "pattern": "",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "They conducted a **vigorous** campaign against tax fraud.",
+     "text": "They conducted a vigorous campaign against tax fraud.",
+     "html": "<p>They conducted a <strong>vigorous</strong> campaign against tax fraud.</p>",
+     "gaps": [
+      "vigorous"
+     ]
+    },
+    {
+     "md": "This plant is a **vigorous** grower.",
+     "text": "This plant is a vigorous grower.",
+     "html": "<p>This plant is a <strong>vigorous</strong> grower.</p>",
+     "gaps": [
+      "vigorous"
+     ]
+    }
+   ],
+   "senses": [
+    {
+     "gloss": "very active, determined or full of energy",
+     "vi": "mạnh mẽ, quyết liệt, hăng hái",
+     "example": {
+      "md": "They conducted a **vigorous** campaign against tax fraud.",
+      "text": "They conducted a vigorous campaign against tax fraud.",
+      "html": "<p>They conducted a <strong>vigorous</strong> campaign against tax fraud.</p>",
+      "gaps": [
+       "vigorous"
+      ]
+     }
+    },
+    {
+     "gloss": "strong and healthy",
+     "vi": "khoẻ mạnh, sung sức; (cây) phát triển mạnh",
+     "example": {
+      "md": "This plant is a **vigorous** grower.",
+      "text": "This plant is a vigorous grower.",
+      "html": "<p>This plant is a <strong>vigorous</strong> grower.</p>",
+      "gaps": [
+       "vigorous"
+      ]
+     }
+    }
+   ]
+  },
+  {
    "id": "wager",
    "term": "wager",
    "kind": "vocab",
@@ -13953,6 +14623,82 @@
     }
    ],
    "senses": []
+  },
+  {
+   "id": "welfare",
+   "term": "welfare",
+   "kind": "vocab",
+   "type": "word",
+   "vi": "tuỳ nghĩa (xem bên dưới)",
+   "cefr": "b2",
+   "added": "2026-10-07",
+   "session": "2026-10-07 Silicon Valley from orchards to chips",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/word",
+    "cefr/b2",
+    "theme/silicon-valley",
+    "theme/economics"
+   ],
+   "notesHtml": "<p>Uncountable. <em>Live on welfare</em> is North American; British English says <em>on benefits</em> (Oxford). Set phrases: <em>child welfare</em>, <em>animal welfare</em>, <em>a social welfare programme</em>, <em>the welfare state</em> /ˌwelfeə ˈsteɪt/.</p><p><strong>Trap for Vietnamese speakers:</strong> <em>phúc lợi</em> at work — insurance, lunch, a gym pass — is <strong>benefits</strong> or <strong>perks</strong> in English. ⚠️ <em>Welfare</em> on a job advert reads as government aid, not as an employee package.</p>",
+   "seeAlso": [
+    "manpower",
+    "residential"
+   ],
+   "ipa": "/ˈwelfeə(r)/",
+   "pos": [
+    "noun"
+   ],
+   "meaning": "two senses — see below",
+   "register": "neutral",
+   "pattern": "",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "Animal **welfare** groups want this practice banned altogether.",
+     "text": "Animal welfare groups want this practice banned altogether.",
+     "html": "<p>Animal <strong>welfare</strong> groups want this practice banned altogether.</p>",
+     "gaps": [
+      "welfare"
+     ]
+    },
+    {
+     "md": "They would rather work than live on **welfare**.",
+     "text": "They would rather work than live on welfare.",
+     "html": "<p>They would rather work than live on <strong>welfare</strong>.</p>",
+     "gaps": [
+      "welfare"
+     ]
+    }
+   ],
+   "senses": [
+    {
+     "gloss": "the general health, happiness and safety of a person, an animal or a group",
+     "vi": "sự an lành, hạnh phúc, lợi ích (của ai)",
+     "example": {
+      "md": "Animal **welfare** groups want this practice banned altogether.",
+      "text": "Animal welfare groups want this practice banned altogether.",
+      "html": "<p>Animal <strong>welfare</strong> groups want this practice banned altogether.</p>",
+      "gaps": [
+       "welfare"
+      ]
+     }
+    },
+    {
+     "gloss": "help, especially money, that the government gives to people who need it",
+     "vi": "trợ cấp xã hội, phúc lợi xã hội",
+     "example": {
+      "md": "They would rather work than live on **welfare**.",
+      "text": "They would rather work than live on welfare.",
+      "html": "<p>They would rather work than live on <strong>welfare</strong>.</p>",
+      "gaps": [
+       "welfare"
+      ]
+     }
+    }
+   ]
   },
   {
    "id": "well acquainted with",
@@ -16090,6 +16836,12 @@
    "date": "2026-10-06",
    "theme": "Weekly review: business and housing, investing, Suits, the quarter-life crisis, speaking toolkit, airports, work English",
    "itemCount": "117"
+  },
+  {
+   "id": "2026-10-07 Silicon Valley from orchards to chips",
+   "date": "2026-10-07",
+   "theme": "Silicon Valley — from orchards to chips",
+   "itemCount": "14"
   }
  ]
 }

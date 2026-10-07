@@ -15,6 +15,14 @@
    "url": "https://www.flickr.com/photos/65630793@N05/19000029178"
   }
  },
+ "campus": {
+  "src": "campus.jpg",
+  "alt": "",
+  "credit": {
+   "text": "The Freshman at Colby by *rboed* (CC BY 2.0)",
+   "url": "https://www.flickr.com/photos/92082510@N04/14897723550"
+  }
+ },
  "capsule": {
   "src": "capsule.jpg",
   "alt": "",
@@ -37,6 +45,14 @@
   "credit": {
    "text": "Wine Not... by derekGavey (CC BY 2.0)",
    "url": "https://www.flickr.com/photos/45170709@N06/4320481155"
+  }
+ },
+ "farmland": {
+  "src": "farmland.jpg",
+  "alt": "",
+  "credit": {
+   "text": "Modern harvest time by prague.czech.photo (CC BY 2.0)",
+   "url": "https://www.flickr.com/photos/99424477@N04/44031422591"
   }
  },
  "germinate": {
