@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-07 16:36",
+ "generated": "2026-10-08 17:56",
  "items": [
   {
    "id": "I mean",
@@ -4210,6 +4210,92 @@
    "senses": []
   },
   {
+   "id": "engage",
+   "term": "engage",
+   "kind": "vocab",
+   "type": "word",
+   "vi": "tuỳ nghĩa (xem bên dưới)",
+   "cefr": "b2",
+   "added": "2026-10-08",
+   "session": "2026-10-07 Silicon Valley from orchards to chips",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/word",
+    "cefr/b2",
+    "theme/workplace"
+   ],
+   "notesHtml": "<p>Senses 1 and 2 are formal (Oxford, both B2); sense 3 is unlisted. In everyday speech people say <em>keep somebody's attention</em> and <em>hire</em>, or <a class=\"xref\" data-term=\"take on\">take on</a> for the employing sense.</p><p>The preposition changes the meaning: <em>engage somebody</em> (thu hút / thuê), <em>engage <strong>with</strong> something</em> (tìm hiểu, tương tác), <em>engage <strong>in</strong> something</em> (tham gia; B2, formal: <em>engage in criminal activities</em>, <em>engage somebody in conversation</em>).</p><p>Word family: <em>engaged</em> (B1) means <em>đính hôn</em> (<em>engaged to somebody</em>), and <em>engaged in</em> (B2) means busy doing something. <em>Engagement</em> (C1) is <em>lễ đính hôn</em> or <em>cuộc hẹn</em>; in product metrics, <em>user engagement</em> is <em>mức độ tương tác</em>.</p>",
+   "seeAlso": [
+    "take on"
+   ],
+   "ipa": "/ɪnˈɡeɪdʒ/",
+   "pos": [
+    "verb"
+   ],
+   "meaning": "three senses — see below",
+   "register": "formal",
+   "pattern": "engage somebody/something · engage with somebody/something",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "It was difficult to **engage** the students at first.",
+     "text": "It was difficult to engage the students at first.",
+     "html": "<p>It was difficult to <strong>engage</strong> the students at first.</p>",
+     "gaps": [
+      "engage"
+     ]
+    },
+    {
+     "md": "We **engaged** an outside firm to run the security audit.",
+     "text": "We engaged an outside firm to run the security audit.",
+     "html": "<p>We <strong>engaged</strong> an outside firm to run the security audit.</p>",
+     "gaps": [
+      "engaged"
+     ]
+    }
+   ],
+   "senses": [
+    {
+     "gloss": "to attract and keep somebody's attention and interest",
+     "vi": "thu hút, giữ được sự chú ý",
+     "example": {
+      "md": "It was difficult to **engage** the students at first.",
+      "text": "It was difficult to engage the students at first.",
+      "html": "<p>It was difficult to <strong>engage</strong> the students at first.</p>",
+      "gaps": [
+       "engage"
+      ]
+     }
+    },
+    {
+     "gloss": "to employ a person or company to do a particular job",
+     "vi": "thuê (luật sư, công ty, dịch vụ)",
+     "example": {
+      "md": "We **engaged** an outside firm to run the security audit.",
+      "text": "We engaged an outside firm to run the security audit.",
+      "html": "<p>We <strong>engaged</strong> an outside firm to run the security audit.</p>",
+      "gaps": [
+       "engaged"
+      ]
+     }
+    },
+    {
+     "gloss": "(engage with) to become involved with something or somebody and try to understand them",
+     "vi": "tìm hiểu kỹ, thật sự quan tâm tới",
+     "example": {
+      "md": "A good reviewer **engages with** the design, not just the formatting.",
+      "text": "A good reviewer engages with the design, not just the formatting.",
+      "html": "<p>A good reviewer <strong>engages with</strong> the design, not just the formatting.</p>",
+      "gaps": [
+       "engages with"
+      ]
+     }
+    }
+   ]
+  },
+  {
    "id": "enigma",
    "term": "enigma",
    "kind": "vocab",
@@ -5479,6 +5565,55 @@
      "html": "<p>An idea for a novel began to <strong>germinate</strong> in her mind.</p>",
      "gaps": [
       "germinate"
+     ]
+    }
+   ],
+   "senses": []
+  },
+  {
+   "id": "get it out of the way",
+   "term": "get (something) out of the way",
+   "kind": "vocab",
+   "type": "idiom",
+   "vi": "làm cho xong (để rảnh tay làm việc khác)",
+   "cefr": "b2",
+   "added": "2026-10-08",
+   "session": "2026-10-07 Silicon Valley from orchards to chips",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/idiom",
+    "cefr/b2",
+    "theme/workplace"
+   ],
+   "notesHtml": "<p>Oxford lists <em>out of the way</em> under <em>way</em> with three meanings: no longer blocking somebody (<em>I moved my legs out of the way</em>); finished or dealt with (this note); and, in negative sentences, unusual (<em>nothing out of the way</em>).</p><p>The object makes the difference. <em>Get <strong>it</strong> out of the way</em> means finish it, but <em>Get out of the way!</em> with no object means move aside (tránh ra).</p><p>Don't confuse this with <em>go out of your way (to do something)</em>, which means to make a special effort (<em>She went out of her way to help them.</em>). <em>If it's not out of your way</em> means if it's on your route (có tiện đường không). The phrase <em>get out of your way</em> does not exist.</p>",
+   "seeAlso": [
+    "pronoun inside a separable phrasal verb"
+   ],
+   "ipa": "way /weɪ/",
+   "pos": [
+    "verb phrase"
+   ],
+   "meaning": "to finish or deal with something, so you can move on to other things",
+   "register": "neutral",
+   "pattern": "get something out of the way · get it out of the way · once X is out of the way",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "Let's **get the admin out of the way** first, then we can talk about the design.",
+     "text": "Let's get the admin out of the way first, then we can talk about the design.",
+     "html": "<p>Let's <strong>get the admin out of the way</strong> first, then we can talk about the design.</p>",
+     "gaps": [
+      "get the admin out of the way"
+     ]
+    },
+    {
+     "md": "Our region is poised for growth once the election is **out of the way**.",
+     "text": "Our region is poised for growth once the election is out of the way.",
+     "html": "<p>Our region is poised for growth once the election is <strong>out of the way</strong>.</p>",
+     "gaps": [
+      "out of the way"
      ]
     }
    ],
@@ -11759,6 +11894,105 @@
    "senses": []
   },
   {
+   "id": "sink",
+   "term": "sink",
+   "kind": "vocab",
+   "type": "word",
+   "vi": "tuỳ nghĩa (xem bên dưới)",
+   "cefr": "b1",
+   "added": "2026-10-08",
+   "session": "2026-10-07 Silicon Valley from orchards to chips",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/word",
+    "cefr/b1",
+    "theme/workplace"
+   ],
+   "notesHtml": "<p>Irregular: <em>sink – <strong>sank</strong> – <strong>sunk</strong></em>. The past simple is <em>sank</em> (<em>the ship sank</em>); <em>sunk</em> follows <em>have</em> (<em>the pound has sunk</em>).</p><p>Levels by sense: 1 is B1, 3 is C1, 4 is C2, and 2 has no level. Sense 3 is the opposite of <a class=\"xref\" data-term=\"soar\">soar</a>.</p><p>Vietnamese uses <em>chìm</em> for anything and <em>đắm</em> only for ships; English uses <em>sink</em> for both.</p><p>Related phrases: <em>sink in</em> means to be fully understood (<em>The full scale of the disaster has yet to <strong>sink in</strong>.</em>). <em>My heart sank</em> means I suddenly felt sad (chán nản, hụt hẫng). <em>Sink or swim</em> means to succeed by your own efforts or fail completely (phải tự bơi). The noun <em>sink</em> (B1) is <em>bồn rửa</em>.</p>",
+   "seeAlso": [
+    "soar",
+    "swing"
+   ],
+   "ipa": "/sɪŋk/",
+   "pos": [
+    "verb"
+   ],
+   "meaning": "four senses — see below",
+   "register": "neutral",
+   "pattern": "sink – sank – sunk",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "The ship **sank** to the bottom of the sea.",
+     "text": "The ship sank to the bottom of the sea.",
+     "html": "<p>The ship <strong>sank</strong> to the bottom of the sea.</p>",
+     "gaps": [
+      "sank"
+     ]
+    },
+    {
+     "md": "I think I've just **sunk** my chances of getting the job.",
+     "text": "I think I've just sunk my chances of getting the job.",
+     "html": "<p>I think I've just <strong>sunk</strong> my chances of getting the job.</p>",
+     "gaps": [
+      "sunk"
+     ]
+    }
+   ],
+   "senses": [
+    {
+     "gloss": "to go down below the surface of water or a soft substance",
+     "vi": "chìm; (tàu) đắm",
+     "example": {
+      "md": "The ship **sank** to the bottom of the sea.",
+      "text": "The ship sank to the bottom of the sea.",
+      "html": "<p>The ship <strong>sank</strong> to the bottom of the sea.</p>",
+      "gaps": [
+       "sank"
+      ]
+     }
+    },
+    {
+     "gloss": "to move downwards, especially by falling or sitting down",
+     "vi": "ngồi phịch xuống, khuỵu xuống",
+     "example": {
+      "md": "She **sank** back into her seat, exhausted.",
+      "text": "She sank back into her seat, exhausted.",
+      "html": "<p>She <strong>sank</strong> back into her seat, exhausted.</p>",
+      "gaps": [
+       "sank"
+      ]
+     }
+    },
+    {
+     "gloss": "to decrease in amount, value or strength",
+     "vi": "giảm, tụt (giá trị, mức)",
+     "example": {
+      "md": "The pound has **sunk** to its lowest recorded level against the dollar.",
+      "text": "The pound has sunk to its lowest recorded level against the dollar.",
+      "html": "<p>The pound has <strong>sunk</strong> to its lowest recorded level against the dollar.</p>",
+      "gaps": [
+       "sunk"
+      ]
+     }
+    },
+    {
+     "gloss": "(informal) to stop somebody or their plans from succeeding",
+     "vi": "làm hỏng, phá (kế hoạch, cơ hội)",
+     "example": {
+      "md": "I think I've just **sunk** my chances of getting the job.",
+      "text": "I think I've just sunk my chances of getting the job.",
+      "html": "<p>I think I've just <strong>sunk</strong> my chances of getting the job.</p>",
+      "gaps": [
+       "sunk"
+      ]
+     }
+    }
+   ]
+  },
+  {
    "id": "skyrocket",
    "term": "skyrocket",
    "kind": "vocab",
@@ -13100,6 +13334,105 @@
     }
    ],
    "senses": []
+  },
+  {
+   "id": "swing",
+   "term": "swing",
+   "kind": "vocab",
+   "type": "word",
+   "vi": "tuỳ nghĩa (xem bên dưới)",
+   "cefr": "c1",
+   "added": "2026-10-08",
+   "session": "2026-10-07 Silicon Valley from orchards to chips",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/word",
+    "cefr/c1",
+    "theme/workplace"
+   ],
+   "notesHtml": "<p>Irregular: <em>swing – <strong>swung</strong> – <strong>swung</strong></em>. The verb and the noun are both C1; senses 1–3 are C1, and sense 4 has no level.</p><p>As a noun: <em>a swing to/towards something</em> is a change (<em>a 10 per cent swing to Labour</em>), <em>the swings</em> are the seats in a playground (xích đu), and a <em>mood swing</em> is a sudden change of mood.</p><p>Related phrases: <em>in full swing</em> means very busy or lively (đang lúc sôi nổi nhất; <em>the party was already <strong>in full swing</strong></em>). <em>Swing into action</em> means to start quickly and with energy. <em>Swing by</em> (informal, mainly North American) means to visit somewhere briefly (<em>I'll <strong>swing by</strong> your desk after lunch.</em>).</p><p>Trap: the idiom is <em>sink or <strong>swim</strong></em>, not <em>swing</em>.</p>",
+   "seeAlso": [
+    "sink"
+   ],
+   "ipa": "/swɪŋ/",
+   "pos": [
+    "verb",
+    "noun"
+   ],
+   "meaning": "four senses — see below",
+   "register": "neutral",
+   "pattern": "swing – swung – swung · swing (from A) (to B) · swing between A and B",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "The door **swung** open.",
+     "text": "The door swung open.",
+     "html": "<p>The door <strong>swung</strong> open.</p>",
+     "gaps": [
+      "swung"
+     ]
+    },
+    {
+     "md": "His emotions **swung** between fear and curiosity.",
+     "text": "His emotions swung between fear and curiosity.",
+     "html": "<p>His emotions <strong>swung</strong> between fear and curiosity.</p>",
+     "gaps": [
+      "swung"
+     ]
+    }
+   ],
+   "senses": [
+    {
+     "gloss": "to move backwards and forwards or from side to side while hanging from a fixed point",
+     "vi": "đung đưa, lắc lư",
+     "example": {
+      "md": "He sat on the stool, **swinging** his legs.",
+      "text": "He sat on the stool, swinging his legs.",
+      "html": "<p>He sat on the stool, <strong>swinging</strong> his legs.</p>",
+      "gaps": [
+       "swinging"
+      ]
+     }
+    },
+    {
+     "gloss": "to move with a wide curved movement",
+     "vi": "(cửa) bật mở; quét một vòng",
+     "example": {
+      "md": "The door **swung** open.",
+      "text": "The door swung open.",
+      "html": "<p>The door <strong>swung</strong> open.</p>",
+      "gaps": [
+       "swung"
+      ]
+     }
+    },
+    {
+     "gloss": "to change from one opinion, mood or situation to another",
+     "vi": "dao động, chuyển (quan điểm, tâm trạng)",
+     "example": {
+      "md": "His emotions **swung** between fear and curiosity.",
+      "text": "His emotions swung between fear and curiosity.",
+      "html": "<p>His emotions <strong>swung</strong> between fear and curiosity.</p>",
+      "gaps": [
+       "swung"
+      ]
+     }
+    },
+    {
+     "gloss": "to turn or change direction suddenly",
+     "vi": "rẽ ngoặt, quay ngoắt",
+     "example": {
+      "md": "The bus **swung** sharply to the left.",
+      "text": "The bus swung sharply to the left.",
+      "html": "<p>The bus <strong>swung</strong> sharply to the left.</p>",
+      "gaps": [
+       "swung"
+      ]
+     }
+    }
+   ]
   },
   {
    "id": "take on",
