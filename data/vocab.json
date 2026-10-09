@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-08 17:56",
+ "generated": "2026-10-09 10:21",
  "items": [
   {
    "id": "I mean",
@@ -409,6 +409,56 @@
      "html": "<p>The room was small but <strong>adequate</strong>.</p>",
      "gaps": [
       "adequate"
+     ]
+    }
+   ],
+   "senses": []
+  },
+  {
+   "id": "adjustable-rate",
+   "term": "adjustable-rate",
+   "kind": "vocab",
+   "type": "word",
+   "vi": "(khoản vay) có lãi suất thả nổi / điều chỉnh",
+   "cefr": "",
+   "added": "2026-10-09",
+   "session": "2026-10-09 Buying vs renting a home",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/word",
+    "theme/housing",
+    "theme/economics"
+   ],
+   "notesHtml": "<p>⚠️ Oxford Learner's has <em>fixed-rate</em> but no <em>adjustable-rate</em> entry; the video says <em>adjustable rates</em>. The hyphen rule is the same as for <a class=\"xref\" data-term=\"fixed-rate\">fixed-rate</a>.</p>",
+   "seeAlso": [
+    "fixed-rate",
+    "mortgage"
+   ],
+   "ipa": "adjustable /əˈdʒʌstəbl/ · rate /reɪt/",
+   "pos": [
+    "adjective"
+   ],
+   "meaning": "(of a loan) with an interest rate that can change during the life of the loan",
+   "register": "neutral",
+   "pattern": "an adjustable-rate mortgage · adjustable rates",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "Outside the US, **adjustable-rate** loans over shorter terms are more common.",
+     "text": "Outside the US, adjustable-rate loans over shorter terms are more common.",
+     "html": "<p>Outside the US, <strong>adjustable-rate</strong> loans over shorter terms are more common.</p>",
+     "gaps": [
+      "adjustable-rate"
+     ]
+    },
+    {
+     "md": "With an **adjustable-rate** mortgage, your payment can rise when rates go up.",
+     "text": "With an adjustable-rate mortgage, your payment can rise when rates go up.",
+     "html": "<p>With an <strong>adjustable-rate</strong> mortgage, your payment can rise when rates go up.</p>",
+     "gaps": [
+      "adjustable-rate"
      ]
     }
    ],
@@ -1453,6 +1503,53 @@
    "senses": []
   },
   {
+   "id": "branch out",
+   "term": "branch out",
+   "kind": "vocab",
+   "type": "phrasal-verb",
+   "vi": "mở rộng sang lĩnh vực mới; (branch out on your own) ra làm riêng",
+   "cefr": "c1",
+   "added": "2026-10-09",
+   "session": "2026-10-09 Buying vs renting a home",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/phrasal-verb",
+    "cefr/c1",
+    "theme/housing"
+   ],
+   "notesHtml": "<p>Picture a tree growing a new branch. <em>Branch</em> is /brɑːntʃ/ in British English and /bræntʃ/ in American.</p><p>---</p><p>Source: TED-Ed video 'Which is better: Buying or renting a home?' · <a class=\"xref\" data-term=\"2026-10-09 Buying vs renting a home\">session note</a></p>",
+   "seeAlso": [],
+   "ipa": "/ˌbrɑːntʃ ˈaʊt/",
+   "pos": [
+    "phrasal verb"
+   ],
+   "meaning": "to start doing an activity you have not done before, especially in your work or business",
+   "register": "neutral",
+   "pattern": "branch out into something · branch out on your own",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "After five years in backend work, she **branched out** into data engineering.",
+     "text": "After five years in backend work, she branched out into data engineering.",
+     "html": "<p>After five years in backend work, she <strong>branched out</strong> into data engineering.</p>",
+     "gaps": [
+      "branched out"
+     ]
+    },
+    {
+     "md": "He left the bank to **branch out** on his own.",
+     "text": "He left the bank to branch out on his own.",
+     "html": "<p>He left the bank to <strong>branch out</strong> on his own.</p>",
+     "gaps": [
+      "branch out"
+     ]
+    }
+   ],
+   "senses": []
+  },
+  {
    "id": "brittle",
    "term": "brittle",
    "kind": "vocab",
@@ -1805,6 +1902,80 @@
    "senses": []
   },
   {
+   "id": "chip off",
+   "term": "chip off",
+   "kind": "vocab",
+   "type": "phrasal-verb",
+   "vi": "tuỳ nghĩa (xem bên dưới)",
+   "cefr": "c1",
+   "added": "2026-10-09",
+   "session": "2026-10-09 Buying vs renting a home",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/phrasal-verb",
+    "cefr/c1",
+    "theme/housing"
+   ],
+   "notesHtml": "<p>⚠️ Sense 2 is the one in the video, and Oxford does not list it under <em>chip off</em>. Its phrasal verb <em>chip away at</em> carries the same idea: to keep making something a little smaller or weaker.</p><p>---</p><p>Source: TED-Ed video 'Which is better: Buying or renting a home?' · <a class=\"xref\" data-term=\"2026-10-09 Buying vs renting a home\">session note</a></p>",
+   "seeAlso": [],
+   "ipa": "/ˌtʃɪp ˈɒf/",
+   "pos": [
+    "phrasal verb"
+   ],
+   "meaning": "two senses — see below",
+   "register": "neutral",
+   "pattern": "chip something off something",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "The paint has **chipped off** the door frame.",
+     "text": "The paint has chipped off the door frame.",
+     "html": "<p>The paint has <strong>chipped off</strong> the door frame.</p>",
+     "gaps": [
+      "chipped off"
+     ]
+    },
+    {
+     "md": "Five years of payments only **chipped** $25,000 **off** her loan.",
+     "text": "Five years of payments only chipped $25,000 off her loan.",
+     "html": "<p>Five years of payments only <strong>chipped</strong> $25,000 <strong>off</strong> her loan.</p>",
+     "gaps": [
+      "chipped",
+      "off"
+     ]
+    }
+   ],
+   "senses": [
+    {
+     "gloss": "to break a small piece off something; to be damaged in this way",
+     "vi": "làm mẻ, sứt, tróc ra",
+     "example": {
+      "md": "The paint has **chipped off** the door frame.",
+      "text": "The paint has chipped off the door frame.",
+      "html": "<p>The paint has <strong>chipped off</strong> the door frame.</p>",
+      "gaps": [
+       "chipped off"
+      ]
+     }
+    },
+    {
+     "gloss": "to reduce an amount by a small part",
+     "vi": "giảm bớt một chút",
+     "example": {
+      "md": "Five years of payments only **chipped** $25,000 **off** her loan.",
+      "text": "Five years of payments only chipped $25,000 off her loan.",
+      "html": "<p>Five years of payments only <strong>chipped</strong> $25,000 <strong>off</strong> her loan.</p>",
+      "gaps": [
+       "chipped",
+       "off"
+      ]
+     }
+    }
+   ]
+  },
+  {
    "id": "chorus of",
    "term": "a chorus of",
    "kind": "vocab",
@@ -1953,6 +2124,56 @@
    "senses": []
   },
   {
+   "id": "closing costs",
+   "term": "closing costs",
+   "kind": "vocab",
+   "type": "collocation",
+   "vi": "các khoản phí khi hoàn tất giao dịch mua nhà",
+   "cefr": "",
+   "added": "2026-10-09",
+   "session": "2026-10-09 Buying vs renting a home",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/collocation",
+    "theme/housing",
+    "theme/economics"
+   ],
+   "notesHtml": "<p>⚠️ Not in Oxford Learner's. The meaning comes from the video itself, which calls them a few extra fees. Always plural.</p>",
+   "seeAlso": [
+    "down payment",
+    "upfront"
+   ],
+   "ipa": "closing /ˈkləʊzɪŋ/ · cost /kɒst/",
+   "pos": [
+    "noun"
+   ],
+   "meaning": "the extra fees a home buyer pays to complete the purchase (American English)",
+   "register": "neutral",
+   "pattern": "",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "With the down payment and **closing costs**, she spent $50,000 before moving in.",
+     "text": "With the down payment and closing costs, she spent $50,000 before moving in.",
+     "html": "<p>With the down payment and <strong>closing costs</strong>, she spent $50,000 before moving in.</p>",
+     "gaps": [
+      "closing costs"
+     ]
+    },
+    {
+     "md": "Ask the bank for an estimate of your **closing costs** early.",
+     "text": "Ask the bank for an estimate of your closing costs early.",
+     "html": "<p>Ask the bank for an estimate of your <strong>closing costs</strong> early.</p>",
+     "gaps": [
+      "closing costs"
+     ]
+    }
+   ],
+   "senses": []
+  },
+  {
    "id": "come across",
    "term": "come across",
    "kind": "vocab",
@@ -1994,6 +2215,55 @@
      "html": "<p>Has anyone <strong>come across</strong> this error before?</p>",
      "gaps": [
       "come across"
+     ]
+    }
+   ],
+   "senses": []
+  },
+  {
+   "id": "come out on top",
+   "term": "come out on top",
+   "kind": "vocab",
+   "type": "idiom",
+   "vi": "giành phần thắng, cuối cùng thắng cuộc",
+   "cefr": "c2",
+   "added": "2026-10-09",
+   "session": "2026-10-09 Buying vs renting a home",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/idiom",
+    "cefr/c2",
+    "theme/housing"
+   ],
+   "notesHtml": "<p>Compare <a class=\"xref\" data-term=\"win out\">win out</a>: <em>come out on top</em> = beat the others in a contest or comparison; <em>win out</em> = succeed after a struggle.</p>",
+   "seeAlso": [
+    "win out"
+   ],
+   "ipa": "top /tɒp/",
+   "pos": [
+    "idiom"
+   ],
+   "meaning": "to win a contest or an argument; to end up in the best position",
+   "register": "neutral",
+   "pattern": "",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "In the end, the buyer **came out on top** by $340,000.",
+     "text": "In the end, the buyer came out on top by $340,000.",
+     "html": "<p>In the end, the buyer <strong>came out on top</strong> by $340,000.</p>",
+     "gaps": [
+      "came out on top"
+     ]
+    },
+    {
+     "md": "Both teams pitched a design, and ours **came out on top**.",
+     "text": "Both teams pitched a design, and ours came out on top.",
+     "html": "<p>Both teams pitched a design, and ours <strong>came out on top</strong>.</p>",
+     "gaps": [
+      "came out on top"
      ]
     }
    ],
@@ -2277,6 +2547,53 @@
      "html": "<p>That release made them a real <strong>contender</strong>.</p>",
      "gaps": [
       "contender"
+     ]
+    }
+   ],
+   "senses": []
+  },
+  {
+   "id": "conventional wisdom",
+   "term": "conventional wisdom",
+   "kind": "vocab",
+   "type": "idiom",
+   "vi": "quan niệm phổ biến, điều mà ai cũng cho là đúng",
+   "cefr": "c1",
+   "added": "2026-10-09",
+   "session": "2026-10-09 Buying vs renting a home",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/idiom",
+    "cefr/c1",
+    "theme/housing"
+   ],
+   "notesHtml": "<p>Oxford lists <em>conventional</em>, <em>received</em> and <em>popular wisdom</em> together. It often sets up a challenge: you state the conventional wisdom, then argue against it.</p><p>---</p><p>Source: TED-Ed video 'Which is better: Buying or renting a home?' · <a class=\"xref\" data-term=\"2026-10-09 Buying vs renting a home\">session note</a></p>",
+   "seeAlso": [],
+   "ipa": "conventional /kənˈvenʃənl/ · wisdom /ˈwɪzdəm/",
+   "pos": [
+    "noun phrase"
+   ],
+   "meaning": "the view or belief that most people hold",
+   "register": "neutral",
+   "pattern": "conventional wisdom has it that… · contrary to conventional wisdom",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "**Conventional wisdom** says buying beats renting, but it depends on the market.",
+     "text": "Conventional wisdom says buying beats renting, but it depends on the market.",
+     "html": "<p><strong>Conventional wisdom</strong> says buying beats renting, but it depends on the market.</p>",
+     "gaps": [
+      "Conventional wisdom"
+     ]
+    },
+    {
+     "md": "Contrary to **conventional wisdom**, more replicas did not make the service faster.",
+     "text": "Contrary to conventional wisdom, more replicas did not make the service faster.",
+     "html": "<p>Contrary to <strong>conventional wisdom</strong>, more replicas did not make the service faster.</p>",
+     "gaps": [
+      "conventional wisdom"
      ]
     }
    ],
@@ -3553,6 +3870,52 @@
    "senses": []
   },
   {
+   "id": "don't sweat it",
+   "term": "don't sweat it",
+   "kind": "vocab",
+   "type": "conversational",
+   "vi": "đừng lo, không sao đâu",
+   "cefr": "",
+   "added": "2026-10-09",
+   "session": "2026-10-09 Buying vs renting a home",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/conversational",
+    "theme/housing"
+   ],
+   "notesHtml": "<p>Oxford labels it North American English, informal. Related: <em>don't sweat the small stuff</em> = don't worry about small details.</p><p>---</p><p>Source: TED-Ed video 'Which is better: Buying or renting a home?' · <a class=\"xref\" data-term=\"2026-10-09 Buying vs renting a home\">session note</a></p>",
+   "seeAlso": [],
+   "ipa": "sweat /swet/",
+   "pos": [
+    "phrase"
+   ],
+   "meaning": "used to tell someone to stop worrying about something",
+   "register": "informal",
+   "pattern": "",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "'I broke the build.' — '**Don't sweat it**, I'll revert it.'",
+     "text": "'I broke the build.' — 'Don't sweat it, I'll revert it.'",
+     "html": "<p>'I broke the build.' — '<strong>Don't sweat it</strong>, I'll revert it.'</p>",
+     "gaps": [
+      "Don't sweat it"
+     ]
+    },
+    {
+     "md": "Her house had doubled in value, so she **wasn't sweating it**.",
+     "text": "Her house had doubled in value, so she wasn't sweating it.",
+     "html": "<p>Her house had doubled in value, so she <strong>wasn't sweating it</strong>.</p>",
+     "gaps": [
+      "wasn't sweating it"
+     ]
+    }
+   ],
+   "senses": []
+  },
+  {
    "id": "doomer",
    "term": "doomer",
    "kind": "vocab",
@@ -3649,6 +4012,59 @@
      "html": "<p>This job's going to take me till <strong>doomsday</strong>.</p>",
      "gaps": [
       "doomsday"
+     ]
+    }
+   ],
+   "senses": []
+  },
+  {
+   "id": "down payment",
+   "term": "down payment",
+   "kind": "vocab",
+   "type": "word",
+   "vi": "khoản trả trước (phần đầu của giá mua)",
+   "cefr": "c2",
+   "added": "2026-10-09",
+   "session": "2026-10-09 Buying vs renting a home",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/word",
+    "cefr/c2",
+    "theme/housing",
+    "theme/economics"
+   ],
+   "notesHtml": "<p>British English often says <em>deposit</em> for this; Oxford gives the same definition under <em>deposit</em>. Vietnamese trap: <em>tiền cọc</em> covers both this and a <a class=\"xref\" data-term=\"security deposit\">security deposit</a>, but they work in opposite ways. A down payment is part of the price and never comes back; a security deposit is returned when you move out.</p>",
+   "seeAlso": [
+    "mortgage",
+    "security deposit",
+    "upfront",
+    "lump sum"
+   ],
+   "ipa": "/ˌdaʊn ˈpeɪmənt/",
+   "pos": [
+    "noun"
+   ],
+   "meaning": "a sum of money paid as the first part of a larger payment, for example when buying a house on a mortgage",
+   "register": "neutral",
+   "pattern": "a 10% down payment · a down payment on a house",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "They saved for six years for a **down payment** on a flat.",
+     "text": "They saved for six years for a down payment on a flat.",
+     "html": "<p>They saved for six years for a <strong>down payment</strong> on a flat.</p>",
+     "gaps": [
+      "down payment"
+     ]
+    },
+    {
+     "md": "The bank wants a **down payment** of at least 30%.",
+     "text": "The bank wants a down payment of at least 30%.",
+     "html": "<p>The bank wants a <strong>down payment</strong> of at least 30%.</p>",
+     "gaps": [
+      "down payment"
      ]
     }
    ],
@@ -5082,6 +5498,58 @@
    "senses": []
   },
   {
+   "id": "fixed-rate",
+   "term": "fixed-rate",
+   "kind": "vocab",
+   "type": "word",
+   "vi": "(khoản vay) có lãi suất cố định",
+   "cefr": "b2",
+   "added": "2026-10-09",
+   "session": "2026-10-09 Buying vs renting a home",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/word",
+    "cefr/b2",
+    "theme/housing",
+    "theme/economics"
+   ],
+   "notesHtml": "<p>Only before a noun, with a hyphen (Oxford: [only before noun]). With no noun after it, split it: <em>the rate is <strong>fixed</strong></em>, <em>a fixed interest rate</em>. The opposite is <a class=\"xref\" data-term=\"adjustable-rate\">adjustable-rate</a>.</p>",
+   "seeAlso": [
+    "adjustable-rate",
+    "mortgage",
+    "refinance"
+   ],
+   "ipa": "/ˌfɪkst ˈreɪt/",
+   "pos": [
+    "adjective"
+   ],
+   "meaning": "(of a loan) with an interest rate that stays the same for an agreed period",
+   "register": "neutral",
+   "pattern": "a fixed-rate mortgage / loan · a fixed interest rate",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "She chose a 30-year **fixed-rate** mortgage at 6%.",
+     "text": "She chose a 30-year fixed-rate mortgage at 6%.",
+     "html": "<p>She chose a 30-year <strong>fixed-rate</strong> mortgage at 6%.</p>",
+     "gaps": [
+      "fixed-rate"
+     ]
+    },
+    {
+     "md": "A **fixed-rate** loan keeps your monthly payment predictable.",
+     "text": "A fixed-rate loan keeps your monthly payment predictable.",
+     "html": "<p>A <strong>fixed-rate</strong> loan keeps your monthly payment predictable.</p>",
+     "gaps": [
+      "fixed-rate"
+     ]
+    }
+   ],
+   "senses": []
+  },
+  {
    "id": "focal point",
    "term": "focal point",
    "kind": "vocab",
@@ -5127,6 +5595,53 @@
      "html": "<p>The central hall is the <strong>focal point</strong> of the whole terminal — every pier leads back to it.</p>",
      "gaps": [
       "focal point"
+     ]
+    }
+   ],
+   "senses": []
+  },
+  {
+   "id": "fraction of",
+   "term": "a fraction of",
+   "kind": "vocab",
+   "type": "idiom",
+   "vi": "một phần rất nhỏ của",
+   "cefr": "b2",
+   "added": "2026-10-09",
+   "session": "2026-10-09 Buying vs renting a home",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/idiom",
+    "cefr/b2",
+    "theme/housing"
+   ],
+   "notesHtml": "<p>Grammar, from Oxford: with a plural noun the verb is plural, as in <em>only a fraction of users <strong>use</strong> it</em>.</p><p>---</p><p>Source: TED-Ed video 'Which is better: Buying or renting a home?' · <a class=\"xref\" data-term=\"2026-10-09 Buying vs renting a home\">session note</a></p>",
+   "seeAlso": [],
+   "ipa": "fraction /ˈfrækʃn/",
+   "pos": [
+    "phrase"
+   ],
+   "meaning": "a very small part or amount of something",
+   "register": "neutral",
+   "pattern": "just / only a fraction of · at a fraction of the price / cost",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "Renting cost her **a fraction of** what her sister paid up front.",
+     "text": "Renting cost her a fraction of what her sister paid up front.",
+     "html": "<p>Renting cost her <strong>a fraction of</strong> what her sister paid up front.</p>",
+     "gaps": [
+      "a fraction of"
+     ]
+    },
+    {
+     "md": "Storage now costs **a fraction of** what it did ten years ago.",
+     "text": "Storage now costs a fraction of what it did ten years ago.",
+     "html": "<p>Storage now costs <strong>a fraction of</strong> what it did ten years ago.</p>",
+     "gaps": [
+      "a fraction of"
      ]
     }
    ],
@@ -7091,6 +7606,78 @@
    "senses": []
   },
   {
+   "id": "inseparable",
+   "term": "inseparable",
+   "kind": "vocab",
+   "type": "word",
+   "vi": "tuỳ nghĩa (xem bên dưới)",
+   "cefr": "c1",
+   "added": "2026-10-09",
+   "session": "2026-10-09 Buying vs renting a home",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/word",
+    "cefr/c1",
+    "theme/housing"
+   ],
+   "notesHtml": "<p>Spelling: <em>separ-</em> with an <strong>a</strong>, from <em>separate</em> (\"there's a rat in sep-a-rate\"). You wrote <em>inseperable</em>. Oxford gives four syllables, /ɪnˈseprəbl/: the vowel after <em>sep-</em> is hardly heard, and the stress is on SEP. Opposite: <em>separable</em>; adverb: <em>inseparably</em>.</p><p>---</p><p>Source: TED-Ed video 'Which is better: Buying or renting a home?' · <a class=\"xref\" data-term=\"2026-10-09 Buying vs renting a home\">session note</a></p>",
+   "seeAlso": [],
+   "ipa": "/ɪnˈseprəbl/",
+   "pos": [
+    "adjective"
+   ],
+   "meaning": "two senses — see below",
+   "register": "neutral",
+   "pattern": "inseparable from something · completely inseparable",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "For most engineers, the job is **inseparable** from the tools they use.",
+     "text": "For most engineers, the job is inseparable from the tools they use.",
+     "html": "<p>For most engineers, the job is <strong>inseparable</strong> from the tools they use.</p>",
+     "gaps": [
+      "inseparable"
+     ]
+    },
+    {
+     "md": "My sister and I were **inseparable** as kids.",
+     "text": "My sister and I were inseparable as kids.",
+     "html": "<p>My sister and I were <strong>inseparable</strong> as kids.</p>",
+     "gaps": [
+      "inseparable"
+     ]
+    }
+   ],
+   "senses": [
+    {
+     "gloss": "not able to be separated",
+     "vi": "không thể tách rời",
+     "example": {
+      "md": "For most engineers, the job is **inseparable** from the tools they use.",
+      "text": "For most engineers, the job is inseparable from the tools they use.",
+      "html": "<p>For most engineers, the job is <strong>inseparable</strong> from the tools they use.</p>",
+      "gaps": [
+       "inseparable"
+      ]
+     }
+    },
+    {
+     "gloss": "(of people) always together and very close",
+     "vi": "thân thiết như hình với bóng",
+     "example": {
+      "md": "My sister and I were **inseparable** as kids.",
+      "text": "My sister and I were inseparable as kids.",
+      "html": "<p>My sister and I were <strong>inseparable</strong> as kids.</p>",
+      "gaps": [
+       "inseparable"
+      ]
+     }
+    }
+   ]
+  },
+  {
    "id": "intellectual capital",
    "term": "intellectual capital",
    "kind": "vocab",
@@ -7460,6 +8047,58 @@
      "html": "<p>They <strong>leapfrogged</strong> us by skipping the migration entirely.</p>",
      "gaps": [
       "leapfrogged"
+     ]
+    }
+   ],
+   "senses": []
+  },
+  {
+   "id": "lease",
+   "term": "lease",
+   "kind": "vocab",
+   "type": "word",
+   "vi": "hợp đồng thuê (nhà, đất, thiết bị)",
+   "cefr": "c1",
+   "added": "2026-10-09",
+   "session": "2026-10-09 Buying vs renting a home",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/word",
+    "cefr/c1",
+    "theme/housing"
+   ],
+   "notesHtml": "<p>Ends in /s/, as Oxford's /liːs/ shows. Verbs from Oxford and ozdic: <em>sign, take out, renew</em> a lease; the lease <em>expires</em> or <em>runs out</em>. Idiom: <em>a new lease of life</em> = fresh energy, or a longer, better life for something.</p>",
+   "seeAlso": [
+    "security deposit",
+    "upkeep",
+    "take out a loan"
+   ],
+   "ipa": "/liːs/",
+   "pos": [
+    "noun"
+   ],
+   "meaning": "a legal agreement that lets you use a building, land or equipment for a period of time, usually in return for rent",
+   "register": "neutral",
+   "pattern": "sign / take out / renew a lease · a lease on a flat · the lease expires / runs out",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "We **signed** a two-year **lease** on the office.",
+     "text": "We signed a two-year lease on the office.",
+     "html": "<p>We <strong>signed</strong> a two-year <strong>lease</strong> on the office.</p>",
+     "gaps": [
+      "signed",
+      "lease"
+     ]
+    },
+    {
+     "md": "The **lease** runs out in March, so we need to decide whether to renew it.",
+     "text": "The lease runs out in March, so we need to decide whether to renew it.",
+     "html": "<p>The <strong>lease</strong> runs out in March, so we need to decide whether to renew it.</p>",
+     "gaps": [
+      "lease"
      ]
     }
    ],
@@ -7865,6 +8504,56 @@
      "html": "<p>I <strong>lost my patience</strong> after the third rollback.</p>",
      "gaps": [
       "lost my patience"
+     ]
+    }
+   ],
+   "senses": []
+  },
+  {
+   "id": "lump sum",
+   "term": "lump sum",
+   "kind": "vocab",
+   "type": "word",
+   "vi": "khoản tiền trả một lần (trọn gói)",
+   "cefr": "c2",
+   "added": "2026-10-09",
+   "session": "2026-10-09 Buying vs renting a home",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/word",
+    "cefr/c2",
+    "theme/housing",
+    "theme/economics"
+   ],
+   "notesHtml": "<p>The opposite of paying in instalments. A <em>lump</em> is a solid piece, so the money arrives in one piece.</p>",
+   "seeAlso": [
+    "down payment"
+   ],
+   "ipa": "/ˌlʌmp ˈsʌm/",
+   "pos": [
+    "noun"
+   ],
+   "meaning": "an amount of money paid at one time, not in separate payments",
+   "register": "neutral",
+   "pattern": "",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "You can pay the course fee monthly or as a **lump sum**.",
+     "text": "You can pay the course fee monthly or as a lump sum.",
+     "html": "<p>You can pay the course fee monthly or as a <strong>lump sum</strong>.</p>",
+     "gaps": [
+      "lump sum"
+     ]
+    },
+    {
+     "md": "She received a **lump sum** when she left the company.",
+     "text": "She received a lump sum when she left the company.",
+     "html": "<p>She received a <strong>lump sum</strong> when she left the company.</p>",
+     "gaps": [
+      "lump sum"
      ]
     }
    ],
@@ -9302,6 +9991,57 @@
    "senses": []
   },
   {
+   "id": "opportunity cost",
+   "term": "opportunity cost",
+   "kind": "vocab",
+   "type": "word",
+   "vi": "chi phí cơ hội",
+   "cefr": "c2",
+   "added": "2026-10-09",
+   "session": "2026-10-09 Buying vs renting a home",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/word",
+    "cefr/c2",
+    "theme/housing",
+    "theme/economics"
+   ],
+   "notesHtml": "<p>Vietnamese has the exact term, so the idea is easy; the thing to watch is the article. Oxford marks it countable and uncountable, so both <em>an opportunity cost</em> and <em>the opportunity cost of X</em> work.</p>",
+   "seeAlso": [
+    "put money into",
+    "down payment"
+   ],
+   "ipa": "/ˌɒpəˈtjuːnəti kɒst/",
+   "pos": [
+    "noun"
+   ],
+   "meaning": "the benefits you lose from the other options when you choose one",
+   "register": "neutral",
+   "pattern": "",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "The **opportunity cost** of the down payment was what that money could have grown into.",
+     "text": "The opportunity cost of the down payment was what that money could have grown into.",
+     "html": "<p>The <strong>opportunity cost</strong> of the down payment was what that money could have grown into.</p>",
+     "gaps": [
+      "opportunity cost"
+     ]
+    },
+    {
+     "md": "Every hour spent in meetings has an **opportunity cost**.",
+     "text": "Every hour spent in meetings has an opportunity cost.",
+     "html": "<p>Every hour spent in meetings has an <strong>opportunity cost</strong>.</p>",
+     "gaps": [
+      "opportunity cost"
+     ]
+    }
+   ],
+   "senses": []
+  },
+  {
    "id": "order of magnitude",
    "term": "an order of magnitude",
    "kind": "vocab",
@@ -9566,6 +10306,87 @@
     }
    ],
    "senses": []
+  },
+  {
+   "id": "pay back",
+   "term": "pay back",
+   "kind": "vocab",
+   "type": "phrasal-verb",
+   "vi": "tuỳ nghĩa (xem bên dưới)",
+   "cefr": "b2",
+   "added": "2026-10-09",
+   "session": "2026-10-09 Buying vs renting a home",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/phrasal-verb",
+    "cefr/b2",
+    "theme/housing",
+    "theme/economics"
+   ],
+   "notesHtml": "<p>A pronoun goes in the middle: <em>pay <strong>it</strong> back</em>, never <em>pay back it</em>. Compare <a class=\"xref\" data-term=\"pay off\">pay off</a>: <em>pay back</em> = return money you borrowed; <em>pay off</em> = finish paying a debt completely.</p>",
+   "seeAlso": [
+    "pay off",
+    "mortgage",
+    "take out a loan"
+   ],
+   "ipa": "/ˌpeɪ ˈbæk/",
+   "pos": [
+    "phrasal verb"
+   ],
+   "meaning": "two senses — see below",
+   "register": "neutral",
+   "pattern": "pay somebody back · pay back a loan · pay something back to somebody",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "I'll **pay** you **back** on Friday.",
+     "text": "I'll pay you back on Friday.",
+     "html": "<p>I'll <strong>pay</strong> you <strong>back</strong> on Friday.</p>",
+     "gaps": [
+      "pay",
+      "back"
+     ]
+    },
+    {
+     "md": "She swore she would **pay** him **back** for the lie.",
+     "text": "She swore she would pay him back for the lie.",
+     "html": "<p>She swore she would <strong>pay</strong> him <strong>back</strong> for the lie.</p>",
+     "gaps": [
+      "pay",
+      "back"
+     ]
+    }
+   ],
+   "senses": [
+    {
+     "gloss": "to return money that you borrowed",
+     "vi": "trả lại tiền (đã vay)",
+     "example": {
+      "md": "I'll **pay** you **back** on Friday.",
+      "text": "I'll pay you back on Friday.",
+      "html": "<p>I'll <strong>pay</strong> you <strong>back</strong> on Friday.</p>",
+      "gaps": [
+       "pay",
+       "back"
+      ]
+     }
+    },
+    {
+     "gloss": "to punish somebody for something bad they did to you",
+     "vi": "trả đũa",
+     "example": {
+      "md": "She swore she would **pay** him **back** for the lie.",
+      "text": "She swore she would pay him back for the lie.",
+      "html": "<p>She swore she would <strong>pay</strong> him <strong>back</strong> for the lie.</p>",
+      "gaps": [
+       "pay",
+       "back"
+      ]
+     }
+    }
+   ]
   },
   {
    "id": "pay off",
@@ -9905,6 +10726,55 @@
      "html": "<p>Prices have pretty much <strong>plateaued</strong> for now.</p>",
      "gaps": [
       "plateaued"
+     ]
+    }
+   ],
+   "senses": []
+  },
+  {
+   "id": "play out",
+   "term": "play out",
+   "kind": "vocab",
+   "type": "phrasal-verb",
+   "vi": "diễn ra, diễn biến",
+   "cefr": "b2",
+   "added": "2026-10-09",
+   "session": "2026-10-09 Buying vs renting a home",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/phrasal-verb",
+    "cefr/b2",
+    "theme/housing"
+   ],
+   "notesHtml": "<p>⚠️ Oxford Learner's lists only the passive, <em>be played out</em> (= happen). The intransitive use in the video, <em>see how things play out</em>, is common but not in that entry. Close to <a class=\"xref\" data-term=\"turn out\">turn out</a>, which is about the result rather than the process.</p>",
+   "seeAlso": [
+    "turn out"
+   ],
+   "ipa": "/ˌpleɪ ˈaʊt/",
+   "pos": [
+    "phrasal verb"
+   ],
+   "meaning": "(of events) to develop or happen in a particular way over time",
+   "register": "neutral",
+   "pattern": "see how things play out · be played out against a background",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "Let's see how the migration **plays out** before we touch the other services.",
+     "text": "Let's see how the migration plays out before we touch the other services.",
+     "html": "<p>Let's see how the migration <strong>plays out</strong> before we touch the other services.</p>",
+     "gaps": [
+      "plays out"
+     ]
+    },
+    {
+     "md": "The whole story **played out** over thirty years.",
+     "text": "The whole story played out over thirty years.",
+     "html": "<p>The whole story <strong>played out</strong> over thirty years.</p>",
+     "gaps": [
+      "played out"
      ]
     }
    ],
@@ -10535,6 +11405,58 @@
    "senses": []
   },
   {
+   "id": "put money into",
+   "term": "put money into something",
+   "kind": "vocab",
+   "type": "phrasal-verb",
+   "vi": "bỏ tiền vào, đầu tư vào",
+   "cefr": "b2",
+   "added": "2026-10-09",
+   "session": "2026-10-09 Buying vs renting a home",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/phrasal-verb",
+    "cefr/b2",
+    "theme/housing",
+    "theme/economics"
+   ],
+   "notesHtml": "<p>Oxford also gives <em>put something in</em> with the same meaning, and the same verb works for effort: <em>put time into something</em>. This is the phrase in the video; you first wrote <em>put out</em>, which is a different phrasal verb.</p>",
+   "seeAlso": [
+    "opportunity cost"
+   ],
+   "ipa": "put /pʊt/ · into /ˈɪntə/",
+   "pos": [
+    "phrasal verb"
+   ],
+   "meaning": "to invest or spend money on something",
+   "register": "neutral",
+   "pattern": "put money / savings / cash into something · put time / effort into something",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "Instead of a down payment, she **put** the money **into** a retirement fund.",
+     "text": "Instead of a down payment, she put the money into a retirement fund.",
+     "html": "<p>Instead of a down payment, she <strong>put</strong> the money <strong>into</strong> a retirement fund.</p>",
+     "gaps": [
+      "put",
+      "into"
+     ]
+    },
+    {
+     "md": "We **put** a lot of money **into** that project and got nothing back.",
+     "text": "We put a lot of money into that project and got nothing back.",
+     "html": "<p>We <strong>put</strong> a lot of money <strong>into</strong> that project and got nothing back.</p>",
+     "gaps": [
+      "put",
+      "into"
+     ]
+    }
+   ],
+   "senses": []
+  },
+  {
    "id": "quarter-life crisis",
    "term": "quarter-life crisis",
    "kind": "vocab",
@@ -10873,6 +11795,58 @@
      "html": "<p>What <strong>recreational activities</strong> should be encouraged for teenagers in the city?</p>",
      "gaps": [
       "recreational activities"
+     ]
+    }
+   ],
+   "senses": []
+  },
+  {
+   "id": "refinance",
+   "term": "refinance",
+   "kind": "vocab",
+   "type": "word",
+   "vi": "vay khoản mới để trả khoản vay cũ (thường để được lãi suất thấp hơn)",
+   "cefr": "c1",
+   "added": "2026-10-09",
+   "session": "2026-10-09 Buying vs renting a home",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/word",
+    "cefr/c1",
+    "theme/housing",
+    "theme/economics"
+   ],
+   "notesHtml": "<p>Oxford labels it <em>finance</em> and lists <em>debt</em> and <em>mortgage</em> as its usual objects. Stress: re-FI-nance.</p>",
+   "seeAlso": [
+    "mortgage",
+    "fixed-rate",
+    "pay off"
+   ],
+   "ipa": "/ˌriːˈfaɪnæns/",
+   "pos": [
+    "verb"
+   ],
+   "meaning": "to borrow money in order to pay a debt; usually, to replace a loan with a new one on better terms",
+   "register": "neutral",
+   "pattern": "refinance a mortgage / a debt",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "When rates fell to 5%, they **refinanced** their mortgage.",
+     "text": "When rates fell to 5%, they refinanced their mortgage.",
+     "html": "<p>When rates fell to 5%, they <strong>refinanced</strong> their mortgage.</p>",
+     "gaps": [
+      "refinanced"
+     ]
+    },
+    {
+     "md": "Many companies **refinance** their debt when interest rates drop.",
+     "text": "Many companies refinance their debt when interest rates drop.",
+     "html": "<p>Many companies <strong>refinance</strong> their debt when interest rates drop.</p>",
+     "gaps": [
+      "refinance"
      ]
     }
    ],
@@ -11746,6 +12720,57 @@
      "html": "<p>'Roger stole the money.' 'I thought <strong>as much</strong>.'</p>",
      "gaps": [
       "as much"
+     ]
+    }
+   ],
+   "senses": []
+  },
+  {
+   "id": "security deposit",
+   "term": "security deposit",
+   "kind": "vocab",
+   "type": "word",
+   "vi": "tiền đặt cọc thuê nhà (được hoàn lại khi trả nhà nếu không hư hỏng)",
+   "cefr": "b2",
+   "added": "2026-10-09",
+   "session": "2026-10-09 Buying vs renting a home",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/word",
+    "cefr/b2",
+    "theme/housing"
+   ],
+   "notesHtml": "<p>Often just <em>deposit</em>. Stress falls on the first word (Oxford marks only <em>security</em>), like other compound nouns: see <a class=\"xref\" data-term=\"Compound noun stress\">Compound noun stress</a>. For the <em>tiền cọc</em> trap, see <a class=\"xref\" data-term=\"down payment\">down payment</a>.</p>",
+   "seeAlso": [
+    "down payment",
+    "lease",
+    "Compound noun stress"
+   ],
+   "ipa": "/sɪˈkjʊərəti dɪpɒzɪt/",
+   "pos": [
+    "noun"
+   ],
+   "meaning": "money you pay when you rent a place, returned when you leave if you have not caused any damage",
+   "register": "neutral",
+   "pattern": "pay a security deposit · get your deposit back · a refundable deposit",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "The landlord asked for one month's rent as a **security deposit**.",
+     "text": "The landlord asked for one month's rent as a security deposit.",
+     "html": "<p>The landlord asked for one month's rent as a <strong>security deposit</strong>.</p>",
+     "gaps": [
+      "security deposit"
+     ]
+    },
+    {
+     "md": "I got my **security deposit** back after a quick check of the flat.",
+     "text": "I got my security deposit back after a quick check of the flat.",
+     "html": "<p>I got my <strong>security deposit</strong> back after a quick check of the flat.</p>",
+     "gaps": [
+      "security deposit"
      ]
     }
    ],
@@ -12862,6 +13887,52 @@
    ]
   },
   {
+   "id": "storm season",
+   "term": "storm season",
+   "kind": "vocab",
+   "type": "collocation",
+   "vi": "mùa mưa bão",
+   "cefr": "",
+   "added": "2026-10-09",
+   "session": "2026-10-09 Buying vs renting a home",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/collocation",
+    "theme/housing"
+   ],
+   "notesHtml": "<p>⚠️ Not an Oxford entry; <em>storm</em> and <em>season</em> were checked separately. <em>Intense</em> is an ordinary adjective here, so the card tests <em>storm season</em>.</p><p>---</p><p>Source: TED-Ed video 'Which is better: Buying or renting a home?' · <a class=\"xref\" data-term=\"2026-10-09 Buying vs renting a home\">session note</a></p>",
+   "seeAlso": [],
+   "ipa": "storm /stɔːm/ · season /ˈsiːzn/",
+   "pos": [
+    "noun"
+   ],
+   "meaning": "the time of year when storms are most frequent",
+   "register": "neutral",
+   "pattern": "an intense storm season · during storm season",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "An intense **storm season** brought flash floods to the whole area.",
+     "text": "An intense storm season brought flash floods to the whole area.",
+     "html": "<p>An intense <strong>storm season</strong> brought flash floods to the whole area.</p>",
+     "gaps": [
+      "storm season"
+     ]
+    },
+    {
+     "md": "Flights are often cancelled during **storm season**.",
+     "text": "Flights are often cancelled during storm season.",
+     "html": "<p>Flights are often cancelled during <strong>storm season</strong>.</p>",
+     "gaps": [
+      "storm season"
+     ]
+    }
+   ],
+   "senses": []
+  },
+  {
    "id": "stretched to the limit",
    "term": "be stretched to the limit",
    "kind": "vocab",
@@ -13533,6 +14604,105 @@
      }
     }
    ]
+  },
+  {
+   "id": "take out a loan",
+   "term": "take out a loan / a mortgage / insurance",
+   "kind": "vocab",
+   "type": "phrasal-verb",
+   "vi": "vay (ngân hàng), mua (bảo hiểm): làm thủ tục để có một dịch vụ chính thức",
+   "cefr": "b2",
+   "added": "2026-10-09",
+   "session": "2026-10-09 Buying vs renting a home",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/phrasal-verb",
+    "cefr/b2",
+    "theme/housing",
+    "theme/economics"
+   ],
+   "notesHtml": "<p>Oxford gives <em>take out</em> six senses; this note keeps only the money one so the card has one answer. Others you will meet: <em>take somebody out</em> (invite them to dinner), <em>takeout</em> (American for takeaway food).</p>",
+   "seeAlso": [
+    "mortgage",
+    "pay back",
+    "lease"
+   ],
+   "ipa": "/ˌteɪk ˈaʊt/",
+   "pos": [
+    "phrasal verb"
+   ],
+   "meaning": "to get an official service or document, such as a loan, a mortgage or an insurance policy",
+   "register": "neutral",
+   "pattern": "take out a loan / a mortgage / an insurance policy / a lease",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "Most buyers **take out** a loan for part of the price.",
+     "text": "Most buyers take out a loan for part of the price.",
+     "html": "<p>Most buyers <strong>take out</strong> a loan for part of the price.</p>",
+     "gaps": [
+      "take out"
+     ]
+    },
+    {
+     "md": "Before you travel, **take out** health insurance.",
+     "text": "Before you travel, take out health insurance.",
+     "html": "<p>Before you travel, <strong>take out</strong> health insurance.</p>",
+     "gaps": [
+      "take out"
+     ]
+    }
+   ],
+   "senses": []
+  },
+  {
+   "id": "tally",
+   "term": "tally",
+   "kind": "vocab",
+   "type": "word",
+   "vi": "số đếm, tổng số cộng dồn",
+   "cefr": "c1",
+   "added": "2026-10-09",
+   "session": "2026-10-09 Buying vs renting a home",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/word",
+    "cefr/c1",
+    "theme/housing"
+   ],
+   "notesHtml": "<p>Plural: <em>tallies</em>. <em>Keep a tally of</em> is the Oxford pattern; <em>final tallies</em> is how the video uses it.</p><p>---</p><p>Source: TED-Ed video 'Which is better: Buying or renting a home?' · <a class=\"xref\" data-term=\"2026-10-09 Buying vs renting a home\">session note</a></p>",
+   "seeAlso": [],
+   "ipa": "/ˈtæli/",
+   "pos": [
+    "noun"
+   ],
+   "meaning": "a record of the number or amount of something, especially one you keep adding to; a running total",
+   "register": "neutral",
+   "pattern": "keep a tally of something · the final tally",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "I **keep a tally** of every hour I spend on the side project.",
+     "text": "I keep a tally of every hour I spend on the side project.",
+     "html": "<p>I <strong>keep a tally</strong> of every hour I spend on the side project.</p>",
+     "gaps": [
+      "keep a tally"
+     ]
+    },
+    {
+     "md": "After thirty years, the **final tally** put the buyer ahead.",
+     "text": "After thirty years, the final tally put the buyer ahead.",
+     "html": "<p>After thirty years, the <strong>final tally</strong> put the buyer ahead.</p>",
+     "gaps": [
+      "final tally"
+     ]
+    }
+   ],
+   "senses": []
   },
   {
    "id": "tell me about it",
@@ -14609,6 +15779,132 @@
    "senses": []
   },
   {
+   "id": "upfront",
+   "term": "upfront",
+   "kind": "vocab",
+   "type": "word",
+   "vi": "tuỳ nghĩa (xem bên dưới)",
+   "cefr": "c1",
+   "added": "2026-10-09",
+   "session": "2026-10-09 Buying vs renting a home",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/word",
+    "cefr/c1",
+    "theme/housing",
+    "theme/economics"
+   ],
+   "notesHtml": "<p>Sense 1 only goes before a noun: <em>an upfront fee</em>, <em>upfront costs</em> (Oxford: [only before noun]). Oxford also has a separate two-word entry, <em>up front</em>. You wrote <em>ufront</em>; the <strong>p</strong> closes <em>up</em>.</p>",
+   "seeAlso": [
+    "down payment",
+    "closing costs"
+   ],
+   "ipa": "/ˌʌpˈfrʌnt/",
+   "pos": [
+    "adjective"
+   ],
+   "meaning": "two senses — see below",
+   "register": "neutral",
+   "pattern": "upfront costs / fee / payment · be upfront about something",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "Buying a house comes with large **upfront** costs.",
+     "text": "Buying a house comes with large upfront costs.",
+     "html": "<p>Buying a house comes with large <strong>upfront</strong> costs.</p>",
+     "gaps": [
+      "upfront"
+     ]
+    },
+    {
+     "md": "Be **upfront** with the PO about the delay.",
+     "text": "Be upfront with the PO about the delay.",
+     "html": "<p>Be <strong>upfront</strong> with the PO about the delay.</p>",
+     "gaps": [
+      "upfront"
+     ]
+    }
+   ],
+   "senses": [
+    {
+     "gloss": "paid in advance, before other payments are made",
+     "vi": "trả trước, ban đầu",
+     "example": {
+      "md": "Buying a house comes with large **upfront** costs.",
+      "text": "Buying a house comes with large upfront costs.",
+      "html": "<p>Buying a house comes with large <strong>upfront</strong> costs.</p>",
+      "gaps": [
+       "upfront"
+      ]
+     }
+    },
+    {
+     "gloss": "honest and open about what you think or do",
+     "vi": "thẳng thắn, không giấu giếm",
+     "example": {
+      "md": "Be **upfront** with the PO about the delay.",
+      "text": "Be upfront with the PO about the delay.",
+      "html": "<p>Be <strong>upfront</strong> with the PO about the delay.</p>",
+      "gaps": [
+       "upfront"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "upkeep",
+   "term": "upkeep",
+   "kind": "vocab",
+   "type": "word",
+   "vi": "chi phí / việc bảo dưỡng, duy trì",
+   "cefr": "c1",
+   "added": "2026-10-09",
+   "session": "2026-10-09 Buying vs renting a home",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/word",
+    "cefr/c1",
+    "theme/housing"
+   ],
+   "notesHtml": "<p>Uncountable: <em>the upkeep</em>, never <em>an upkeep</em> or <em>upkeeps</em>. Stress on the first syllable, UP-keep. Compare <a class=\"xref\" data-term=\"upfront\">upfront</a>, which is stressed at the end: up-FRONT.</p>",
+   "seeAlso": [
+    "upfront",
+    "lease"
+   ],
+   "ipa": "/ˈʌpkiːp/",
+   "pos": [
+    "noun"
+   ],
+   "meaning": "the cost or process of keeping something in good condition",
+   "register": "neutral",
+   "pattern": "the upkeep of something · be responsible for the upkeep · go towards the upkeep",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "Owners pay for the **upkeep** of their house; renters leave it to the landlord.",
+     "text": "Owners pay for the upkeep of their house; renters leave it to the landlord.",
+     "html": "<p>Owners pay for the <strong>upkeep</strong> of their house; renters leave it to the landlord.</p>",
+     "gaps": [
+      "upkeep"
+     ]
+    },
+    {
+     "md": "The **upkeep** of an old car can cost more than the car is worth.",
+     "text": "The upkeep of an old car can cost more than the car is worth.",
+     "html": "<p>The <strong>upkeep</strong> of an old car can cost more than the car is worth.</p>",
+     "gaps": [
+      "upkeep"
+     ]
+    }
+   ],
+   "senses": []
+  },
+  {
    "id": "vandal",
    "term": "vandal",
    "kind": "vocab",
@@ -15296,6 +16592,55 @@
      "html": "<p>It's very... <strong>what's the word</strong>... counterintuitive.</p>",
      "gaps": [
       "what's the word"
+     ]
+    }
+   ],
+   "senses": []
+  },
+  {
+   "id": "win out",
+   "term": "win out",
+   "kind": "vocab",
+   "type": "phrasal-verb",
+   "vi": "cuối cùng vẫn thắng / thành công (dù khó khăn)",
+   "cefr": "c2",
+   "added": "2026-10-09",
+   "session": "2026-10-09 Buying vs renting a home",
+   "priority": "normal",
+   "status": "new",
+   "tags": [
+    "vocab/phrasal-verb",
+    "cefr/c2",
+    "theme/housing"
+   ],
+   "notesHtml": "<p>Oxford: <em>win out</em> or <em>win through</em>, labelled informal. Compare <a class=\"xref\" data-term=\"come out on top\">come out on top</a>: that one is about beating others; <em>win out</em> is about succeeding after a struggle.</p>",
+   "seeAlso": [
+    "come out on top"
+   ],
+   "ipa": "/ˌwɪn ˈaʊt/",
+   "pos": [
+    "phrasal verb"
+   ],
+   "meaning": "to succeed in the end, despite difficulties",
+   "register": "informal",
+   "pattern": "win out / win through · win out in the end",
+   "image": "",
+   "imageAlt": "",
+   "examples": [
+    {
+     "md": "Common sense **won out**, and the release was postponed.",
+     "text": "Common sense won out, and the release was postponed.",
+     "html": "<p>Common sense <strong>won out</strong>, and the release was postponed.</p>",
+     "gaps": [
+      "won out"
+     ]
+    },
+    {
+     "md": "The renter **won out** in other ways: more spare cash and the freedom to move.",
+     "text": "The renter won out in other ways: more spare cash and the freedom to move.",
+     "html": "<p>The renter <strong>won out</strong> in other ways: more spare cash and the freedom to move.</p>",
+     "gaps": [
+      "won out"
      ]
     }
    ],
@@ -17175,6 +18520,12 @@
    "date": "2026-10-07",
    "theme": "Silicon Valley — from orchards to chips",
    "itemCount": "14"
+  },
+  {
+   "id": "2026-10-09 Buying vs renting a home",
+   "date": "2026-10-09",
+   "theme": "Buying vs renting a home",
+   "itemCount": "25"
   }
  ]
 }
